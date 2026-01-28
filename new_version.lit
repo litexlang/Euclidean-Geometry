@@ -1,0 +1,18 @@
+have point nonempty_set
+have line nonempty_set
+have plane nonempty_set
+
+prop point_on_line(p point, l line)
+prop point_on_plane(p point, pl plane)
+prop line_on_plane(l line, pl plane)
+
+have draw_line fn(point, point) line
+know:
+    forall a, b, c point, l line:
+        $point_on_line(a, l)
+        $point_on_line(b, l)
+        $point_on_line(c, l)
+        =>:
+            l = draw_line(a, b)
+            l = draw_line(a, c)
+            l = draw_line(b, c)
