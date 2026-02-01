@@ -1,13 +1,67 @@
+# three primitive terms:
+
 have point nonempty_set
 have line nonempty_set
 have plane nonempty_set
+
+# three primitive relations
+#Incidence
 
 prop point_on_line(p point, l line)
 prop point_on_plane(p point, pl plane)
 prop line_on_plane(l line, pl plane)
 
-have draw_line fn(point, point) line
+## I1
+### For every two points A and B there exists a line a that contains them both. We write AB = a or BA = a
+### For every two points there exists no more than one line that contains them both
+let fn line_of(A point,B point) line:
+    dom:
+        A!=B
+have A,B point
 know:
+    $point_on_line(A, line_of(A, B))
+    $point_on_line(B, line_of(A, B))
+    forall l line:
+        $point_on_line(A, l)
+        $point_on_line(B, l)
+        =>:
+            l = line_of(A, B)
+
+## I2
+### There exist at least two points on a line.
+
+prop exist_two_points_on_line(A point,B point,l line):
+    A!=B
+    $point_on_line(A, l)  
+    $point_on_line(B, l)
+know:    
+    forall l line:
+        exist a,b point st $exist_two_points_on_line(A, B,l )
+
+## I3
+### There exist at least three points that do not lie on the same line.
+prop three_points_collinear(A,B,C point):
+    $point_on_line(A, line_of(B,C))
+know:
+    exist A,B,C point st not $three_points_collinear(A,B,C)
+
+## I4
+### For every three points A, B, C not situated on the same line there exists exactly one plane α that contains all of them.
+### For every plane there exists a point which lies on it. 
+let fn plane_of(A point,B point,C point) plane:
+    dom:
+        not $three_points_collinear(A,B,C)
+prop exist_point_on_plane(A point,pl plane):
+    $point_on_plane(A, pl)
+know:
+    $point_on_plane(A, plane_of(A,B,C))
+    $point_on_plane(B, plane_of(A,B,C))
+    $point_on_plane(C, plane_of(A,B,C)) 
+    forall pl plane:
+        exist A point st $exist_point_on_plane(A,pl)
+        
+##I5
+### Every plane contains three points A, B, C which do not lie in the same line.
     forall a, b, c point, l line:
         $point_on_line(a, l)
         $point_on_line(b, l)
