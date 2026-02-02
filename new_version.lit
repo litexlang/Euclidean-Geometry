@@ -137,3 +137,12 @@ know:
             $point_between(B,C,A)
 ## B2
 ### If A and C are two points, then there exists at least one point B on the line AC such that C lies between A and B
+prop exist_point_on_extension(A point,C point,B point):
+    A!=C
+    B $in line_of(A,C)
+    $point_between(C,A,B)
+know:
+    forall A,C point:
+        A!=C
+        =>:
+            exist B point st $exist_point_on_extension(A,C,B)
