@@ -230,3 +230,18 @@ know:
             $finite_line_congruence(l1,l2)
         <=>:
             $finite_line_congruence(l2,l1)
+prop left_congruence(A point,B point,l line, fl finite_line):
+    $point_left_to_point_on_one_line(A,B,l)
+    $finite_line_congruence(fl,finite_line_of(A,B))
+prop right_congruence(A point,B point,l line, fl finite_line):
+    $point_right_to_point_on_one_line(A,B,l)
+    $finite_line_congruence(fl,finite_line_of(A,B))
+know:
+    forall fl finite_line, A point , l line:
+        A $in l
+        =>:
+            exist B point st $left_congruence(A,B,l,fl)
+    forall fl finite_line, A point , l line:
+        A $in l
+        =>:
+            exist B point st $right_congruence(A,B,l,fl)
