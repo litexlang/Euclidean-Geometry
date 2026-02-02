@@ -1,8 +1,8 @@
 # three primitive terms:
 
 have point nonempty_set
-have line nonempty_set
-have plane nonempty_set
+have line power_set(point)
+have plane power_set(line)
 
 # three primitive relations
 #Incidence
