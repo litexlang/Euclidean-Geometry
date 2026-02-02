@@ -1,8 +1,13 @@
 # three primitive terms:
 
 have point nonempty_set
-have line power_set(point)
-have plane power_set(line)
+have line nonempty_set
+have plane nonempty_set
+know:
+    forall l line:
+        l $in power_set(point)
+    forall pl plane:
+        pl $in power_set(point)
 
 # three primitive relations
 #Incidence
@@ -74,20 +79,30 @@ know:
 ## I6
 ### If two points A, B of a line a lie in a plane α, then every point of a lies in α. 
 ### In this case we say: "The line a lies in the plane α"
-know：
-    prop line_on_plane(l line, pl plane):
-         <=>:
-            forall A l
-                A $in plane
+prop line_on_plane(l line, pl plane):
+    <=>:
+        forall A l
+            A $in pl
+prop line_of_in_plane(A point,B point, pl plane):
+    A!=B
+    A $in pl
+    B $in pl
+    =>:
+        line_on_plane(line_of(A,B),pl)
 
 ## I7
 ### If two planes α, β have a point A in common, then they have at least a second point B in common
-    
-    forall a, b, c point, l line:
-        $point_on_line(a, l)
-        $point_on_line(b, l)
-        $point_on_line(c, l)
+prop exist_another_point_of_two_intersect_planes(A point,B point,p plane,q plane):
+    A $in p
+    A $in q
+    =>:
+        B $in p
+        B $in q
+
+know:
+    forall A point, p,q plane:
+        A $in p
+        A $in q
         =>:
-            l = draw_line(a, b)
-            l = draw_line(a, c)
-            l = draw_line(b, c)
+            exist B point st $exist_another_point_of_two_intersect_planes(A,B,p,q)
+    
