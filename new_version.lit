@@ -129,7 +129,7 @@ prop point_between(B point ,A point ,C point):
     B!=A
     B!=C
     C!=A
-    B $in line_of(A,C)
+    $three_points_collinear(A,B,C)
 know:
     forall B,A,C point:
         $point_between(B,A,C)
@@ -146,3 +146,43 @@ know:
         A!=C
         =>:
             exist B point st $exist_point_on_extension(A,C,B)
+## B3
+### Of any three points situated on a line, there is no more than one which lies between the other two
+### prop no_more_than_one_point_between_three_points_on_line(A point,B point ,C point)
+###     $three_points_collinear(A,B,C)
+###     or:
+###         $between(A, B, C)
+###         $between(B, C, A)
+###         $between(C, A, B)
+###想表达仅一个会发生
+### know:
+###     forall A,B,C point:
+###         $three_points_collinear(A,B,C)
+###         $no_more_than_one_point_between_three_points_on_line(A,B,C)
+
+##B4
+### Pasch's axiom: Let A, B, C be three points not lying in the same line and let a be a line lying in the plane ABC 
+### and not passing through any of the points A, B, C. Then, if the line a passes through a point of the segment AB, 
+### it will also pass through either a point of the segment BC or a point of the segment AC.
+
+let finite_line nonempty_set
+know:
+    forall l finite_line:
+        l $in power_set(point)
+let fn finite_line_of(A point,B point):
+    dom:
+        A!=B
+know:
+    forall A,B point:
+        A!=B
+        =>:
+            A $in finite_line_of(A,B)
+            B $in finite_line_of(A,B)
+    forall A,B,C point:
+        A!=B
+        C!=A
+        C!=B
+        C $in finite_line_of(A,B)
+        =>:
+            C $in line_of(A,B)
+            $point_between(C,A,B)
