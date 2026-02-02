@@ -186,3 +186,21 @@ know:
         =>:
             C $in line_of(A,B)
             $point_between(C,A,B)
+prop intersect_point_of_line_and_finite_line(A point,l line,fl finite_line):
+    A $in l
+    A $in fl
+prop line_intersect_finite_line(l line ,fl finite_line):
+    exist A point st $intersect_point_of_line_and_finite_line(A,l,fl)
+know:
+    forall A,B,C point ,l line:
+        A!=B
+        A!=C
+        B!=C
+        not $three_points_collinear(A,B,C)
+        $line_on_plane(l,plane_of(A,B,C))
+        A not $in l
+        B not $in l
+        C not $in l
+        $line_intersect_finite_line(l,finite_line_of(A,B))
+        =>:
+            $line_intersect_finite_line(l,finite_line_of(B,C)) or $line_intersect_finite_line(l,finite_line_of(A,C)) 
