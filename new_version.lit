@@ -81,7 +81,7 @@ know:
 ### In this case we say: "The line a lies in the plane α"
 prop line_on_plane(l line, pl plane):
     <=>:
-        forall A l
+        forall A l:
             A $in pl
 prop line_of_in_plane(A point,B point, pl plane):
     A!=B
@@ -105,4 +105,11 @@ know:
         A $in q
         =>:
             exist B point st $exist_another_point_of_two_intersect_planes(A,B,p,q)
+## I8
+### There exist at least four points not lying in a plane
+prop not_four_points_coplanar(A point, B point, C point, D point):
+    forall p plane:
+        not $point_on_plane(A, p) or not $point_on_plane(B, p) or not $point_on_plane(C, p) or not $point_on_plane(D, p)
+know:
+    exist A,B,C,D point st $not_four_points_coplanar(A,B,C,D)
     
