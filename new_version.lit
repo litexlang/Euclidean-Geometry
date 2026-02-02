@@ -169,7 +169,7 @@ let finite_line nonempty_set
 know:
     forall l finite_line:
         l $in power_set(point)
-let fn finite_line_of(A point,B point):
+let fn finite_line_of(A point,B point) finite_line:
     dom:
         A!=B
 know:
