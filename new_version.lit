@@ -215,12 +215,12 @@ know:
 
 prop point_left_to_point_on_one_line(A point, B point, l line):
     A != B
-    $point_on_line(A, l)
-    $point_on_line(B, l)
+    A $in l
+    B $in l
 prop point_right_to_point_on_one_line(A point, B point, l line):
     A != B
-    $point_on_line(A, l)
-    $point_on_line(B, l)
+    A $in l
+    B $in l
 prop finite_line_congruence(l1 finite_line,l2 finite_line)
 know:
     forall l finite_line:
