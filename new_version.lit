@@ -198,10 +198,37 @@ know:
         B!=C
         not $three_points_collinear(A,B,C)
         $line_on_plane(l,plane_of(A,B,C))
-        A $in l
-        B $in l
-        C $in l
+        A not $in l
+        B not $in l
+        C not $in l
         $line_intersect_finite_line(l,finite_line_of(A,B))
         =>:
             $line_intersect_finite_line(l,finite_line_of(B,C)) or $line_intersect_finite_line(l,finite_line_of(A,C)) 
 
+
+#Congruence
+## C1
+### If A, B are two points on a line a, and if A′ is a point upon the same or another line a′, 
+### then, upon a given side of A′ on the straight line a′, we can always find a point B′ 
+### so that the segment AB is congruent to the segment A′B′.
+### We indicate this relation by writing AB ≅ A′B′. Every segment is congruent to itself
+
+prop point_left_to_point_on_one_line(A point, B point, l line):
+    dom:
+        A != B
+        $point_on_line(A, l)
+        $point_on_line(B, l)
+prop point_right_to_point_on_one_line(A point, B point, l line):
+    dom:
+        A != B
+        $point_on_line(A, l)
+        $point_on_line(B, l)
+prop finite_line_congruence(l1 finite_line,l2 finite_line)
+know:
+    forall l finite_line:
+        $finite_line_congruence(l,l)
+    forall l1,l2 finite_line:
+        =>:
+            $finite_line_congruence(l1,l2)
+        <=>:
+            $finite_line_congruence(l2,l1)
