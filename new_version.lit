@@ -1,3 +1,4 @@
+# Welcome to Litex Playground!
 # three primitive terms:
 
 have point nonempty_set
@@ -14,7 +15,7 @@ know:
 
 prop point_on_line(p point, l line)
 prop point_on_plane(p point, pl plane)
-prop line_on_plane(l line, pl plane)
+
 
 ## I1
 ### For every two points A and B there exists a line a that contains them both. We write AB = a or BA = a
@@ -22,15 +23,16 @@ prop line_on_plane(l line, pl plane)
 let fn line_of(A point,B point) line:
     dom:
         A!=B
-have A,B point
+
 know:
-    $point_on_line(A, line_of(A, B))
-    $point_on_line(B, line_of(A, B))
-    forall l line:
-        $point_on_line(A, l)
-        $point_on_line(B, l)
-        =>:
-            l = line_of(A, B)
+    forall A,B point:
+        $point_on_line(A, line_of(A, B))
+        $point_on_line(B, line_of(A, B))
+        forall l line:
+            $point_on_line(A, l)
+            $point_on_line(B, l)
+            =>:
+                l = line_of(A, B)
 
 ## I2
 ### There exist at least two points on a line.
@@ -41,7 +43,7 @@ prop exist_two_points_on_line(A point,B point,l line):
     $point_on_line(B, l)
 know:    
     forall l line:
-        exist a,b point st $exist_two_points_on_line(A, B,l )
+        exist A,B point st $exist_two_points_on_line(A, B,l )
 
 ## I3
 ### There exist at least three points that do not lie on the same line.
@@ -59,9 +61,10 @@ let fn plane_of(A point,B point,C point) plane:
 prop exist_point_on_plane(A point,pl plane):
     $point_on_plane(A, pl)
 know:
-    $point_on_plane(A, plane_of(A,B,C))
-    $point_on_plane(B, plane_of(A,B,C))
-    $point_on_plane(C, plane_of(A,B,C)) 
+    forall A,B,C point:
+        $point_on_plane(A, plane_of(A,B,C))
+        $point_on_plane(B, plane_of(A,B,C))
+        $point_on_plane(C, plane_of(A,B,C)) 
     forall pl plane:
         exist A point st $exist_point_on_plane(A,pl)
 
@@ -83,21 +86,22 @@ prop line_on_plane(l line, pl plane):
     <=>:
         forall A l:
             A $in pl
-prop line_of_in_plane(A point,B point, pl plane):
-    A!=B
-    A $in pl
-    B $in pl
-    =>:
-        line_on_plane(line_of(A,B),pl)
+know:
+    forall A point,B point, pl plane:
+        A!=B
+        A $in pl
+        B $in pl
+        =>:
+            $line_on_plane(line_of(A,B),pl)
 
 ## I7
 ### If two planes α, β have a point A in common, then they have at least a second point B in common
 prop exist_another_point_of_two_intersect_planes(A point,B point,p plane,q plane):
     A $in p
     A $in q
-    =>:
-        B $in p
-        B $in q
+    B $in p
+    B $in q
+    A!=B
 
 know:
     forall A point, p,q plane:
@@ -105,11 +109,4 @@ know:
         A $in q
         =>:
             exist B point st $exist_another_point_of_two_intersect_planes(A,B,p,q)
-## I8
-### There exist at least four points not lying in a plane
-prop not_four_points_coplanar(A point, B point, C point, D point):
-    forall p plane:
-        not $point_on_plane(A, p) or not $point_on_plane(B, p) or not $point_on_plane(C, p) or not $point_on_plane(D, p)
-know:
-    exist A,B,C,D point st $not_four_points_coplanar(A,B,C,D)
-    
+       
