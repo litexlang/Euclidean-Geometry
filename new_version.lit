@@ -198,9 +198,9 @@ know:
         B!=C
         $three_points_collinear(A,B,C)
         $line_on_plane(l,plane_of(A,B,C))
-        A not $in l
-        B not $in l
-        C not $in l
+        A $in l
+        B $in l
+        C $in l
         $line_intersect_finite_line(l,finite_line_of(A,B))
         =>:
             $line_intersect_finite_line(l,finite_line_of(B,C)) or $line_intersect_finite_line(l,finite_line_of(A,C)) 
