@@ -204,7 +204,7 @@ know:
         $line_intersect_finite_line(l,finite_line_of(A,B))
         =>:
             $line_intersect_finite_line(l,finite_line_of(B,C)) or $line_intersect_finite_line(l,finite_line_of(A,C)) 
-
+#加一个not
 
 #Congruence
 ## C1
@@ -214,15 +214,13 @@ know:
 ### We indicate this relation by writing AB ≅ A′B′. Every segment is congruent to itself
 
 prop point_left_to_point_on_one_line(A point, B point, l line):
-    dom:
-        A != B
-        $point_on_line(A, l)
-        $point_on_line(B, l)
+    A != B
+    $point_on_line(A, l)
+    $point_on_line(B, l)
 prop point_right_to_point_on_one_line(A point, B point, l line):
-    dom:
-        A != B
-        $point_on_line(A, l)
-        $point_on_line(B, l)
+    A != B
+    $point_on_line(A, l)
+    $point_on_line(B, l)
 prop finite_line_congruence(l1 finite_line,l2 finite_line)
 know:
     forall l finite_line:
