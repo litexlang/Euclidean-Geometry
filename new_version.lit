@@ -196,7 +196,7 @@ know:
         A!=B
         A!=C
         B!=C
-        mot $three_points_collinear(A,B,C)
+        not $three_points_collinear(A,B,C)
         $line_on_plane(l,plane_of(A,B,C))
         A $in l
         B $in l
