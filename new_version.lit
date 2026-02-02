@@ -109,4 +109,17 @@ know:
         A $in q
         =>:
             exist B point st $exist_another_point_of_two_intersect_planes(A,B,p,q)
-       
+
+##I8
+### There exist at least four points not lying in a plane    
+prop exist_four_points_not_on_any_plane(A point, B point, C point, D point):
+    A!=B
+    A!=C
+    A!=D
+    B!=C
+    B!=D
+    C!=D
+    forall p plane:
+        A not $in p or B not $in p or C not $in p or D not $in p
+know:
+    exist A,B,C,D point st $exist_four_points_not_on_any_plane(A,B,C,D)
