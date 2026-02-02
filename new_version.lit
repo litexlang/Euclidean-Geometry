@@ -71,10 +71,18 @@ know:
     forall pl plane:
         exist A,B,C point st $three_points_not_collinear_on_plane(A,B,C,pl)
 
-##I6
+## I6
 ### If two points A, B of a line a lie in a plane α, then every point of a lies in α. 
 ### In this case we say: "The line a lies in the plane α"
+know：
+    prop line_on_plane(l line, pl plane):
+         <=>:
+            forall A l
+                A $in plane
 
+## I7
+### If two planes α, β have a point A in common, then they have at least a second point B in common
+    
     forall a, b, c point, l line:
         $point_on_line(a, l)
         $point_on_line(b, l)
