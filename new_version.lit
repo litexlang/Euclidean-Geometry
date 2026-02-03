@@ -385,16 +385,16 @@ prop plane_contains_two_lines(pl plane,l1 line,l2 line):
 prop point_on_two_lines(A point,l1 line,l2 line):
     A $in l1
     A $in l2
+prop line_coplanar(l1 line,l2 line):
+    exist pl plane st $plane_contains_two_lines(pl,l1,l2)
+
 prop intersect_of_two_lines(l1 line,l2 line):
     $line_coplanar(l1,l2)
     exist A point st $point_on_two_lines(A,l1,l2)
 
-prop line_coplanar(l1 line,l2 line):
-    exist pl plane st $plane_contains_two_lines(pl,l1,l2)
-
 prop parallel_line(l1 line,l2 line):
     $line_coplanar(l1,l2)
-    not $intersect_of_two_lines(l1,l2)
+    not $intersect(l1,l2)
 
 let fn plane_of_point_and_line(A point,l line) plane:
     dom:
