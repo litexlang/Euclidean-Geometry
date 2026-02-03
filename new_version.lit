@@ -430,3 +430,18 @@ know:
 ### If AB and CD are any segments then there exists a number n such that n segments CD constructed contiguously from A,
 ### along the ray from A through B, will pass beyond the point B
 
+
+let fn length_of_finite_line(fl finite_line) R
+
+prop archimedes_number(A point,B point,C point,D point,n N_pos):
+    A!=B
+    C!=D
+    n * length_of_finite_line(finite_line_of(C,D)) > length_of_finite_line(finite_line_of(A,B))
+
+know:
+    forall A,B,C,D point:
+        A!=B
+        C!=D
+        =>:
+            exist n N_pos st $prop archimedes_number(A,B,C,D,n)
+        
