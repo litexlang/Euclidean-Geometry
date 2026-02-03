@@ -374,4 +374,33 @@ know:
             $triangle_congruence(C,B,A,C',B',A')
             $triangle_congruence(B,A,C,B',A',C')
 
-            
+#Parallel
+## P1
+### Playfair's axiom: Let a be any line and A a point not on it. Then there is at most one line in the plane,
+### determined by a and A, that passes through A and does not intersect a.
+
+prop plane_contains_two_lines(pl plane,l1 line,l2 line):
+    l1 $in pl
+    l2 $in pl
+prop point_on_two_lines(A point,l1 line,l2 line):
+    A $in l1
+    A $in l2
+prop intersect(l1 line,l2 line):
+    $line_coplanar(l1,l2)
+    exist A point st $point_on_two_lines(A,l1,l2)
+
+prop line_coplanar(l1 line,l2 line):
+    exist pl plane st $plane_contains_two_lines(pl,l1,l2)
+
+prop parallel_line(l1 line,l2 line):
+    $line_coplanar(l1,l2)
+    not $intersect(l1,l2)
+
+let fn plane_of_point_and_line(A point,l line) plane:
+    dom:
+        not A $in l
+    =>:
+        A $in plane_of_point_and_line(A,l)
+        l $line_on_plane(plane_of_point_and_line(A,l))
+
+
