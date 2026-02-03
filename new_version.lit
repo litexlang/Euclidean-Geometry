@@ -323,10 +323,10 @@ prop angle_congruence(a1 angle,a2 angle)
 
 prop clock_wise_congruence(a angle,r ray,A point,B point):
     $ray_clock_wise_ray(A,r,ray_with_end_point_and_direction(A,B))
-    $angle_congruence(a,angle_of_two_rays(r,ray_with_end_point_and_direction(A,B)))
+    $angle_congruence(a,angle_of_two_rays(A,r,ray_with_end_point_and_direction(A,B)))
 prop counter_clock_wise_congruence(a angle,r ray,A point,B point):
     $ray_counter_clock_wise_ray(A,r,ray_with_end_point_and_direction(A,B))
-    $angle_congruence(a,angle_of_two_rays(r,ray_with_end_point_and_direction(A,B)))
+    $angle_congruence(a,angle_of_two_rays(A,r,ray_with_end_point_and_direction(A,B)))
 
 know:
     forall a angle,A point,B point:
@@ -356,5 +356,22 @@ know :
         =>:
             $angle_congruence(a1,a3)
 
+## C6
+### If in the two triangles ABC and A′B′C′ the congruences AB ≅ A′B′, AC ≅ A′C′, ∠BAC ≅ ∠B′A′C′ hold,
+### then the congruence ∠ABC ≅ ∠A′B′C′ holds
+### (and, by a change of notation, it follows that ∠ACB ≅ ∠A′C′B′ also holds)
 
+prop triangle_congruence(A point,B point,C point,A' point,B' point,C' point):
+    not $three_points_collinear(A,B,C)
+    not $three_points_collinear(A',B',C')
+    $finite_line_congruence(finite_line_of(A,B),finite_line_of(A',B'))
+    $finite_line_congruence(finite_line_of(A,C),finite_line_of(A',C'))
+    $angle_congruence(angle_of_two_rays(A,ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,C)),angle_of_two_rays(A',ray_with_end_point_and_direction(A',B'),ray_with_end_point_and_direction(A',C')))
+know:
+    forall A,B,C point,A',B',C' point:
+        $triangle_congruence(A,B,C,A',B',C')
+        =>:
+            $triangle_congruence(C,B,A,C',B',A')
+            $triangle_congruence(B,A,C,B',A',C')
 
+            
