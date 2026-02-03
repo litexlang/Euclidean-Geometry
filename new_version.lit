@@ -154,17 +154,17 @@ know:
 prop no_more_than_one_point_between_three_points_on_line(A point,B point ,C point):
     $three_points_collinear(A,B,C)
     $point_between(A, B, C) or $point_between(B, C, A) or $point_between(C, A, B)
-    forall A,B,C point: 
+    forall: 
         $point_between(A, B, C) 
         =>:
             not $point_between(B, C, A) 
             not $point_between(C, A, B)
-    forall A,B,C point: 
+    forall: 
         $point_between(B, C, A) 
         =>:
             not $point_between(A, B, C) 
             not $point_between(C, A, B)
-    forall A,B,C point: 
+    forall: 
         $point_between(C, A, B) 
         =>:
             not $point_between(A, B, C) 
