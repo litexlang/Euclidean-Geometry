@@ -289,7 +289,7 @@ know:
 let fn ray_with_end_point_and_direction(A point, B point) ray:
     dom:
         A != B
-prop two_rays_with_same_end_point(A point, r1 ray, r2 ray)
+prop two_rays_with_same_end_point(A point, r1 ray, r2 ray):
     A $in r1
     A $in r2
     forall x point:
