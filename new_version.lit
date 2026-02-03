@@ -152,11 +152,23 @@ know:
 ## B3
 ### Of any three points situated on a line, there is no more than one which lies between the other two
 prop no_more_than_one_point_between_three_points_on_line(A point,B point ,C point):
-         $three_points_collinear(A,B,C)
-     forall:$between(A, B, C) or $between(B, C, A) or $between(C, A, B)
-     forall:$between(A, B, C) => not $between(B, C, A) , not $between(C, A, B)
-     forall:$between(B, C, A) => not $between(A, B, C) , not $between(C, A, B)
-     forall:$between(C, A, B) => not $between(A, B, C) , not $between(B, C, A)
+    $three_points_collinear(A,B,C)
+    $point_between(A, B, C) or $point_between(B, C, A) or $point_between(C, A, B)
+    forall A,B,C point: 
+        $point_between(A, B, C) 
+        =>:
+            not $point_between(B, C, A) 
+            not $point_between(C, A, B)
+    forall A,B,C point: 
+        $point_between(B, C, A) 
+        =>:
+            not $point_between(A, B, C) 
+            not $point_between(C, A, B)
+    forall A,B,C point: 
+        $point_between(C, A, B) 
+        =>:
+            not $point_between(A, B, C) 
+            not $point_between(B, C, A)
 know:
     forall A,B,C point:
         $three_points_collinear(A,B,C)
@@ -205,7 +217,7 @@ know:
         $line_intersect_finite_line(l,finite_line_of(A,B))
         =>:
             $line_intersect_finite_line(l,finite_line_of(B,C)) or $line_intersect_finite_line(l,finite_line_of(A,C)) 
-#加一个not
+
 
 #Congruence
 ## C1
