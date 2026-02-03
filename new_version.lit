@@ -443,5 +443,5 @@ know:
         A!=B
         C!=D
         =>:
-            exist n N_pos st $prop archimedes_number(A,B,C,D,n)
+            exist n N_pos st $archimedes_number(A,B,C,D,n)
         
