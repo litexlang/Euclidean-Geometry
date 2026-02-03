@@ -411,7 +411,7 @@ know:
     forall A point,l line:
         not A $in l
         =>:
-            exist l' line st $parallel_line_through_point(A,l,l')
+            exist l' line st $parallel_line_through_point_on_their_plane(A,l,l')
     forall A point,l line,l'1 line,l'2 line:
         not A $in l
         A $in l'1   
