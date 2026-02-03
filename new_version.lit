@@ -423,3 +423,10 @@ know:
         =>:
             l'1 = l'2
 
+
+# Continuity
+## Ct1
+### Axiom of Archimedes:
+### If AB and CD are any segments then there exists a number n such that n segments CD constructed contiguously from A,
+### along the ray from A through B, will pass beyond the point B
+
