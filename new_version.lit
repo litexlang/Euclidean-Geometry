@@ -256,18 +256,3 @@ know:
         =>:
             $finite_line_congruence(l1,l3)
 
-## C3
-### Let AB and BC be two segments of a line a which have no points in common aside from the point B,
-### and, furthermore, let A′B′ and B′C′ be two segments of the same or of another line a′ having, 
-### likewise, no point other than B′ in common. Then, if AB ≅ A′B′ and BC ≅ B′C′, we have AC ≅ A'C'
-
-know:
-    forall A,B,C,A',B',C' point:
-        $three_points_collinear(A,B,C)
-        $three_points_collinear(A',B',C')
-        $point_between(B,A,C)
-        $point_between(B',A',C')
-        $finite_line_congruence(finite_line_of(A,B),finite_line_congruence(A',B'))
-        $finite_line_congruence(finite_line_of(B,C),finite_line_congruence(B',C'))
-        =>:
-            $finite_line_congruence(finite_line_of(A,C),finite_line_congruence(A',C'))
