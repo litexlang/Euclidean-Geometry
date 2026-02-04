@@ -554,3 +554,22 @@ know:
         <=>:
             length_of_finite_line(finite_line_of(O,P))= r
 
+let fn circle_of_triangle(A point,B point,C point) circle:
+    dom:
+        not $three_points_collinear(A,B,C)
+    =>:
+        A $in circle_of_triangle(A,B,C)
+        B $in circle_of_triangle(A,B,C)
+        C $in circle_of_triangle(A,B,C)
+prop center_of_circle_of_triangle(O,A,B,C point):
+    not $three_points_collinear(A,B,C)
+    length_of_finite_line(finite_line_of(O,A))=length_of_finite_line(finite_line_of(O,B))=length_of_finite_line(finite_line_of(O,C))
+know: 
+    forall A,B,C point:
+        not $three_points_collinear(A,B,C)
+        =>:
+            exist O point st $center_of_circle_of_triangle(O,A,B,C)
+    forall A,B,C,O point:
+        $center_of_circle_of_triangle(O,A,B,C)
+        =>:
+            circle_of_triangle(A,B,C)=circle_of_center_with_radius(O,length_of_finite_line(finite_line_of(O,A)))
