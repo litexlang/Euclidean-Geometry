@@ -618,7 +618,7 @@ know:
 
 prop eq_trapezoid(A,B,C,D point):
     $trapezoid(A,B,C,D)
-    length_of_finite_line(finite_line_of(A,C),finite_line_of(B,D))
+    length_of_finite_line(finite_line_of(A,C))=length_of_finite_line(finite_line_of(B,D))
 
 let fn eq_trapezoid_of(A,B,C,D point) Eq_quadrangle:
     dom:
