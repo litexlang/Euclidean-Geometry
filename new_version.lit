@@ -521,4 +521,4 @@ know:
 prop angle_bisector(A point,r ray,r1 ray,r2 ray):
     $two_rays_with_same_end_point(A,r1,r2)
     $ray_between(A,r,r1,r2)
-    $angle_bisector(angle_of_two_rays(A,r1,r),angle_of_two_rays(A,r2,r))
+    $angle_congruence(angle_of_two_rays(A,r1,r),angle_of_two_rays(A,r2,r))
