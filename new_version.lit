@@ -298,10 +298,17 @@ have angle nonempty_set
 know:
     forall r ray:
         r $in power_set(point)
+let fn r ray_with_end_point_and_direction(A, B point) ray:
+    A != B
 
-let fn ray_with_end_point_and_direction(A point, B point) ray:
-    dom:
+know:
+    forall A, B, C point:
         A != B
+        =>:
+            $point_between(C, A, B) or $point_between(B, A, C)
+        <=>:
+            c $in ray_with_end_point_and_direction(A B)
+
 prop two_rays_with_same_end_point(A point, r1 ray, r2 ray):
     A $in r1
     A $in r2
@@ -360,6 +367,21 @@ know :
 ### If in the two triangles ABC and A′B′C′ the congruences AB ≅ A′B′, AC ≅ A′C′, ∠BAC ≅ ∠B′A′C′ hold,
 ### then the congruence ∠ABC ≅ ∠A′B′C′ holds
 ### (and, by a change of notation, it follows that ∠ACB ≅ ∠A′C′B′ also holds)
+
+have triangle nonempty_set:
+let fn triangle_of(A point,B point,C point) triangle:
+    dom:
+        not $three_points_collinear(A,B,C)
+know: 
+    forall T triangle:
+        T $in power_set(point)
+    forall A,B,C,P point:
+        not $three_points_collinear(A,B,C)
+        =>:
+            P $in triangle_of(A,B,C)
+        <=>:
+            P $in finite_line_of(A,B) or P $in finite_line_of(B,C) or P $in finite_line_of(C,A)
+
 
 prop triangle_congruence(A point,B point,C point,A' point,B' point,C' point):
     not $three_points_collinear(A,B,C)
