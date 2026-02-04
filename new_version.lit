@@ -191,6 +191,7 @@ know:
         =>:
             A $in finite_line_of(A,B)
             B $in finite_line_of(A,B)
+            finite_line_of(A,B)=finite_line_of(B,A)
     forall A,B,C point:
         A!=B
         C!=A
