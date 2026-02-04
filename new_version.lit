@@ -518,6 +518,7 @@ know:
 
 #concepts reffer to alpha geometry
 ##defs.txt
+#1
 prop angle_bisector(A point,r ray,r1 ray,r2 ray):
     $two_rays_with_same_end_point(A,r1,r2)
     $ray_between(A,r,r1,r2)
@@ -528,7 +529,7 @@ know:
         $two_rays_with_same_end_point(A,r1,r2)
         =>:
             exist r ray st $angle_bisector(A,r,r1,r2)
-
+#2
 prop angle_mirror(A point,r ray,r1 ray ,r2 ray):
     $two_rays_with_same_end_point(A,r1,r2)
     $ray_between(A,r2,r,r1)
@@ -539,4 +540,17 @@ know:
         $two_rays_with_same_end_point(A,r1,r2)
         =>:
             exist r ray st $angle_mirror(A,r,r1,r2)
+
+#3
+have circle nonempty_set
+know:
+    forall c circle:
+        c $in power_set(point)
+let fn circle_of_center_with_radius(O point,r R_pos) circle:
+know:
+    forall O,P point,r R_pos:
+        =>:
+            P $in circle_of_center_with_radius(O,r)
+        <=>:
+            length_of_finite_line(finite_line_of(O,P))= r
 
