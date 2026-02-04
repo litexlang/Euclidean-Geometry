@@ -296,9 +296,16 @@ know:
 
 have ray nonempty_set
 have angle nonempty_set
+
+##Todo: complete definition of angle
 know:
     forall r ray:
         r $in power_set(point)
+    forall a angle:
+        a $in power_set(point)
+
+let fn deg_of_angle(a angle) R
+
 let fn ray_with_end_point_and_direction(A, B point) ray:
     A != B
 
@@ -326,6 +333,28 @@ prop ray_clock_wise_ray(A point,r1 ray,r2 ray):
 
 prop ray_counter_clock_wise_ray(A point,r1 ray,r2 ray):
     $two_rays_with_same_end_point(A,r1,r2)
+
+prop ray_clock_between(A point,r ray, r1 ray, r2 ray):
+    $ray_clock_wise_ray(A,r,r1)
+    $ray_counter_clock_wise_ray(A,r,r2)
+
+prop ray_counter_clock_between(A point,r ray, r1 ray, r2 ray):
+    $ray_counter_clock_wise_ray(A,r,r1)
+    $ray_clock_wise_ray(A,r,r2)
+
+prop ray_between(A point,r ray,r1 ray,r2 ray):
+    $ray_clock_between(A,r,r1,r2) or $ray_counter_clock_between(A,r,r1,r2)
+
+
+know:
+    forall A,P point,r1,r2 ray:
+        $two_rays_with_same_end_point(A,r1,r2)
+        =>:
+            P $in angle_of_two_rays(A,r1,r2)
+        <=>:
+            $ray_between(A,ray_with_end_point_and_direction(A,P),r1,r2)
+
+
 
 prop angle_congruence(a1 angle,a2 angle)
 
