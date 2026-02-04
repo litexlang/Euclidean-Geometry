@@ -494,7 +494,7 @@ let fn length_of_finite_line(fl finite_line) R
 
 know :
     forall fl1,fl2 finite_line:
-        finite_line_congruence(fl1,fl2)
+        $finite_line_congruence(fl1,fl2)
         =>:
             length_of_finite_line(fl1)=length_of_finite_line(fl2)
 
