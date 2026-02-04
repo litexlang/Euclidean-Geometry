@@ -573,3 +573,30 @@ know:
         $center_of_circle_of_triangle(O,A,B,C)
         =>:
             circle_of_triangle(A,B,C)=circle_of_center_with_radius(O,length_of_finite_line(finite_line_of(O,A)))
+
+#4
+have quadrangle nonempty_set
+know:
+    forall q quadrangle:
+        q $in power_set(point)
+let fn quadrangle_of(A,B,C,D point) quadrangle:
+    dom:
+        not $three_points_collinear(A,B,C)
+        not $three_points_collinear(B,C,D)
+        not $three_points_collinear(C,D,A)
+        A $in plane_of(B,C,D)
+know:
+    forall A,B,C,D,P point:
+        not $three_points_collinear(A,B,C)
+        not $three_points_collinear(B,C,D)
+        not $three_points_collinear(C,D,A)
+        A $in plane_of(B,C,D)
+        =>:
+            P $in quadrangle_of(A,B,C,D)
+        <=>:
+            P $in finite_line_of(A,B) or P $in finite_line_of(B,C) or P $in finite_line_of(C,D) or P $in finite_line_of(D,A) 
+
+#eq_quadrangle same as axiom C1
+
+#5
+have trapezoid power_set(quadrangle)
