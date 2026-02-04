@@ -327,7 +327,11 @@ prop two_rays_with_same_end_point(A point, r1 ray, r2 ray):
             x = A
 let fn angle_of_two_rays(A point, r1 ray, r2 ray) angle:
     $two_rays_with_same_end_point(A,r1,r2)
-
+know:
+    forall A point,r1,r2 ray:
+        $two_rays_with_same_end_point(A,r1,r2)
+        =>:
+            angle_of_two_rays(A,r1,r2)=angle_of_two_rays(A,r2,r1)
 prop ray_clock_wise_ray(A point,r1 ray,r2 ray):
     $two_rays_with_same_end_point(A,r1,r2)
 
@@ -509,3 +513,12 @@ know:
         C!=D
         =>:
             exist n N_pos st $archimedes_number(A,B,C,D,n)
+
+
+
+#concepts reffer to alpha geometry
+##defs.txt
+prop angle_bisector(A point,r ray,r1 ray,r2 ray):
+    $two_rays_with_same_end_point(A,r1,r2)
+    $ray_between(A,r,r1,r2)
+    $angle_bisector(angle_of_two_rays(A,r1,r),angle_of_two_rays(A,r2,r))
