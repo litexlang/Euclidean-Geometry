@@ -603,13 +603,18 @@ prop eq_quadrangle(A,B,C,D point):
 
 #5
 have Trapezoid power_set(Quadrangle)
+know:
+    Trapezoid $is_nonempty_set
+
 prop trapezoid(A,B,C,D point):
     $quadrangle(A,B,C,D)
     $parallel_line(line_of(A,B),line_of(C,D))
 let fn trapezoid_of(A,B,C,D point) Trapezoid:
     dom:
         $trapezoid(A,B,C,D)
-have Eq_quadrangle power_set(Trapezoid)
+have Eq_trapezoid power_set(Trapezoid)
+know:
+    Eq_trapezoid $is_nonempty_set
 
 prop eq_trapezoid(A,B,C,D point):
     $trapezoid(A,B,C,D)
