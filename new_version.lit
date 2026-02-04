@@ -299,7 +299,7 @@ have angle nonempty_set
 know:
     forall r ray:
         r $in power_set(point)
-let fn r ray_with_end_point_and_direction(A, B point) ray:
+let fn ray_with_end_point_and_direction(A, B point) ray:
     A != B
 
 know:
