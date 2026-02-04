@@ -575,28 +575,49 @@ know:
             circle_of_triangle(A,B,C)=circle_of_center_with_radius(O,length_of_finite_line(finite_line_of(O,A)))
 
 #4
-have quadrangle nonempty_set
+have Quadrangle nonempty_set
 know:
-    forall q quadrangle:
+    forall q Quadrangle:
         q $in power_set(point)
-let fn quadrangle_of(A,B,C,D point) quadrangle:
+prop quadrangle(A,B,C,D point):
+    not $three_points_collinear(A,B,C)
+    not $three_points_collinear(B,C,D)
+    not $three_points_collinear(C,D,A)
+    A $in plane_of(B,C,D)
+let fn quadrangle_of(A,B,C,D point) Quadrangle:
     dom:
-        not $three_points_collinear(A,B,C)
-        not $three_points_collinear(B,C,D)
-        not $three_points_collinear(C,D,A)
-        A $in plane_of(B,C,D)
+        $quadrangle(A,B,C,D)
 know:
     forall A,B,C,D,P point:
-        not $three_points_collinear(A,B,C)
-        not $three_points_collinear(B,C,D)
-        not $three_points_collinear(C,D,A)
-        A $in plane_of(B,C,D)
+        $quadrangle(A,B,C,D )
         =>:
             P $in quadrangle_of(A,B,C,D)
         <=>:
             P $in finite_line_of(A,B) or P $in finite_line_of(B,C) or P $in finite_line_of(C,D) or P $in finite_line_of(D,A) 
 
-#eq_quadrangle same as axiom C1
+prop eq_quadrangle(A,B,C,D point):
+    $quadrangle(A,B,C,D)
+    length_of_finite_line(finite_line_of(A,B))=length_of_finite_line(finite_line_of(C,D))
+
+#eq_quadrangle existence is same as axiom C1
 
 #5
-have trapezoid power_set(quadrangle)
+have Trapezoid power_set(Quadrangle)
+prop trapezoid(A,B,C,D point):
+    $quadrangle(A,B,C,D)
+    parallel_line(line_of(A,B),line_of(C,D))
+let fn trapezoid_of(A,B,C,D point) Trapezoid:
+    dom:
+        $trapezoid(A,B,C,D)
+have Eq_quadrangle power_set(Trapezoid)
+
+prop eq_trapezoid(A,B,C,D point):
+    $trapezoid(A,B,C,D)
+    length_of_finite_line(finite_line_of(A,C),finite_line_of(B,D))
+
+let fn eq_trapezoid_of(A,B,C,D point) Eq_quadrangle:
+    dom:
+        $eq_quadrangle(A,B,C,D)
+know:
+    forall A,B,C point:
+        exist D point st $eq_quadrangle(A,B,C,D)
