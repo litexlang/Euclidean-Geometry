@@ -358,9 +358,16 @@ know:
 
 prop angle_congruence(a1 angle,a2 angle)
 
+know:
+    forall a1,a2 angle:
+        $angle_congruence(a1,a2)
+        =>:
+            deg_of_angle(a1)=deg_of_angle(a2)
+
 prop clock_wise_congruence(a angle,r ray,A point,B point):
     $ray_clock_wise_ray(A,r,ray_with_end_point_and_direction(A,B))
     $angle_congruence(a,angle_of_two_rays(A,r,ray_with_end_point_and_direction(A,B)))
+
 prop counter_clock_wise_congruence(a angle,r ray,A point,B point):
     $ray_counter_clock_wise_ray(A,r,ray_with_end_point_and_direction(A,B))
     $angle_congruence(a,angle_of_two_rays(A,r,ray_with_end_point_and_direction(A,B)))
@@ -485,6 +492,12 @@ know:
 
 let fn length_of_finite_line(fl finite_line) R
 
+know :
+    forall fl1,fl2 finite_line:
+        finite_line_congruence(fl1,fl2)
+        =>:
+            length_of_finite_line(fl1)=length_of_finite_line(fl2)
+
 prop archimedes_number(A point,B point,C point,D point,n N_pos):
     A!=B
     C!=D
@@ -496,4 +509,3 @@ know:
         C!=D
         =>:
             exist n N_pos st $archimedes_number(A,B,C,D,n)
-        
