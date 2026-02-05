@@ -524,6 +524,11 @@ prop angle_bisector(A point,r ray,r1 ray,r2 ray):
     $ray_between(A,r,r1,r2)
     $angle_congruence(angle_of_two_rays(A,r1,r),angle_of_two_rays(A,r2,r))
 
+let fn angle_bisector_of(A point,r1 ray,r2 ray) ray:
+    dom:
+        $two_rays_with_same_end_point(A,r1,r2)
+    =>:
+        $angle_bisector(A,angle_bisector_of(A,r1,r2),r1,r2)
 know:
     forall A point,r1,r2 ray:
         $two_rays_with_same_end_point(A,r1,r2)
@@ -626,3 +631,57 @@ let fn eq_trapezoid_of(A,B,C,D point) Eq_trapezoid:
 know:
     forall A,B,C point:
         exist D point st $eq_quadrangle(A,B,C,D)
+
+#6
+have Eq_triangle power_set(triangle)
+know:
+    Eq_triangle $is_nonempty_set
+
+prop eq_triangle(A,B,C point):
+    not $three_points_collinear(A,B,C)
+    length_of_finite_line(finite_line_of(A,B))=length_of_finite_line(finite_line_of(B,C))=length_of_finite_line(finite_line_of(C,A))
+
+let fn eq_triangle_of(A,B,C point) Eq_triangle:
+    dom:
+        $eq_triangle(A,B,C)
+know:
+    forall A,B point:
+        A!=B
+        =>:
+            exist C point st $eq_triangle(A,B,C)
+    forall A,B,C point:
+        $eq_trapezoid(A,B,C)
+        =>:
+            C $in circle_of_center_with_radius(A,length_of_finite_line(finite_line_of(A,B)))
+
+#7
+prop eq_dia_quadrangle(A,B,C,D point):
+    $quadrangle(A,B,C,D)
+    length_of_finite_line(finite_line_of(A,D))=length_of_finite_line(finite_line_of(B,C))
+
+#exisitence of eq_dia_quadrangle is same as axiom C1
+
+#8
+prop incenter(I,A,B,C point):
+    not $three_points_collinear(A,B,C)
+    $angle_bisector(A,ray_with_end_point_and_direction(A,I),ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,C))
+    $angle_bisector(B,ray_with_end_point_and_direction(B,I),ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C))
+    $angle_bisector(C,ray_with_end_point_and_direction(C,I),ray_with_end_point_and_direction(C,B),ray_with_end_point_and_direction(C,A))
+
+know:
+    forall A,B,C point:
+        not $three_points_collinear(A,B,C)
+        =>:
+            exisitence I point st $incerter(I,A,B,C)
+let incenter_of(A,B,C point) point:
+    dom:
+        not $three_points_collinear(A,B,C)
+    =>:
+        $incerter(incenter_of(A,B,C),A,B,C)
+
+#8
+prop angle_exbisector(A point ,r ray ,r1 ray,r2 ray):
+    $two_rays_with_same_end_point(A,r1,r2)
+    $ray_between(A,r2,r1,r)
+    #r 与 angle_bisector_of(A,r1,r2)垂直
+    
