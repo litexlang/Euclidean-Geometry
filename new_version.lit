@@ -703,5 +703,16 @@ prop angle_exbisector(A,B point ,r ray ,r1 ray):
     $ray_between(A,r1,ray_with_end_point_and_direction(A,B),r)
     $angle_bisector(A,r,converse_extenstion_ray_of(A,B),r1)
 
- 
-    
+prop exincenter(J,A,B,C point):
+    not $three_points_collinear(A,B,C)
+    $angle_bisector(A,ray_with_end_point_and_direction(A,J),ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,C))
+    $angle_exbisector(B,A,ray_with_end_point_and_direction(B,J),ray_with_end_point_and_direction(B,C))
+    $angle_exbisector(C,A,ray_with_end_point_and_direction(B,J),ray_with_end_point_and_direction(C,B))
+
+let fn exincenter_of(A,B,C point) point:
+    dom:
+        not $three_points_collinear(A,B,C)
+    =>:
+        $exincenter(exincenter_of(A,B,C),A,B,C)
+
+        
