@@ -518,6 +518,7 @@ know:
 
 #concepts reffer to alpha geometry
 ##defs.txt
+
 #1
 prop angle_bisector(A point,r ray,r1 ray,r2 ray):
     $two_rays_with_same_end_point(A,r1,r2)
@@ -548,10 +549,12 @@ know:
 
 #3
 have circle nonempty_set
+
 know:
     forall c circle:
         c $in power_set(point)
 let fn circle_of_center_with_radius(O point,r R_pos) circle
+
 know:
     forall O,P point,r R_pos:
         =>:
@@ -566,9 +569,11 @@ let fn circle_of_triangle(A point,B point,C point) circle:
         A $in circle_of_triangle(A,B,C)
         B $in circle_of_triangle(A,B,C)
         C $in circle_of_triangle(A,B,C)
+
 prop center_of_circle_of_triangle(O,A,B,C point):
     not $three_points_collinear(A,B,C)
     length_of_finite_line(finite_line_of(O,A))=length_of_finite_line(finite_line_of(O,B))=length_of_finite_line(finite_line_of(O,C))
+
 know: 
     forall A,B,C point:
         not $three_points_collinear(A,B,C)
@@ -581,14 +586,17 @@ know:
 
 #4
 have Quadrangle nonempty_set
+
 know:
     forall q Quadrangle:
         q $in power_set(point)
+
 prop quadrangle(A,B,C,D point):
     not $three_points_collinear(A,B,C)
     not $three_points_collinear(B,C,D)
     not $three_points_collinear(C,D,A)
     A $in plane_of(B,C,D)
+
 let fn quadrangle_of(A,B,C,D point) Quadrangle:
     dom:
         $quadrangle(A,B,C,D)
@@ -608,16 +616,20 @@ prop eq_quadrangle(A,B,C,D point):
 
 #5
 have Trapezoid power_set(Quadrangle)
+
 know:
     Trapezoid $is_nonempty_set
 
 prop trapezoid(A,B,C,D point):
     $quadrangle(A,B,C,D)
     $parallel_line(line_of(A,B),line_of(C,D))
+
 let fn trapezoid_of(A,B,C,D point) Trapezoid:
     dom:
         $trapezoid(A,B,C,D)
+
 have Eq_trapezoid power_set(Trapezoid)
+
 know:
     Eq_trapezoid $is_nonempty_set
 
@@ -634,6 +646,7 @@ know:
 
 #6
 have Eq_triangle power_set(triangle)
+
 know:
     Eq_triangle $is_nonempty_set
 
@@ -644,6 +657,7 @@ prop eq_triangle(A,B,C point):
 let fn eq_triangle_of(A,B,C point) Eq_triangle:
     dom:
         $eq_triangle(A,B,C)
+
 know:
     forall A,B point:
         A!=B
