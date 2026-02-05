@@ -682,8 +682,26 @@ let fn incenter_of(A,B,C point) point:
         $incenter(incenter_of(A,B,C),A,B,C)
 
 #8
-prop angle_exbisector(A point ,r ray ,r1 ray,r2 ray):
-    $two_rays_with_same_end_point(A,r1,r2)
-    $ray_between(A,r2,r1,r)
-    #r 与 angle_bisector_of(A,r1,r2)垂直
+#定义反向延长线以及垂直
+prop converse_extenstion_ray(A point,r,r1 ray):
+    $two_rays_with_same_end_point(A,r,r1)
+    forall B,C point:
+        B!=A
+        C!=A
+        B $in r
+        C $in r1
+        =>:
+            $three_points_collinear(A,B,C)
+let fn converse_extenstion_ray_of(A point,B point) ray:
+    dom:
+        A!=B
+    =>:
+        $converse_extenstion_ray(A,converse_extenstion_ray_of(A,B),ray_with_end_point_and_direction(A,B))
+    
+prop angle_exbisector(A,B point ,r ray ,r1 ray):
+    $two_rays_with_same_end_point(A,ray_with_end_point_and_direction(A,B),r1)
+    $ray_between(A,r1,ray_with_end_point_and_direction(A,B),r)
+    $angle_bisector(A,r,converse_extenstion_ray_of(A,B),r1)
+
+ 
     
