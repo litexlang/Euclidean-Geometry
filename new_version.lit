@@ -673,7 +673,7 @@ know:
     forall A,B,C point:
         not $three_points_collinear(A,B,C)
         =>:
-            exist I point st $incerter(I,A,B,C)
+            exist I point st $incenter(I,A,B,C)
             
 let incenter_of(A,B,C point) point:
     dom:
