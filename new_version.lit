@@ -679,7 +679,7 @@ let fn incenter_of(A,B,C point) point:
     dom:
         not $three_points_collinear(A,B,C)
     =>:
-        $incerter(incenter_of(A,B,C),A,B,C)
+        $incenter(incenter_of(A,B,C),A,B,C)
 
 #8
 prop angle_exbisector(A point ,r ray ,r1 ray,r2 ray):
