@@ -663,7 +663,7 @@ prop eq_dia_quadrangle(A,B,C,D point):
 
 #8
 
-prop i_ncenter(I,A,B,C point):
+prop incenter(I,A,B,C point):
     not $three_points_collinear(A,B,C)
     $angle_bisector(A,ray_with_end_point_and_direction(A,I),ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,C))
     $angle_bisector(B,ray_with_end_point_and_direction(B,I),ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C))
@@ -673,8 +673,8 @@ know:
     forall A,B,C point:
         not $three_points_collinear(A,B,C)
         =>:
-            exist I point st $i_ncerter(I,A,B,C)
-
+            exist I point st $incerter(I,A,B,C)
+            
 let incenter_of(A,B,C point) point:
     dom:
         not $three_points_collinear(A,B,C)
