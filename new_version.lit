@@ -1,5 +1,4 @@
 # three primitive terms:
-
 have point nonempty_set
 have line nonempty_set
 have plane nonempty_set
@@ -484,6 +483,14 @@ prop line_coplanar(l1 line,l2 line):
 prop intersect_of_two_lines(l1 line,l2 line):
     $line_coplanar(l1,l2)
     exist A point st $point_on_two_lines(A,l1,l2)
+    forall B point:
+        $point_on_two_lines(B,l1,l2)
+        =>:
+            B=A
+let fn intersection_point(l1,l2 line) point:
+    $intersect_of_two_lines(l1,l2)
+    =>:
+        $point_on_two_lines(intersection_point(l1,l2),l1,l2)
 
 prop parallel_line(l1 line,l2 line):
     $line_coplanar(l1,l2)
