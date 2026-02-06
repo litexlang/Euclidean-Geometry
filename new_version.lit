@@ -652,7 +652,7 @@ know:
     Trapezoid $is_nonempty_set
 
 prop is_trapezoid(A,B,C,D point):
-    $quadrangle(A,B,C,D)
+    $is_quadrangle(A,B,C,D)
     $parallel_line(line_of(A,B),line_of(C,D))
 
 let fn trapezoid_of(A,B,C,D point) Trapezoid:
