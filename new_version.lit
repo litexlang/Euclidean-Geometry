@@ -331,7 +331,7 @@ let fn end_point_of(r ray) point:
 let fn ray_with_end_point_and_direction(A, B point) ray:
     A != B
     =>:
-        end_point_of_ray(A,ray_with_end_point_and_direction(A,B))
+        $end_point_of_ray(A,ray_with_end_point_and_direction(A,B))
         B $in ray_with_end_point_and_direction(A,B)
 
 
