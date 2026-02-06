@@ -790,4 +790,18 @@ prop perp(l1,l2 line):
     $intersect_of_two_lines(l1,l2)
     $is_right_angle(angle_of_two_rays(ray_with_end_point_and_direction(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l1)),ray_with_end_point_and_direction(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l2))))
    
+prop is_foot(X,A,B,C point):
+    not $three_points_collinear(A,B,C)
+    $perp(line_of(X,A),line_of(B,C))
+    $three_points_collinear(X,B,C)
+
+know:
+    forall A,B,C point:
+        exist X point st $is_foot(X,A,B,C)
+let fn foot(A,B,C point):
+    dom:
+        not $three_points_collinear(A,B,C)
+    =>:
+        $is_foot(foot(A,B,C),A,B,C)
+    
     
