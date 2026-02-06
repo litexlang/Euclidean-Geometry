@@ -798,7 +798,7 @@ prop is_foot(X,A,B,C point):
 know:
     forall A,B,C point:
         exist X point st $is_foot(X,A,B,C)
-let fn foot(A,B,C point):
+let fn foot(A,B,C point) point:
     dom:
         not $three_points_collinear(A,B,C)
     =>:
