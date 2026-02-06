@@ -735,7 +735,7 @@ prop is_converse_extenstion_ray(r,r1 ray):
         C $in r1
         B!=C
         B!=end_point_of(r1)
-        c!=end_point_of(r1)
+        C!=end_point_of(r1)
         =>:
             $three_points_collinear(end_point_of(r1),B,C)
 let fn converse_extenstion_ray_of(r ray) ray:
