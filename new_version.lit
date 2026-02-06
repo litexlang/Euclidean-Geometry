@@ -639,7 +639,7 @@ know:
         <=>:
             P $in finite_line_of(A,B) or P $in finite_line_of(B,C) or P $in finite_line_of(C,D) or P $in finite_line_of(D,A) 
 
-prop eq_quadrangle(A,B,C,D point):
+prop is_eq_quadrangle(A,B,C,D point):
     $is_quadrangle(A,B,C,D)
     length_of_finite_line(finite_line_of(A,B))=length_of_finite_line(finite_line_of(C,D))
 
