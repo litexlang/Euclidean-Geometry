@@ -710,9 +710,9 @@ prop is_eq_dia_quadrangle(A,B,C,D point):
 
 prop is_incenter(I,A,B,C point):
     not $three_points_collinear(A,B,C)
-    $angle_bisector(A,ray_with_end_point_and_direction(A,I),ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,C))
-    $angle_bisector(B,ray_with_end_point_and_direction(B,I),ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C))
-    $angle_bisector(C,ray_with_end_point_and_direction(C,I),ray_with_end_point_and_direction(C,B),ray_with_end_point_and_direction(C,A))
+    $is_angle_bisector(A,ray_with_end_point_and_direction(A,I),ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,C))
+    $is_angle_bisector(B,ray_with_end_point_and_direction(B,I),ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C))
+    $is_angle_bisector(C,ray_with_end_point_and_direction(C,I),ray_with_end_point_and_direction(C,B),ray_with_end_point_and_direction(C,A))
 
 know:
     forall A,B,C point:
