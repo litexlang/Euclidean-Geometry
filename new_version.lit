@@ -776,6 +776,8 @@ let fn start_point_of(a angle) point:
     =>:
         $end_point_of_ray(start_point_of(a),sides_of(a)[1])    
  
-prop is_right_angle(a angle)
+prop is_right_angle(a angle):
+    $angle_congruence(a,angle_of_two_rays(sides_of(a)[2],converse_extenstion_ray_of(sides_of(a)[1])))
+
 prop perp(l1,l2 line):
     $intersect_of_two_lines(l1,l2)
