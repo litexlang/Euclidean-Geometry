@@ -768,6 +768,14 @@ let fn exincenter_of(A,B,C point) point:
 know:
     forall a angle:
         exist r1,r2 ray st a=angle_of_two_rays(r1,r2)
+
+let fn sides_of(a angle) cart(ray,ray):
+    =>:
+        a=angle_of_two_rays(sides_of(a)[1],sides_of(a)[2])
+let fn start_point_of(a angle) point:
+    =>:
+        $end_point_of_ray(start_point_of(a),sides_of(a)[1])    
+ 
 prop is_right_angle(a angle)
 prop perp(l1,l2 line):
     $intersect_of_two_lines(l1,l2)
