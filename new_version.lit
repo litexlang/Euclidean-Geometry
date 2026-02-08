@@ -831,6 +831,6 @@ let fn centroid_of(A,B,C point) point:
     dom:
         not $three_points_collinear(A,B,C)
     =>:
-        is_centroid(centroid_of(A,B,C),A,B,C)
+        $is_centroid(centroid_of(A,B,C),A,B,C)
 
 
