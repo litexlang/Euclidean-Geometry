@@ -646,7 +646,7 @@ prop two_disjiont_circles(c1,c2 circle):
     length_of_finite_line(finite_line_of(center_of_circle(c1),center_of_circle(c2)))>radius_of_circle(c1)+radius_of_circle(c2)
 
 
-prop is_intersect_points_of_cirlces(A,B point,c1,c2 circle):
+prop is_intersect_points_of_circles(A,B point,c1,c2 circle):
     $two_circles_intersect(c1,c2)
     A $in c1
     A $in c2
@@ -654,15 +654,26 @@ prop is_intersect_points_of_cirlces(A,B point,c1,c2 circle):
     B $in c2
     A!=B
 
+prop is_tangency_point_of_circles(A point,c1,c2 circle):
+    $two_tangent_circles(c1,c2)
+    A $in c1
+    A $in c2
+
 let fn intersection_points_of_circles(c1,c2 circle) cart(point,point):
     dom:
         $two_circles_intersect(c1,c2)
     =>:
-        $is_intersect_points_of_cirlces(intersection_points_of_circles(c1,c2)[1],intersection_points_of_circles(c1,c2)[2],c1,c2)
+        $is_intersect_points_of_circles(intersection_points_of_circles(c1,c2)[1],intersection_points_of_circles(c1,c2)[2],c1,c2)
 
+let fn tangency_point_of_circles(c1,c2 circle) point:
+    dom:
+        $two_tangent_circles(c1,c2)
+    =>:
+        $is_tangency_point_of_circles(tangency_point_of_circles(c1,c2),c1,c2)
+    
 know:
     forall A,B point,c1,c2 circle:
-        $is_intersect_points_of_cirlces(A,B,c1,c2)
+        $is_intersect_points_of_circles(A,B,c1,c2)
         =>:
             {A,B}={intersection_points_of_circles(c1,c2)[1],intersection_points_of_circles(c1,c2)[2]}
 
@@ -935,5 +946,7 @@ prop line_is_tangent_to_circle(l line,c circle):
 prop line_and_circle_disjiont(l line,c cirlce):
     $line_and_circle_coplanar(l,c)
     distance_of_point_to_line(center_of_circle(c),l)>radius_of_circle(c)
+
+
 
 
