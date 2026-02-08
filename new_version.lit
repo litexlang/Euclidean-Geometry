@@ -985,6 +985,8 @@ know:
             A=tangency_point_of_line_and_circle(l,c)
 
 
-
-
+"""
+平面几何的几何量以及基本几何关系定义几乎完成，一些性质还缺乏（之后要翻译rules.txt）：平行线夹角相等，三角形相似全等判定法则诸如此类
+angle,length_of_finite_line 如何打到R_pos
+"""
 
