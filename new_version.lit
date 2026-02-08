@@ -874,7 +874,7 @@ prop is_foot(X,A point,l line):
     X $in l
 
 know:
-    forall A point l line:
+    forall A point,l line:
         exist X point st $is_foot(X,A,l)
 let fn foot(A point,l line) point:
     dom:
