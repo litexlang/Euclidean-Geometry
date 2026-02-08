@@ -596,6 +596,27 @@ know:
             P $in circle_of_center_with_radius(O,r)
         <=>:
             length_of_finite_line(finite_line_of(O,P))= r
+    forall c circle:
+        exist O point,r R_pos st c=circle_of_center_with_radius(O,r)
+
+let fn center_radius_of_circle(c circle) cart(point,R_pos):
+    =>:
+        c=circle_of_center_with_radius(center_radius_of_circle(c)[1],center_radius_of_circle(c)[2])
+let fn center_of_circle(c circle) point:
+    =>:
+        center_of_circle(c)=center_radius_of_circle(c)[1]
+
+let fn radius_of_circle(c circle) R_pos:
+    =>:
+        radius_of_circle(C)=center_radius_of_circle(c)[2]
+
+prop intersect_of_two_circles(c1,c2 circle):
+    
+
+
+
+
+
 
 let fn circle_of_triangle(A point,B point,C point) circle:
     dom:
@@ -604,6 +625,13 @@ let fn circle_of_triangle(A point,B point,C point) circle:
         A $in circle_of_triangle(A,B,C)
         B $in circle_of_triangle(A,B,C)
         C $in circle_of_triangle(A,B,C)
+know:
+    forall c circle,A,B,C point:
+        A $in c
+        B $in c
+        C $in c
+        =>:
+            c=circle_of_triangle(A,B,C)
 
 prop center_of_circle_of_triangle(O,A,B,C point):
     not $three_points_collinear(A,B,C)
@@ -618,6 +646,7 @@ know:
         $center_of_circle_of_triangle(O,A,B,C)
         =>:
             circle_of_triangle(A,B,C)=circle_of_center_with_radius(O,length_of_finite_line(finite_line_of(O,A)))
+
 
 #4
 have Quadrangle nonempty_set
@@ -832,5 +861,4 @@ let fn centroid_of(A,B,C point) point:
         not $three_points_collinear(A,B,C)
     =>:
         $is_centroid(centroid_of(A,B,C),A,B,C)
-
 
