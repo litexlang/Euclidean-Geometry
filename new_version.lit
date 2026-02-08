@@ -652,6 +652,7 @@ prop is_intersect_points_of_cirlces(A,B point,c1,c2 circle):
     A $in c2
     B $in c1
     B $in c2
+    A!=B
 
 let fn intersection_points_of_circles(c1,c2 circle) cart(point,point):
     dom:
@@ -664,6 +665,7 @@ know:
         $is_intersect_points_of_cirlces(A,B,c1,c2)
         =>:
             {A,B}={intersection_points_of_circles(c1,c2)[1],intersection_points_of_circles(c1,c2)[2]}
+
 
 let fn circle_of_triangle(A point,B point,C point) circle:
     dom:
@@ -866,19 +868,19 @@ prop perp(l1,l2 line):
     $intersect_of_two_lines(l1,l2)
     $is_right_angle(angle_of_two_rays(ray_with_end_point_and_direction(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l1)),ray_with_end_point_and_direction(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l2))))
    
-prop is_foot(X,A,B,C point):
-    not $three_points_collinear(A,B,C)
-    $perp(line_of(X,A),line_of(B,C))
-    $three_points_collinear(X,B,C)
+prop is_foot(X,A point,l line):
+    not A $in l 
+    $perp(line_of(X,A),l)
+    X $in l
 
 know:
-    forall A,B,C point:
-        exist X point st $is_foot(X,A,B,C)
-let fn foot(A,B,C point) point:
+    forall A point l line:
+        exist X point st $is_foot(X,A,l)
+let fn foot(A point,l line) point:
     dom:
-        not $three_points_collinear(A,B,C)
+        not A $in l
     =>:
-        $is_foot(foot(A,B,C),A,B,C)
+        $is_foot(foot(A,l),A,l)
 
 #10
 prop is_mid_point(M,A,B point):
@@ -909,3 +911,10 @@ let fn centroid_of(A,B,C point) point:
     =>:
         $is_centroid(centroid_of(A,B,C),A,B,C)
 
+#10
+let fn distance_of_point_to_line(A point,l line) R_pos:
+    not A $in l
+    =>:
+        distance_of_point_to_line(A,l)=length_of_finite_line(A,foot(A,l))
+
+prop interect_of_line_and_circle(l line,c circle):
