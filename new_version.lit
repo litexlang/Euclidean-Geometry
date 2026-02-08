@@ -823,8 +823,7 @@ let fn incenter_of(A,B,C point) point:
     =>:
         $is_incenter(incenter_of(A,B,C),A,B,C)
 
-#8
-#定义反向延长线以及垂直
+#9
 prop is_converse_extenstion_ray(r,r1 ray):
     $two_rays_with_same_end_point(r,r1)
     forall B,C point:
@@ -857,7 +856,7 @@ let fn exincenter_of(A,B,C point) point:
         $is_exincenter(exincenter_of(A,B,C),A,B,C)
 
         
-#9
+#10
 know:
     forall a angle:
         exist r1,r2 ray st a=angle_of_two_rays(r1,r2)
@@ -897,7 +896,7 @@ let fn foot(A point,l line) point:
     =>:
         $is_foot(foot(A,l),A,l)
 
-#10
+#11
 prop is_mid_point(M,A,B point):
     A!=B
     M $in finite_line_of(A,B)
@@ -926,7 +925,7 @@ let fn centroid_of(A,B,C point) point:
     =>:
         $is_centroid(centroid_of(A,B,C),A,B,C)
 
-#10
+#12
 let fn distance_of_point_to_line(A point,l line) R_pos:
     not A $in l
     =>:
@@ -984,6 +983,7 @@ know:
         $is_tangency_point_of_line_and_circle(A,l,c)
         =>:
             A=tangency_point_of_line_and_circle(l,c)
+
 
 
 
