@@ -924,16 +924,16 @@ prop line_and_circle_on_plane(l line,c circle,pl plane):
 prop line_and_circle_coplanar(l line,c circle):
     exist pl plane st $line_and_circle_on_plane(l,c,pl)
 
-prop interect_of_line_and_circle(l line,c circle):
+prop intersect_of_line_and_circle(l line,c circle):
     $line_and_circle_coplanar(l,c)
-    $distance_of_point_to_line(center_of_circle(c),l)<radius_of_circle(c)
+    distance_of_point_to_line(center_of_circle(c),l)<radius_of_circle(c)
 
 prop line_is_tangent_to_circle(l line,c circle):
     $line_and_circle_coplanar(l,c)
-    $distance_of_point_to_line(center_of_circle(c),l)=radius_of_circle(c)
+    distance_of_point_to_line(center_of_circle(c),l)=radius_of_circle(c)
 
 prop line_and_circle_disjiont(l line,c cirlce):
     $line_and_circle_coplanar(l,c)
-    $distance_of_point_to_line(center_of_circle(c),l)>radius_of_circle(c)
+    distance_of_point_to_line(center_of_circle(c),l)>radius_of_circle(c)
 
 
