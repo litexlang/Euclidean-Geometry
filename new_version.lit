@@ -611,6 +611,7 @@ let fn radius_of_circle(c circle) R_pos:
         radius_of_circle(c)=center_radius_of_circle(c)[2]
 
 prop intersect_of_two_circles(c1,c2 circle):
+    length_of_finite_line(finite_line_of(center_of_circle(c1),center_of_circle(c2)))<radius_of_circle(c1)+radius_of_circle(c2)
 
 
 
