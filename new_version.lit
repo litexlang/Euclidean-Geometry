@@ -803,5 +803,34 @@ let fn foot(A,B,C point) point:
         not $three_points_collinear(A,B,C)
     =>:
         $is_foot(foot(A,B,C),A,B,C)
-    
-    
+
+#10
+prop is_mid_point(M,A,B point):
+    A!=B
+    M $in finite_line_of(A,B)
+    finite_line_congruence(finite_line_of(A,M),finite_line_of(B,M))
+
+let fn  mid_point_of(A,B point) point:
+    A!=B
+    =>:
+        $is_mid_point(mid_point_of(A,B),A,B)
+
+prop is_centroid(G,A,B,C point):
+    not $three_points_collinear(A,B,C)
+    $is_mid_point(intersection_point(line_of(A,G),line_of(B,C)),B,C)
+    $is_mid_point(intersection_point(line_of(B,G),line_of(C,A)),C,A)
+    $is_mid_point(intersection_point(line_of(C,G),line_of(A,B)),A,B)
+
+know:
+    forall A,B,C point:
+        not $three_points_collinear(A,B,C)
+        =>:
+            exist G point st $is_centroid(G,A,B,C)
+
+let fn centroid_of(A,B,C point) point:
+    dom:
+        not $three_points_collinear(A,B,C)
+    =>:
+        is_centroid(centroid_of(A,B,C),A,B,C)
+
+
