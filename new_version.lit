@@ -659,7 +659,7 @@ let intersection_points_of_circles(c1,c2 circle) cart(point,point):
     =>:
         $is_intersect_points_of_cirlces(intersection_points_of_circles(c1,c2)[1],intersection_points_of_circles(c1,c2)[2],c1,c2)
 
-know：
+know:
     forall A,B point,c1,c2 circle:
         $is_intersect_points_of_cirlces(A,B,c1,c2)
         =>:
