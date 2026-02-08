@@ -974,7 +974,7 @@ let fn tangency_point_of_line_and_circle(l line,c circle) point:
     dom:
         $line_is_tangent_to_circle(l,c)
     =>:
-        is_tangency_point_of_line_and_circle(tangency_point_of_line_and_circle(l,c),l,c)
+        $is_tangency_point_of_line_and_circle(tangency_point_of_line_and_circle(l,c),l,c)
 know:
     forall A,B point, l line,c circle:
         $is_intersect_points_of_line_and_circle(A,B,l,c)
