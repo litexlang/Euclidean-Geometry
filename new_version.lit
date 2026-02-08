@@ -631,7 +631,7 @@ prop circle_on_plane(c circle,pl plane):
 prop two_circles_intersect(c1,c2 circle):
     length_of_finite_line(finite_line_of(center_of_circle(c1),center_of_circle(c2)))<radius_of_circle(c1)+radius_of_circle(c2)
 
-prop two_tangent_circles(c1,c2,circle):
+prop two_tangent_circles(c1,c2 circle):
     length_of_finite_line(finite_line_of(center_of_circle(c1),center_of_circle(c2)))=radius_of_circle(c1)+radius_of_circle(c2)
 
 prop two_disjiont_circles(c1,c2 circle):
