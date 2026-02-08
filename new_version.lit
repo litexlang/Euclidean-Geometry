@@ -653,7 +653,7 @@ prop is_intersect_points_of_cirlces(A,B point,c1,c2 circle):
     B $in c1
     B $in c2
 
-let intersection_points_of_circles(c1,c2 circle) cart(point,point):
+let fn intersection_points_of_circles(c1,c2 circle) cart(point,point):
     dom:
         $two_circles_intersect(c1,c2)
     =>:
