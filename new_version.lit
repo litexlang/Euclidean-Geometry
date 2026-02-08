@@ -610,9 +610,32 @@ let fn radius_of_circle(c circle) R_pos:
     =>:
         radius_of_circle(c)=center_radius_of_circle(c)[2]
 
-prop intersect_of_two_circles(c1,c2 circle):
+prop three_points_on_circle(c circle,A,B,C point):
+    A!=B
+    B!=C
+    C!=A
+    A $in c
+    B $in c
+    C $in c
+
+know:
+    forall c circle:
+        exist A,B,C st $three_points_on_circle(c,A,B,C)
+
+prop circle_on_plane(c circle,pl plane):
+    forall p c:
+        =>:
+            p $in pl
+
+
+prop two_circles_intersect(c1,c2 circle):
     length_of_finite_line(finite_line_of(center_of_circle(c1),center_of_circle(c2)))<radius_of_circle(c1)+radius_of_circle(c2)
 
+prop two_tangent_circles(c1,c2,circle):
+    length_of_finite_line(finite_line_of(center_of_circle(c1),center_of_circle(c2)))=radius_of_circle(c1)+radius_of_circle(c2)
+
+prop two_disjiont_circles(c1,c2 circle):
+    length_of_finite_line(finite_line_of(center_of_circle(c1),center_of_circle(c2)))>radius_of_circle(c1)+radius_of_circle(c2)
 
 
 
