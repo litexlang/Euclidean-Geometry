@@ -965,7 +965,7 @@ prop is_tangency_point_of_line_and_circle(A point,l line,c circle):
     A $in c
 
 let intersect_points_of_line_and_circle(l line,c circle) cart(point,point):
-    dom：
+    dom:
         $intersect_of_line_and_circle(l,c)
     =>:
         $is_intersect_points_of_line_and_circle(intersect_points_of_line_and_circle(l,c)[1],intersect_points_of_line_and_circle(l,c)[2],l,c)
