@@ -808,7 +808,7 @@ let fn foot(A,B,C point) point:
 prop is_mid_point(M,A,B point):
     A!=B
     M $in finite_line_of(A,B)
-    finite_line_congruence(finite_line_of(A,M),finite_line_of(B,M))
+    $finite_line_congruence(finite_line_of(A,M),finite_line_of(B,M))
 
 let fn  mid_point_of(A,B point) point:
     A!=B
