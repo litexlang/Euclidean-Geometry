@@ -1006,8 +1006,7 @@ prop four_points_cyclic(A point,B point,C point,D point,c circle):
     B $in c
     C $in c
     D $in c
-    =>:
-        $four_points_cyclic(A,B,C,D,c)
+
 prop cyclic_points(A point,B point,C point,D point):
     A!=B
     A!=C
@@ -1025,8 +1024,7 @@ prop six_points_cyclic(A point,B point,C point,P point,Q point,R point,c circle)
     P $in c
     Q $in c
     R $in c
-    =>:
-        $six_points_cyclic(A,B,C,P,Q,R,c)
+ 
 prop cyclic6_points(A point,B point,C point,P point,Q point,R point):
     A!=B
     A!=C
