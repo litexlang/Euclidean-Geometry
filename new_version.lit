@@ -1142,10 +1142,7 @@ know:
     forall A,B,P,Q point:
         $cyclic_points(A,B,P,Q)
         =>:
-            $angle_congruence(
-                angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),
-                angle_of_two_rays(ray_with_end_point_and_direction(Q,A),ray_with_end_point_and_direction(Q,B))
-            )
+            $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),angle_of_two_rays(ray_with_end_point_and_direction(Q,A),ray_with_end_point_and_direction(Q,B)))
 
 # Rule 5
 ### rules.txt: eqangle6 P A P B Q A Q B, ncoll P Q A B => cyclic A B P Q
