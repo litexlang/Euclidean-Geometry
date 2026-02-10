@@ -1050,7 +1050,8 @@ prop ncoll_points(A point,B point,E point):
 
 # For ncoll P Q A B: points P,Q,A,B are not all collinear
 prop ncoll4_points(P point,Q point,A point,B point):
-    not ($three_points_collinear(P,Q,A) and $three_points_collinear(P,Q,B))
+    not $three_points_collinear(P,Q,A) 
+    not $three_points_collinear(P,Q,B)
 
 
 # For eqangle A B P Q C D P Q: angle ABP equals angle CDP (with P, Q as reference points)
