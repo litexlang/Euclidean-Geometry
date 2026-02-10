@@ -1094,8 +1094,7 @@ prop eqratio3_points(A point,B point,C point,D point,O point):
     A!=B
     C!=D
     O=intersection_point(line_of(A,C),line_of(B,D))
-    length_of_finite_line(finite_line_of(A,O)) / length_of_finite_line(finite_line_of(C,O)) = 
-    length_of_finite_line(finite_line_of(B,O)) / length_of_finite_line(finite_line_of(D,O))
+    length_of_finite_line(finite_line_of(A,O)) / length_of_finite_line(finite_line_of(C,O)) = length_of_finite_line(finite_line_of(B,O)) / length_of_finite_line(finite_line_of(D,O))
   
 
 
