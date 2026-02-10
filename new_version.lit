@@ -1149,10 +1149,7 @@ know:
 ### 自然语言：圆周角定理的逆：若 \(\angle APB=\angle AQB\)，并且不出现 P,Q,A,B 全共线的退化情况，则 A,B,P,Q 共圆。
 know:
     forall P,A,B,Q point:
-        $angle_congruence(
-            angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),
-            angle_of_two_rays(ray_with_end_point_and_direction(Q,A),ray_with_end_point_and_direction(Q,B))
-        )
+        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),angle_of_two_rays(ray_with_end_point_and_direction(Q,A),ray_with_end_point_and_direction(Q,B)))
         $ncoll4_points(P,Q,A,B)
         =>:
             $cyclic_points(A,B,P,Q)
@@ -1163,10 +1160,7 @@ know:
 know:
     forall A,B,C,P,Q,R point:
         $cyclic6_points(A,B,C,P,Q,R)
-        $angle_congruence(
-            angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)),
-            angle_of_two_rays(ray_with_end_point_and_direction(R,P),ray_with_end_point_and_direction(R,Q))
-        )
+        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)),angle_of_two_rays(ray_with_end_point_and_direction(R,P),ray_with_end_point_and_direction(R,Q)))
         =>:
             $finite_line_congruence(finite_line_of(A,B),finite_line_of(P,Q))
 
