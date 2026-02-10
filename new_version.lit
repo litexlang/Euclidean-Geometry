@@ -1061,10 +1061,7 @@ prop eqangle_points(A point,B point,P point,Q point,C point,D point):
     A!=B
     C!=D
     P!=Q
-    $angle_congruence(
-        angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),
-        angle_of_two_rays(ray_with_end_point_and_direction(P,C),ray_with_end_point_and_direction(P,D))
-    )
+    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),angle_of_two_rays(ray_with_end_point_and_direction(P,C),ray_with_end_point_and_direction(P,D)))
 
 # For eqangle6 P A P B Q A Q B: angle APB equals angle AQB
 prop eqangle6_points(P point,A point,B point,Q point):
