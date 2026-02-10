@@ -1069,10 +1069,7 @@ prop eqangle6_points(P point,A point,B point,Q point):
     P!=B
     Q!=A
     Q!=B
-    $angle_congruence(
-        angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),
-        angle_of_two_rays(ray_with_end_point_and_direction(Q,A),ray_with_end_point_and_direction(Q,B))
-    )
+    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),angle_of_two_rays(ray_with_end_point_and_direction(Q,A),ray_with_end_point_and_direction(Q,B)))
 
 # For eqratio: ratio equality (to be defined more precisely based on context)
 prop eqratio_points(A point,B point,C point,D point,M point,N point,P point,Q point):
