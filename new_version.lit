@@ -1087,8 +1087,7 @@ prop eqratio6_points(D point,B point,C point,A point):
     D!=C
     A!=B
     A!=C
-    length_of_finite_line(finite_line_of(D,B)) / length_of_finite_line(finite_line_of(D,C)) = 
-    length_of_finite_line(finite_line_of(A,B)) / length_of_finite_line(finite_line_of(A,C))
+    length_of_finite_line(finite_line_of(D,B)) / length_of_finite_line(finite_line_of(D,C)) = length_of_finite_line(finite_line_of(A,B)) / length_of_finite_line(finite_line_of(A,C))
 
 # For eqratio3 A B C D O O: ratio with three points (A, B, C, D, O, O)
 prop eqratio3_points(A point,B point,C point,D point,O point):
