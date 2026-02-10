@@ -988,5 +988,234 @@ know:
 """
 平面几何的几何量以及基本几何关系定义几乎完成，一些性质还缺乏（之后要翻译rules.txt）：平行线夹角相等，三角形相似全等判定法则诸如此类
 angle,length_of_finite_line 如何打到R_pos
+直线夹角怎么定义 rule3，9，10
 """
 
+# Geometric rules from rules.txt
+# Auxiliary definitions for rules
+
+## Helper properties for rules translation
+
+
+
+    
+
+# For cyclic A B C D: points A, B, C, D are concyclic (lie on the same circle)
+prop four_points_cyclic(A point,B point,C point,D point,c circle):
+    A $in c
+    B $in c
+    C $in c
+    D $in c
+    =>:
+        $four_points_cyclic(A,B,C,D,c)
+prop cyclic_points(A point,B point,C point,D point):
+    A!=B
+    A!=C
+    A!=D
+    B!=C
+    B!=D
+    C!=D
+    exist c circle st $four_points_cyclic(A,B,C,D,c)    
+
+# For cyclic A B C P Q R: six points are concyclic
+prop six_points_cyclic(A point,B point,C point,P point,Q point,R point,c circle):
+    A $in c
+    B $in c
+    C $in c
+    P $in c
+    Q $in c
+    R $in c
+    =>:
+        $six_points_cyclic(A,B,C,P,Q,R,c)
+prop cyclic6_points(A point,B point,C point,P point,Q point,R point):
+    A!=B
+    A!=C
+    A!=P
+    A!=Q
+    A!=R
+    B!=C
+    B!=P
+    B!=Q
+    B!=R
+    C!=P
+    C!=Q
+    C!=R
+    P!=Q
+    P!=R
+    Q!=R
+    exist c circle st $six_points_cyclic(A,B,C,P,Q,R,c)
+
+
+# For ncoll A B E: points A, B, E are not collinear
+prop ncoll_points(A point,B point,E point):
+    not $three_points_collinear(A,B,E)
+
+# For ncoll P Q A B: points P,Q,A,B are not all collinear
+prop ncoll4_points(P point,Q point,A point,B point):
+    not ($three_points_collinear(P,Q,A) and $three_points_collinear(P,Q,B))
+
+
+# For eqangle A B P Q C D P Q: angle ABP equals angle CDP (with P, Q as reference points)
+# This represents ∠(AB, PQ) = ∠(CD, PQ) where PQ is a common reference
+prop eqangle_points(A point,B point,P point,Q point,C point,D point):
+    A!=B
+    C!=D
+    P!=Q
+    $angle_congruence(
+        angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),
+        angle_of_two_rays(ray_with_end_point_and_direction(P,C),ray_with_end_point_and_direction(P,D))
+    )
+
+# For eqangle6 P A P B Q A Q B: angle APB equals angle AQB
+prop eqangle6_points(P point,A point,B point,Q point):
+    P!=A
+    P!=B
+    Q!=A
+    Q!=B
+    $angle_congruence(
+        angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),
+        angle_of_two_rays(ray_with_end_point_and_direction(Q,A),ray_with_end_point_and_direction(Q,B))
+    )
+
+# For eqratio: ratio equality (to be defined more precisely based on context)
+prop eqratio_points(A point,B point,C point,D point,M point,N point,P point,Q point):
+    A!=B
+    C!=D
+    M!=N
+    P!=Q
+    C!=D
+    M!=N
+    P!=Q
+    length_of_finite_line(finite_line_of(A,B)) / length_of_finite_line(finite_line_of(C,D)) = length_of_finite_line(finite_line_of(M,N)) / length_of_finite_line(finite_line_of(P,Q))
+
+# For eqratio6 d b d c a b a c: ratio DB/DC = AB/AC
+prop eqratio6_points(D point,B point,C point,A point):
+    D!=B
+    D!=C
+    A!=B
+    A!=C
+    length_of_finite_line(finite_line_of(D,B)) / length_of_finite_line(finite_line_of(D,C)) = 
+    length_of_finite_line(finite_line_of(A,B)) / length_of_finite_line(finite_line_of(A,C))
+
+# For eqratio3 A B C D O O: ratio with three points (A, B, C, D, O, O)
+prop eqratio3_points(A point,B point,C point,D point,O point):
+    A!=B
+    C!=D
+    O=intersection_point(line_of(A,C),line_of(B,D))
+    length_of_finite_line(finite_line_of(A,O)) / length_of_finite_line(finite_line_of(C,O)) = 
+    length_of_finite_line(finite_line_of(B,O)) / length_of_finite_line(finite_line_of(D,O))
+  
+
+
+
+# Rule 1
+### If line AB is perpendicular to line CD, and line CD is perpendicular to line EF,
+### and points A, B, E are not collinear, then line AB is parallel to line EF.
+### 如果直线AB垂直于直线CD，直线CD垂直于直线EF，且点A、B、E不共线，则直线AB平行于直线EF。
+know:
+    forall A,B,C,D,E,F point:
+        $perp(line_of(A,B),line_of(C,D))
+        $perp(line_of(C,D),line_of(E,F))
+        $ncoll_points(A,B,E)
+        =>:
+            $parallel_line(line_of(A,B),line_of(E,F))
+
+# Rule 2
+### If segments OA, OB, OC, OD are all congruent (OA ≅ OB ≅ OC ≅ OD),
+### then points A, B, C, D are concyclic (lie on the same circle).
+### 如果线段OA、OB、OC、OD都相等（OA ≅ OB ≅ OC ≅ OD），则点A、B、C、D共圆。
+know:
+    forall O,A,B,C,D point:
+        $finite_line_congruence(finite_line_of(O,A),finite_line_of(O,B))
+        $finite_line_congruence(finite_line_of(O,B),finite_line_of(O,C))
+        $finite_line_congruence(finite_line_of(O,C),finite_line_of(O,D))
+        =>:
+            $cyclic_points(A,B,C,D)
+
+# Rule 3
+### rules.txt: eqangle A B P Q C D P Q => para A B C D
+### 自然语言：若 \(\angle(AB,PQ)=\angle(CD,PQ)\)（两条直线 AB 与 CD 相对同一参考直线 PQ 的夹角相等），则 AB ∥ CD。
+know:
+    forall A,B,P,Q,C,D point:
+        $eqangle_points(A,B,P,Q,C,D,P,Q)
+        =>:
+            $parallel_line(line_of(A,B),line_of(C,D))
+
+# Rule 4
+### rules.txt: cyclic A B P Q => eqangle P A P B Q A Q B
+### 自然语言：同圆定理（同弦所对圆周角相等）：若 A,B,P,Q 共圆，则 \(\angle APB = \angle AQB\)（同为弦 AB 所对的圆周角）。
+know:
+    forall A,B,P,Q point:
+        $cyclic_points(A,B,P,Q)
+        =>:
+            $angle_congruence(
+                angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),
+                angle_of_two_rays(ray_with_end_point_and_direction(Q,A),ray_with_end_point_and_direction(Q,B))
+            )
+
+# Rule 5
+### rules.txt: eqangle6 P A P B Q A Q B, ncoll P Q A B => cyclic A B P Q
+### 自然语言：圆周角定理的逆：若 \(\angle APB=\angle AQB\)，并且不出现 P,Q,A,B 全共线的退化情况，则 A,B,P,Q 共圆。
+know:
+    forall P,A,B,Q point:
+        $angle_congruence(
+            angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),
+            angle_of_two_rays(ray_with_end_point_and_direction(Q,A),ray_with_end_point_and_direction(Q,B))
+        )
+        $ncoll4_points(P,Q,A,B)
+        =>:
+            $cyclic_points(A,B,P,Q)
+
+# Rule 6
+### rules.txt: cyclic A B C P Q R, eqangle C A C B R P R Q => cong A B P Q
+### 自然语言：同圆中“等角对等弦”：在同一圆上，若圆周角 \(\angle ACB\) 与 \(\angle PRQ\) 相等，则它们所对的弦 AB 与 PQ 相等。
+know:
+    forall A,B,C,P,Q,R point:
+        $cyclic6_points(A,B,C,P,Q,R)
+        $angle_congruence(
+            angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)),
+            angle_of_two_rays(ray_with_end_point_and_direction(R,P),ray_with_end_point_and_direction(R,Q))
+        )
+        =>:
+            $finite_line_congruence(finite_line_of(A,B),finite_line_of(P,Q))
+
+# Rule 7
+### rules.txt: midp E A B, midp F A C => para E F B C
+### 自然语言：三角形中位线定理：若 E、F 分别是 AB、AC 的中点，则 EF ∥ BC。
+know:
+    forall E,A,B,F,C point:
+        $is_mid_point(E,A,B)
+        $is_mid_point(F,A,C)
+        =>:
+            $parallel_line(line_of(E,F),line_of(B,C))
+
+# Rule 8
+### rules.txt: para A B C D, coll O A C, coll O B D => eqratio3 A B C D O O
+### 自然语言：平行线截比/相似带来的比例结论：AB ∥ CD 且 O 分别在 AC、BD 上时，会导出关于 A,B,C,D 与交点 O 的一个比例关系。
+know:
+    forall A,B,C,D,O point:
+        $parallel_line(line_of(A,B),line_of(C,D))
+        O=intersection_point(line_of(A,B),line_of(C,D))
+        =>:
+            $eqratio3_points(A,B,C,D,O)
+
+# Rule 9
+### rules.txt: perp A B C D, perp E F G H, npara A B E F => eqangle A B E F C D G H
+### 自然语言：若 AB ⟂ CD 且 EF ⟂ GH，则 \(\angle(AB,EF)=\angle(CD,GH)\)；再加 “AB 与 EF 不平行” 用来排除夹角为 0/180° 的退化情况。
+know:
+    forall A,B,C,D,E,F,G,H point:
+        $perp(line_of(A,B),line_of(C,D))
+        $perp(line_of(E,F),line_of(G,H))
+        not $parallel_line(line_of(A,B),line_of(E,F))
+        =>:
+            $eqangle_points(A,B,E,F,C,D,G,H)
+
+# Rule 10
+### rules.txt: eqangle a b c d m n p q, eqangle c d e f p q r u => eqangle a b e f m n r u
+### 自然语言：等角关系的传递性：若 \(\angle(ab,cd)=\angle(mn,pq)\) 且 \(\angle(cd,ef)=\angle(pq,ru)\)，则 \(\angle(ab,ef)=\angle(mn,ru)\)。
+know:
+    forall a,b,c,d,m,n,p,q,e,f,r,u point:
+        $eqangle_points(a,b,c,d,m,n,p,q)
+        $eqangle_points(c,d,e,f,p,q,r,u)
+        =>:
+            $eqangle_points(a,b,e,f,m,n,r,u)
