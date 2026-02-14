@@ -1634,6 +1634,20 @@ know:
 
 
 # cc_tangent0: common tangent of two circles (two points)
+prop sameside_points(A point,C point,l line):
+    A $in plane_of_point_and_line(C,l)
+    not A $in l
+    not C $in l
+    not $parallel_line(l,line_of(A,C))
+    not intersection_point(l,line_of(A,C)) $in finite_line_of(A,C)
+
+prop not_sameside_points(A point,C point,l line):
+    A $in plane_of_point_and_line(C,l)
+    not A $in l
+    not C $in l
+    not $parallel_line(l,line_of(A,C))
+    intersection_point(l,line_of(A,C)) $in finite_line_of(A,C)
+
 prop is_cc_outertangent_line(c1,c2 circle,l line):
     c1!=c2
     distance_of_point_to_line(center_of_circle(c1),l)=radius_of_circle(c1)
@@ -1707,6 +1721,8 @@ prop is_tangent(X point,Y point,A point,O point,B point):
     O!=A
     O!=B
     A!=B
+    X!=Y
+    length_of_finite_line(O,A)>length_of_finite_line(O,B)
     $finite_line_congruence(finite_line_of(O,X),finite_line_of(O,B))
     $perp(line_of(A,X),line_of(O,X))
     $finite_line_congruence(finite_line_of(O,Y),finite_line_of(O,B))
@@ -1717,6 +1733,7 @@ let fn tangent_points(A point,O point,B point) cart(point,point):
         O!=A
         O!=B
         A!=B
+        length_of_finite_line(O,A)>length_of_finite_line(O,B)
     =>:
         $is_tangent(tangent_points(A,O,B)[1],tangent_points(A,O,B)[2],A,O,B)
 
@@ -1725,6 +1742,7 @@ know:
         O!=A
         O!=B
         A!=B
+        length_of_finite_line(O,A)>length_of_finite_line(O,B)
         =>:
             exist X,Y point st $is_tangent(X,Y,A,O,B)
     forall X,Y,A,O,B point:
@@ -1734,20 +1752,7 @@ know:
 
 # on_circum: point on circumcircle
 # x is a point on the circumcircle of triangle abc
-prop is_on_circum(X point,A point,B point,C point):
-    not $three_points_collinear(A,B,C)
-    $cyclic_points(A,B,C,X)
 
-know:
-    forall X,A,B,C point:
-        $is_on_circum(X,A,B,C)
-        =>:
-            X $in circle_of_triangle(A,B,C)
-    forall X,A,B,C point:
-        not $three_points_collinear(A,B,C)
-        X $in circle_of_triangle(A,B,C)
-        =>:
-            $is_on_circum(X,A,B,C)
 
 """
 平面几何的几何量以及基本几何关系定义几乎完成，一些性质还缺乏（之后要翻译rules.txt）：平行线夹角相等，三角形相似全等判定法则诸如此类
@@ -2144,16 +2149,7 @@ know:
             $is_mid_point(M,C,D)
 
 # For sameside A O C B O D: points A and C are on the same side of line through O, and B and D are on the same side
-prop sameside_points(A point,C point,l line):
-    not A $in l
-    not C $in l
-    not $parallel_line(l,line_of(A,C))
-    not intersection_point(l,line_of(A,C)) $in finite_line_of(A,C)
-prop not_sameside_points(A point,C point,l line):
-    not A $in l
-    not C $in l
-    not $parallel_line(l,line_of(A,C))
-    intersection_point(l,line_of(A,C)) $in finite_line_of(A,C)
+
   
 # Rule 28
 ### rules.txt: eqratio O A A C O B B D, coll O A C, coll O B D, ncoll A B C, sameside A O C B O D => para A B C D
