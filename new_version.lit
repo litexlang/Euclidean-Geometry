@@ -1634,16 +1634,12 @@ know:
 
 
 # cc_tangent0: common tangent of two circles (two points)
-# x, y are the two points of tangency for common tangents of circles with centers o, w
-prop is_cc_tangent0(X point,Y point,O point,A point,W point,B point):
-    O!=A
-    W!=B
-    O!=W
-    $finite_line_congruence(finite_line_of(O,X),finite_line_of(O,A))
-    $finite_line_congruence(finite_line_of(W,Y),finite_line_of(W,B))
-    $perp(line_of(X,O),line_of(X,Y))
-    $perp(line_of(Y,W),line_of(Y,X))
-
+# 外公切线
+prop is_cc_tangent0(c1,c2 circle,l line):
+    c1!=c2
+    distance_of_point_to_line(center_of_circle(c1),l)=radius_of_circle(c1)
+    distance_of_point_to_line(center_of_circle(c2),l)=radius_of_circle(c2)
+    $not_sameside_points(center_of_circle(c1),center_of_circle(c2),l)
 let fn cc_tangent0_points(O point,A point,W point,B point) cart(point,point):
     dom:
         O!=A
