@@ -824,7 +824,7 @@ let fn incenter_of(A,B,C point) point:
         $is_incenter(incenter_of(A,B,C),A,B,C)
 
 #9
-prop is_converse_extenstion_ray(r,r1 ray):
+prop is_converse_extension_ray(r,r1 ray):
     $two_rays_with_same_end_point(r,r1)
     forall B,C point:
         B $in r
