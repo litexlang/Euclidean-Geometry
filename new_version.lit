@@ -1546,11 +1546,6 @@ prop is_3peq(X point,Y point,z point,A point,B point,C point):
     X $in line_of(Y,z)
     $finite_line_congruence(finite_line_of(z,X),finite_line_of(z,Y))
 
-let fn _3peq_points(A point,B point,C point) cart(point,point,point):
-    dom:
-        not $three_points_collinear(A,B,C)
-    =>:
-        $is_3peq(_3peq_points(A,B,C)[1],_3peq_points(A,B,C)[2],_3peq_points(A,B,C)[3],A,B,C)
 
 know:
     forall A,B,C point:
@@ -1560,31 +1555,32 @@ know:
 
 # trisect: trisect an angle
 # x, y are points that trisect angle abc (divide it into three equal parts)
-prop is_trisect(X point,Y point,A point,B point,C point):
-    not $three_points_collinear(A,B,C)
-    X $in line_of(A,C)
-    Y $in line_of(A,C)
-    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,X)),angle_of_two_rays(ray_with_end_point_and_direction(B,X),ray_with_end_point_and_direction(B,Y)))
-    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(B,X),ray_with_end_point_and_direction(B,Y)),angle_of_two_rays(ray_with_end_point_and_direction(B,Y),ray_with_end_point_and_direction(B,C)))
 
-let fn trisect_points(A point,B point,C point) cart(point,point):
+prop is_angle_trisect(r1 ray,r2 ray,r3 ray,r4 ray):
+    $two_rays_with_same_end_point(r1,r2)
+    $two_rays_with_same_end_point(r3,r4)
+    $ray_between(r1,r3,r4)
+    $ray_between(r2,r3,r4)
+    $angle_congruence(angle_of_two_rays(r3,r1),angle_of_two_rays(r1,r2))
+    $angle_congruence(angle_of_two_rays(r1,r2),angle_of_two_rays(r2,r4))
+
+let fn angle_trisect_rays(r3 ray,r4 ray) cart(ray,ray):
     dom:
-        not $three_points_collinear(A,B,C)
+        $two_rays_with_same_end_point(r3,r4)
     =>:
-        $is_trisect(trisect_points(A,B,C)[1],trisect_points(A,B,C)[2],A,B,C)
-
+        $is_angle_trisect(angle_trisect_rays(r3,r4)[1],angle_trisect_rays(r3,r4)[2],r3,r4)
 know:
-    forall A,B,C point:
-        not $three_points_collinear(A,B,C)
+    forall r3,r4 ray:
+        $two_rays_with_same_end_point(r3,r4)
         =>:
-            exist X,Y point st $is_trisect(X,Y,A,B,C)
+            exist r1,r2 ray st $is_angle_trisect(r1,r2,r3,r4)
 
-# trisegment: trisect a segment
+# trisegment: trisect a segment 
 # x, y are points that trisect segment ab
 prop is_trisegment(X point,Y point,A point,B point):
     A!=B
-    X $in line_of(A,B)
-    Y $in line_of(A,B)
+    X $in finite_line_of(A,B)
+    Y $in finite_line_of(A,B)
     $finite_line_congruence(finite_line_of(X,A),finite_line_of(X,Y))
     $finite_line_congruence(finite_line_of(Y,X),finite_line_of(Y,B))
 
