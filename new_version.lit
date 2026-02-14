@@ -1406,8 +1406,8 @@ prop is_risos(A point,B point,C point):
 # s_angle: supplementary angle
 # a1 and a2 are supplementary angles
 prop is_s_angle(a1 angle,a2 angle):
-    sides_of_angle(a1) = sides_of_angle(a2)
-    a1=angle_of_two_rays(extension_of_ray(sides_of_angle(a2)[1]),sides_of_angle(a2)[2])
+    sides_of(a1) = sides_of(a2)
+    a1=angle_of_two_rays(converse_extension_ray_of(sides_of(a2)[1]),sides_of(a2)[2])
 
 # shift: shift/translate point
 # x is the point such that xb = cd and xc = bd (translation of point b by vector cd)
