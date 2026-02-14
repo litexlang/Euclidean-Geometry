@@ -869,7 +869,7 @@ let fn start_point_of(a angle) point:
         $end_point_of_ray(start_point_of(a),sides_of(a)[1])    
  
 prop is_right_angle(a angle):
-    $angle_congruence(a,angle_of_two_rays(sides_of(a)[2],converse_extenstion_ray_of(sides_of(a)[1])))
+    $angle_congruence(a,angle_of_two_rays(sides_of(a)[2],converse_extension_ray_of(sides_of(a)[1])))
 
 let fn ano_point_on_line(A point,l line) point:
     A $in l
