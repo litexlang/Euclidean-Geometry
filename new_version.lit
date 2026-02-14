@@ -1117,7 +1117,6 @@ know:
 # x is the point and circle with center o and passing through a, such that ax is tangent to the circle
 prop is_lc_tangent(X point,A point,O point):
     A!=O
-    X $in circle_of_center_with_radius(O,length_of_finite_line(finite_line_of(O,A)))
     $perp(line_of(A,X),line_of(A,O))
 
 let fn lc_tangent(A point,O point) point:
@@ -1201,32 +1200,10 @@ prop is_on_bline(X point,A point,B point):
 
 # on_circle: point on a circle
 # x is a point on the circle with center o and passing through a
-prop is_on_circle(X point,O point,A point):
-    O!=A
-    $finite_line_congruence(finite_line_of(O,X),finite_line_of(O,A))
-
-know:
-    forall X,O,A point:
-        $is_on_circle(X,O,A)
-        =>:
-            X $in circle_of_center_with_radius(O,length_of_finite_line(finite_line_of(O,A)))
 
 # on_line: point on a line
 # x is a point on line ab
-prop is_on_line(X point,A point,B point):
-    A!=B
-    X $in line_of(A,B)
 
-know:
-    forall X,A,B point:
-        $is_on_line(X,A,B)
-        =>:
-            X $in line_of(A,B)
-    forall X,A,B point:
-        A!=B
-        X $in line_of(A,B)
-        =>:
-            $is_on_line(X,A,B)
 
 # on_pline: point on a parallel line
 # x is a point such that xa is parallel to bc
@@ -1292,6 +1269,7 @@ know:
 
 # pentagon: pentagon (five points forming a pentagon)
 # This is a construction predicate for a pentagon with vertices a, b, c, d, e
+have Pentagon nonempty_set
 prop is_pentagon(A point,B point,C point,D point,E point):
     # A pentagon is defined by five distinct points
     A!=B
@@ -1304,6 +1282,21 @@ prop is_pentagon(A point,B point,C point,D point,E point):
     C!=D
     C!=E
     D!=E
+    not $three_points_collinear(A,B,C)
+    not $three_points_collinear(A,B,D)
+    not $three_points_collinear(A,B,E)
+    not $three_points_collinear(A,C,D)
+    not $three_points_collinear(A,C,E)
+    not $three_points_collinear(A,D,E)
+    not $three_points_collinear(B,C,D)
+    not $three_points_collinear(B,C,E)
+    not $three_points_collinear(B,D,E)
+    not $three_points_collinear(C,D,E)
+know:
+    forall p pentagon:
+        p $in power_set(point)
+    forall p pentagon:
+        $is_pentagon(p)
 
 # psquare: construct a square point (positive rotation)
 # x is the point such that xa = ab and xa is perpendicular to ab (rotated 90 degrees)
@@ -1325,15 +1318,6 @@ know:
             exist X point st $is_psquare(X,A,B)
 
 # quadrangle: quadrangle (four points forming a quadrilateral)
-# This is a construction predicate for a quadrangle with vertices a, b, c, d
-prop is_quadrangle(A point,B point,C point,D point):
-    # A quadrangle is defined by four distinct points
-    A!=B
-    A!=C
-    A!=D
-    B!=C
-    B!=D
-    C!=D
 
 # r_trapezoid: right trapezoid (trapezoid with a right angle)
 # d is the fourth vertex of a right trapezoid abcd where ab ∥ cd and ab ⟂ ad
@@ -1392,6 +1376,7 @@ know:
 prop is_reflect(X point,A point,B point,C point):
     B!=C
     not $three_points_collinear(A,B,C)
+    X $in plane_of(A,B,C)
     $finite_line_congruence(finite_line_of(B,A),finite_line_of(B,X))
     $finite_line_congruence(finite_line_of(C,A),finite_line_of(C,X))
     $perp(line_of(B,C),line_of(A,X))
