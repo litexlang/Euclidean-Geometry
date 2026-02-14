@@ -1373,52 +1373,44 @@ know:
 
 # reflect: reflection point
 # x is the reflection of point a across line bc
-prop is_reflect(X point,A point,B point,C point):
-    B!=C
-    not $three_points_collinear(A,B,C)
-    X $in plane_of(A,B,C)
-    $finite_line_congruence(finite_line_of(B,A),finite_line_of(B,X))
-    $finite_line_congruence(finite_line_of(C,A),finite_line_of(C,X))
-    $perp(line_of(B,C),line_of(A,X))
+prop is_reflect(X point,A point,l line):
+    not A $in l
+    X $in plane_of_point_and_line(A,l)
+    distance_of_point_to_line(A,l) = distance_of_point_to_line(X,l)
+    $perp(l,line_of(A,X))
 
-let fn reflect(A point,B point,C point) point:
+let fn reflect(A point,l line) point:
     dom:
-        B!=C
-        not $three_points_collinear(A,B,C)
+        not A $in l
     =>:
-        $is_reflect(reflect(A,B,C),A,B,C)
+        $is_reflect(reflect(A,l),A,l)
 
 know:
-    forall A,B,C point:
-        B!=C
-        not $three_points_collinear(A,B,C)
+    forall A,l line:
+        not A $in l
         =>:
-            exist X point st $is_reflect(X,A,B,C)
-    forall X,A,B,C point:
-        $is_reflect(X,A,B,C)
+            exist X point st $is_reflect(X,A,l)
+    forall X,A,l line:
+        $is_reflect(X,A,l)
         =>:
-            X=reflect(A,B,C)
+            X=reflect(A,l)
 
 # risos: right isosceles triangle
 # triangle abc is a right isosceles triangle with right angle at a
 prop is_risos(A point,B point,C point):
-    A!=B
+    not $three_points_collinear(A,B,C)
     $perp(line_of(A,B),line_of(A,C))
     $finite_line_congruence(finite_line_of(A,B),finite_line_of(A,C))
     $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C)),angle_of_two_rays(ray_with_end_point_and_direction(C,B),ray_with_end_point_and_direction(C,A)))
 
 # s_angle: supplementary angle
-# y is a point such that angle abx and angle aby are supplementary
-prop is_s_angle(Y point,A point,B point,X point):
-    A!=B
-    X $in line_of(A,B)
-    # This represents that angles abx and aby are supplementary
-    # The definition is recursive: s_angle a b x y means s_angle a b y (y is determined by x)
+# a1 and a2 are supplementary angles
+prop is_s_angle(a1 angle,a2 angle):
+    two_sides_of_angle(a1) = two_sides_of_angle(a2)
+    a1=angle_of_two_rays(extension_of_ray(two_sides_of_angle(a2)[1]),two_sides_of_angle(a2)[2])
 
 # segment: line segment
-# This is a construction predicate for a line segment with endpoints a and b
-prop is_segment(A point,B point):
-    A!=B
+
 
 # shift: shift/translate point
 # x is the point such that xb = cd and xc = bd (translation of point b by vector cd)
