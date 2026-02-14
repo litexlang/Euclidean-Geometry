@@ -1611,7 +1611,7 @@ know:
 # ieq_triangle: equilateral triangle
 # triangle abc is equilateral (all sides equal and all angles equal)
 prop is_ieq_triangle(A point,B point,C point):
-    A!=B
+    not $three_points_collinear(A,B,C)
     $finite_line_congruence(finite_line_of(A,B),finite_line_of(B,C))
     $finite_line_congruence(finite_line_of(B,C),finite_line_of(C,A))
     $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,C)),angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)))
@@ -1631,19 +1631,7 @@ know:
 
 # on_opline: point on opposite line
 # x is a point on line ab (same as on_line, but with different name)
-prop is_on_opline(X point,A point,B point):
-    A!=B
-    X $in line_of(A,B)
 
-know:
-    forall X,A,B point:
-        $is_on_opline(X,A,B)
-        =>:
-            $is_on_line(X,A,B)
-    forall X,A,B point:
-        $is_on_line(X,A,B)
-        =>:
-            $is_on_opline(X,A,B)
 
 # cc_tangent0: common tangent of two circles (two points)
 # x, y are the two points of tangency for common tangents of circles with centers o, w
