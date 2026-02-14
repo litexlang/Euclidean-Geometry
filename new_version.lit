@@ -1634,19 +1634,28 @@ know:
 
 
 # cc_tangent0: common tangent of two circles (two points)
-# 外公切线
-prop is_cc_tangent0(c1,c2 circle,l line):
+prop is_cc_outertangent_line(c1,c2 circle,l line):
     c1!=c2
     distance_of_point_to_line(center_of_circle(c1),l)=radius_of_circle(c1)
     distance_of_point_to_line(center_of_circle(c2),l)=radius_of_circle(c2)
     $not_sameside_points(center_of_circle(c1),center_of_circle(c2),l)
-let fn cc_tangent0_points(O point,A point,W point,B point) cart(point,point):
-    dom:
-        O!=A
-        W!=B
-        O!=W
-    =>:
-        $is_cc_tangent0(cc_tangent0_points(O,A,W,B)[1],cc_tangent0_points(O,A,W,B)[2],O,A,W,B)
+
+prop is_cc_inertangent_line(c1,c2 circle,l line):
+    c1!=c2
+    distance_of_point_to_line(center_of_circle(c1),l)=radius_of_circle(c1)
+    distance_of_point_to_line(center_of_circle(c2),l)=radius_of_circle(c2)
+    $sameside_points(center_of_circle(c1),center_of_circle(c2),l)
+
+# x, y are the two points of tangency for common tangents of circles with centers o, w
+prop is_cc_tangent0(X point,Y point,O point,A point,W point,B point):
+    O!=A
+    W!=B
+    O!=W
+    $finite_line_congruence(finite_line_of(O,X),finite_line_of(O,A))
+    $finite_line_congruence(finite_line_of(W,Y),finite_line_of(W,B))
+    $perp(line_of(X,O),line_of(X,Y))
+    $perp(line_of(Y,W),line_of(Y,X))
+
 
 know:
     forall O,A,W,B point:
@@ -1658,26 +1667,22 @@ know:
 
 # cc_tangent: common tangent of two circles (four points)
 # x, y, z, i are the four points of tangency for common tangents of circles with centers o, w
-prop is_cc_tangent(X point,Y point,Z point,I point,O point,A point,W point,B point):
+prop is_cc_tangent(X point,Y point,z point,I point,O point,A point,W point,B point):
     O!=A
     W!=B
     O!=W
+    X!=z
+    Y!=I
     $finite_line_congruence(finite_line_of(O,X),finite_line_of(O,A))
     $finite_line_congruence(finite_line_of(W,Y),finite_line_of(W,B))
     $perp(line_of(X,O),line_of(X,Y))
     $perp(line_of(Y,W),line_of(Y,X))
-    $finite_line_congruence(finite_line_of(O,Z),finite_line_of(O,A))
+    $finite_line_congruence(finite_line_of(O,z),finite_line_of(O,A))
     $finite_line_congruence(finite_line_of(W,I),finite_line_of(W,B))
-    $perp(line_of(Z,O),line_of(Z,I))
-    $perp(line_of(I,W),line_of(I,Z))
+    $perp(line_of(z,O),line_of(z,I))
+    $perp(line_of(I,W),line_of(I,z))
 
-let fn cc_tangent_points(O point,A point,W point,B point) cart(point,point,point,point):
-    dom:
-        O!=A
-        W!=B
-        O!=W
-    =>:
-        $is_cc_tangent(cc_tangent_points(O,A,W,B)[1],cc_tangent_points(O,A,W,B)[2],cc_tangent_points(O,A,W,B)[3],cc_tangent_points(O,A,W,B)[4],O,A,W,B)
+
 
 know:
     forall O,A,W,B point:
@@ -1685,7 +1690,7 @@ know:
         W!=B
         O!=W
         =>:
-            exist X,Y,Z,I point st $is_cc_tangent(X,Y,Z,I,O,A,W,B)
+            exist X,Y,z,I point st $is_cc_tangent(X,Y,z,I,O,A,W,B)
 
 # eqangle3: equal angle (three-point variant)
 # x is a point such that angle xab equals angle def
