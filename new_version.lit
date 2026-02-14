@@ -1293,9 +1293,9 @@ prop is_pentagon(A point,B point,C point,D point,E point):
     not $three_points_collinear(B,D,E)
     not $three_points_collinear(C,D,E)
 know:
-    forall p pentagon:
+    forall p pPentagon:
         p $in power_set(point)
-    forall p pentagon:
+    forall p Pentagon:
         $is_pentagon(p)
 
 # psquare: construct a square point (positive rotation)
