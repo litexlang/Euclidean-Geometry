@@ -834,14 +834,14 @@ prop is_converse_extenstion_ray(r,r1 ray):
         C!=end_point_of(r1)
         =>:
             $three_points_collinear(end_point_of(r1),B,C)
-let fn converse_extenstion_ray_of(r ray) ray:
+let fn converse_extension_ray_of(r ray) ray:
     =>:
-        $is_converse_extenstion_ray(converse_extenstion_ray_of(r),r)
+        $is_converse_extension_ray(converse_extension_ray_of(r),r)
     
 prop is_angle_exbisector(r ray ,r1 ray,r2 ray):
     $two_rays_with_same_end_point(r1,r2)
     $ray_between(r2,r1,r)
-    $is_angle_bisector(r,converse_extenstion_ray_of(r1),r2)
+    $is_angle_bisector(r,converse_extension_ray_of(r1),r2)
 
 prop is_exincenter(J,A,B,C point):
     not $three_points_collinear(A,B,C)
