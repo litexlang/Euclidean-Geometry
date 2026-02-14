@@ -1406,18 +1406,14 @@ prop is_risos(A point,B point,C point):
 # s_angle: supplementary angle
 # a1 and a2 are supplementary angles
 prop is_s_angle(a1 angle,a2 angle):
-    two_sides_of_angle(a1) = two_sides_of_angle(a2)
-    a1=angle_of_two_rays(extension_of_ray(two_sides_of_angle(a2)[1]),two_sides_of_angle(a2)[2])
-
-# segment: line segment
-
+    sides_of_angle(a1) = sides_of_angle(a2)
+    a1=angle_of_two_rays(extension_of_ray(sides_of_angle(a2)[1]),sides_of_angle(a2)[2])
 
 # shift: shift/translate point
 # x is the point such that xb = cd and xc = bd (translation of point b by vector cd)
-prop is_shift(X point,B point,C point,D point):
-    D!=B
-    $finite_line_congruence(finite_line_of(X,B),finite_line_of(C,D))
-    $finite_line_congruence(finite_line_of(X,C),finite_line_of(B,D))
+prop is_shift(X point,B point,v vector):
+    $finite_line_congruence(finite_line_of(X,B),finite_line_of(B,v))
+    $finite_line_congruence(finite_line_of(X,B),finite_line_of(B,v))
 
 let fn shift(B point,C point,D point) point:
     dom:
