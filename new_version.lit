@@ -1411,9 +1411,10 @@ prop is_s_angle(a1 angle,a2 angle):
 
 # shift: shift/translate point
 # x is the point such that xb = cd and xc = bd (translation of point b by vector cd)
-prop is_shift(X point,B point,v vector):
-    $finite_line_congruence(finite_line_of(X,B),finite_line_of(B,v))
-    $finite_line_congruence(finite_line_of(X,B),finite_line_of(B,v))
+prop is_shift(X point,B point,C point,D point):
+    $finite_line_congruence(finite_line_of(X,B),finite_line_of(C,D))
+    $parallel_line(line_of(X,B),line_of(C,D))
+    $parallel_line(line_of(B,D),line_of(X,C))
 
 let fn shift(B point,C point,D point) point:
     dom:
@@ -1435,21 +1436,14 @@ know:
 # x and y are the third and fourth vertices of square abxy
 prop is_square(A point,B point,X point,Y point):
     A!=B
-    $perp(line_of(A,B),line_of(B,X))
+    $is_rectangle(A,B,X,Y)
     $finite_line_congruence(finite_line_of(A,B),finite_line_of(B,X))
-    $parallel_line(line_of(A,B),line_of(X,Y))
-    $parallel_line(line_of(A,Y),line_of(B,X))
-    $perp(line_of(A,Y),line_of(Y,X))
-    $finite_line_congruence(finite_line_of(B,X),finite_line_of(X,Y))
-    $finite_line_congruence(finite_line_of(X,Y),finite_line_of(Y,A))
-    $perp(line_of(A,X),line_of(B,Y))
-    $finite_line_congruence(finite_line_of(A,X),finite_line_of(B,Y))
 
 let fn square_third_vertex(A point,B point) point:
     dom:
         A!=B
     =>:
-        $is_square(A,B,square_third_vertex(A,B),square_fourth_vertex(A,B,square_third_vertex(A,B)))
+        $is_psquare(square_third_vertex(A,B),B,A)
 
 let fn square_fourth_vertex(A point,B point,X point) point:
     dom:
@@ -1467,48 +1461,11 @@ know:
 
 # isquare: construct a square from three points
 # d is the fourth vertex of square abcd
-prop is_isquare(A point,B point,C point,D point):
-    A!=B
-    $perp(line_of(A,B),line_of(B,C))
-    $finite_line_congruence(finite_line_of(A,B),finite_line_of(B,C))
-    $parallel_line(line_of(A,B),line_of(C,D))
-    $parallel_line(line_of(A,D),line_of(B,C))
-    $perp(line_of(A,D),line_of(D,C))
-    $finite_line_congruence(finite_line_of(B,C),finite_line_of(C,D))
-    $finite_line_congruence(finite_line_of(C,D),finite_line_of(D,A))
-    $perp(line_of(A,C),line_of(B,D))
-    $finite_line_congruence(finite_line_of(A,C),finite_line_of(B,D))
 
-let fn isquare_fourth_vertex(A point,B point,C point) point:
-    dom:
-        A!=B
-        $perp(line_of(A,B),line_of(B,C))
-        $finite_line_congruence(finite_line_of(A,B),finite_line_of(B,C))
-    =>:
-        $is_isquare(A,B,C,isquare_fourth_vertex(A,B,C))
-
-know:
-    forall A,B,C point:
-        A!=B
-        $perp(line_of(A,B),line_of(B,C))
-        $finite_line_congruence(finite_line_of(A,B),finite_line_of(B,C))
-        =>:
-            exist D point st $is_isquare(A,B,C,D)
-    forall D,A,B,C point:
-        $is_isquare(A,B,C,D)
-        =>:
-            D=isquare_fourth_vertex(A,B,C)
 
 # trapezoid: trapezoid
 # d is the fourth vertex of trapezoid abcd where ab ∥ cd
-prop is_trapezoid(A point,B point,C point,D point):
-    A!=B
-    A!=C
-    A!=D
-    B!=C
-    B!=D
-    C!=D
-    $parallel_line(line_of(A,B),line_of(C,D))
+
 
 let fn trapezoid_fourth_vertex(A point,B point,C point) point:
     dom:
