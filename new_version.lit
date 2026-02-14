@@ -1485,10 +1485,7 @@ know:
 
 # triangle: triangle
 # This is a construction predicate for a triangle with vertices a, b, c
-prop is_triangle(A point,B point,C point):
-    A!=B
-    A!=C
-    B!=C
+
 
 # triangle12: triangle with ratio 1:2
 # c is a point such that the ratio of ab to ac is 1:2
@@ -1534,41 +1531,20 @@ know:
         $finite_line_congruence(finite_line_of(O,A),finite_line_of(O,B))
         not $three_points_collinear(A,B,C)
         =>:
-            exist X,Y,Z,I point st $is_2l1c(X,Y,Z,I,A,B,C,O)
+            exist X,Y,z,I point st $is_2l1c(X,Y,z,I,A,B,C,O)
 
 # e5128: specific construction from problem e5128
-# x, y are points constructed from quadrangle abcd
-prop is_e5128(X point,Y point,A point,B point,C point,D point):
-    $finite_line_congruence(finite_line_of(C,B),finite_line_of(C,D))
-    $perp(line_of(B,C),line_of(B,A))
-    $finite_line_congruence(finite_line_of(C,B),finite_line_of(C,X))
-    Y $in line_of(A,B)
-    X $in line_of(Y,D)
-    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,D)),angle_of_two_rays(ray_with_end_point_and_direction(X,A),ray_with_end_point_and_direction(X,Y)))
 
-let fn e5128_points(A point,B point,C point,D point) cart(point,point):
-    dom:
-        $finite_line_congruence(finite_line_of(C,B),finite_line_of(C,D))
-        $perp(line_of(B,C),line_of(B,A))
-    =>:
-        $is_e5128(e5128_points(A,B,C,D)[1],e5128_points(A,B,C,D)[2],A,B,C,D)
-
-know:
-    forall A,B,C,D point:
-        $finite_line_congruence(finite_line_of(C,B),finite_line_of(C,D))
-        $perp(line_of(B,C),line_of(B,A))
-        =>:
-            exist X,Y point st $is_e5128(X,Y,A,B,C,D)
 
 # 3peq: three points with equal distances
 # x, y, z are points such that zx = zy and x, y are on sides ab, ac respectively
-prop is_3peq(X point,Y point,Z point,A point,B point,C point):
+prop is_3peq(X point,Y point,z point,A point,B point,C point):
     not $three_points_collinear(A,B,C)
-    Z $in line_of(B,C)
+    z $in line_of(B,C)
     X $in line_of(A,B)
     Y $in line_of(A,C)
-    X $in line_of(Y,Z)
-    $finite_line_congruence(finite_line_of(Z,X),finite_line_of(Z,Y))
+    X $in line_of(Y,z)
+    $finite_line_congruence(finite_line_of(z,X),finite_line_of(z,Y))
 
 let fn _3peq_points(A point,B point,C point) cart(point,point,point):
     dom:
@@ -1580,7 +1556,7 @@ know:
     forall A,B,C point:
         not $three_points_collinear(A,B,C)
         =>:
-            exist X,Y,Z point st $is_3peq(X,Y,Z,A,B,C)
+            exist X,Y,z point st $is_3peq(X,Y,z,A,B,C)
 
 # trisect: trisect an angle
 # x, y are points that trisect angle abc (divide it into three equal parts)
