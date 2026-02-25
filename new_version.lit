@@ -1968,15 +1968,14 @@ know:
 
 # Rule 10
 ### rules.txt: eqangle a b c d m n p q, eqangle c d e f p q r u => eqangle a b e f m n r u
-### 自然语言：等角关系的传递性：若从点 c 看角 ab 等于从点 m 看角 n p（参考 d 和 q），且从点 c 看角 d e 等于从点 p 看角 q r（参考 f 和 u），则从点 c 看角 ab 等于从点 m 看角 n r（参考 e 和 u）。
-### 注：由于 eqangle_points 的新定义（7 个参数），这里需要根据具体几何意义来理解角度关系。
-### 暂时保留原始形式，待后续根据实际几何意义调整。
+### 自然语言：第一组：∠(ab, cd) = ∠(mn, pq)第二组：∠(cd, ef) = ∠(pq, ru)
+### 结论：∠(ab, ef) = ∠(mn, ru)
 know:
-    forall a,b,c,d,m,n,p,q,e,f,r,u point:
-        $eqangle_points(a,b,c,d,n,p,m,q)
-        $eqangle_points(d,e,c,f,q,r,p,u)
+    forall A,B,C,D,M,N,P,Q,E,F,R,U point:
+        angle_of_two_lines(line_of(A,B),line_of(C,D))=angle_of_two_lines(line_of(M,N),line_of(P,Q))
+        angle_of_two_lines(line_of(C,D),line_of(E,F))=angle_of_two_lines(line_of(P,Q),line_of(R,U))
         =>:
-            $eqangle_points(a,b,c,e,n,r,m,u)
+            angle_of_two_lines(line_of(A,B),line_of(E,F))=angle_of_two_lines(line_of(M,N),line_of(R,U))
 
 # Rule 11
 ### rules.txt: eqratio a b c d m n p q, eqratio c d e f p q r u => eqratio a b e f m n r u
