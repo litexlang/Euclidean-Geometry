@@ -1838,15 +1838,7 @@ prop ncoll4_points(P point,Q point,A point,B point):
     not $three_points_collinear(P,Q,B)
 
 
-# For eqangle A B P Q C D P Q: angle ABP equals angle CDP (with P, Q as reference points)
-# This represents ∠(AB, PQ) = ∠(CD, PQ) where PQ is a common reference
-prop eqangle_points(A point,B point,P point,Q point,C point,D point):
-    A!=B
-    C!=D
-    P!=Q
-    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),angle_of_two_rays(ray_with_end_point_and_direction(P,C),ray_with_end_point_and_direction(P,D)))
 
-# For eqangle6 P A P B Q A Q B: angle APB equals angle AQB
 prop eqangle6_points(P point,A point,B point,Q point):
     P!=A
     P!=B
@@ -1909,10 +1901,10 @@ know:
 ### rules.txt: eqangle A B P Q C D P Q => para A B C D
 ### 自然语言：若 \(\angle(AB,PQ)=\angle(CD,PQ)\)（两条直线 AB 与 CD 相对同一参考直线 PQ 的夹角相等），则 AB ∥ CD。
 know:
-    forall A,B,P,Q,C,D point:
-        $eqangle_points(A,B,P,Q,C,D,P,Q)
+    forall l1,l2,l3 line:
+        angle_of_two_lines(l1,l3)=angle_of_two_lines(l2,l3)
         =>:
-            $parallel_line(line_of(A,B),line_of(C,D))
+            $parallel_line(l1,l2)
 
 # Rule 4
 ### rules.txt: cyclic A B P Q => eqangle P A P B Q A Q B
@@ -1972,7 +1964,7 @@ know:
         $perp(line_of(E,F),line_of(G,H))
         not $parallel_line(line_of(A,B),line_of(E,F))
         =>:
-            $eqangle_points(A,B,E,F,C,D,G,H)
+            angle_of_two_lines(line_of(A,B),line_of(E,F))=angle_of_two_lines(line_of(C,D),line_of(G,H))
 
 # Rule 10
 ### rules.txt: eqangle a b c d m n p q, eqangle c d e f p q r u => eqangle a b e f m n r u
@@ -2199,15 +2191,6 @@ know:
         =>:
             $eqratio_points(M,A,A,B,N,C,C,D)
 
-# For eqangle A B P Q C D U V: angle between lines AB and PQ equals angle between lines CD and UV
-prop eqangle8_points(A point,B point,P point,Q point,C point,D point,U point,V point):
-    A!=B
-    P!=Q
-    C!=D
-    U!=V
-    # This represents that the angle between lines AB and PQ equals the angle between lines CD and UV
-    # A more complete definition would involve finding intersection points and comparing angles
-
 
 
 
@@ -2229,7 +2212,7 @@ prop triangle_similar(A point,B point,C point,P point,Q point,R point):
 ### 自然语言：若直线 AB 与 PQ 的夹角等于直线 CD 与 UV 的夹角，且 PQ 垂直于 UV，则 AB 垂直于 CD。
 know:
     forall A,B,P,Q,C,D,U,V point:
-        $eqangle8_points(A,B,P,Q,C,D,U,V)
+        angle_of_two_lines(line_of(A,B),line_of(P,Q))=angle_of_two_lines(line_of(C,D),line_of(U,V))
         $perp(line_of(P,Q),line_of(U,V))
         =>:
             $perp(line_of(A,B),line_of(C,D))
