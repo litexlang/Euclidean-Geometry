@@ -1406,8 +1406,18 @@ prop is_risos(A point,B point,C point):
 # s_angle: supplementary angle
 # a1 and a2 are supplementary angles
 prop is_s_angle(a1 angle,a2 angle):
-    sides_of(a1) = sides_of(a2)
     a1=angle_of_two_rays(converse_extension_ray_of(sides_of(a2)[1]),sides_of(a2)[2])
+
+let fn s_angle(a angle) angle:
+    =>:
+        $is_s_angle(s_angle(a),a)
+
+let fn angle_of_two_lines(l1 line,l2 line) angle:
+    dom:
+        $intersect_of_two_lines(l1,l2)
+    =>:
+        
+        angle_of_two_lines(l1,l2)=min(angle_of_two_rays(ray_with_end_point_and_direction(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l1)),ray_with_end_point_and_direction(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l2))),s_angle(angle_of_two_rays(ray_with_end_point_and_direction(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l1)),ray_with_end_point_and_direction(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l2)))))
 
 # shift: shift/translate point
 # x is the point such that xb = cd and xc = bd (translation of point b by vector cd)
