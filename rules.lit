@@ -2,7 +2,7 @@
 # Auxiliary definitions for rules
 
 ## Helper properties for rules translation
-run_file new_version.lit    
+import "new_version.lit"    
 
 # For cyclic A B C D: points A, B, C, D are concyclic (lie on the same circle)
 prop four_points_cyclic(A point,B point,C point,D point,c circle):
