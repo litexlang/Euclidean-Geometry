@@ -1777,11 +1777,7 @@ know:
 # x is a point on the circumcircle of triangle abc
 
 
-"""
-平面几何的几何量以及基本几何关系定义几乎完成，一些性质还缺乏（之后要翻译rules.txt）：平行线夹角相等，三角形相似全等判定法则诸如此类
-angle,length_of_finite_line 如何打到R_pos
-直线夹角怎么定义 rule3，9，10,31
-"""
+
 
 # Geometric rules from rules.txt
 # Auxiliary definitions for rules
