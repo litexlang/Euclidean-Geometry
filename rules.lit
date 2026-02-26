@@ -1,0 +1,580 @@
+# Geometric rules from rules.txt
+# Auxiliary definitions for rules
+
+## Helper properties for rules translation
+run_file "new_version.lit"    
+
+# For cyclic A B C D: points A, B, C, D are concyclic (lie on the same circle)
+prop four_points_cyclic(A point,B point,C point,D point,c circle):
+    A $in c
+    B $in c
+    C $in c
+    D $in c
+
+prop cyclic_points(A point,B point,C point,D point):
+    A!=B
+    A!=C
+    A!=D
+    B!=C
+    B!=D
+    C!=D
+    exist c circle st $four_points_cyclic(A,B,C,D,c)    
+
+# For cyclic A B C P Q R: six points are concyclic
+prop six_points_cyclic(A point,B point,C point,P point,Q point,R point,c circle):
+    A $in c
+    B $in c
+    C $in c
+    P $in c
+    Q $in c
+    R $in c
+ 
+prop cyclic6_points(A point,B point,C point,P point,Q point,R point):
+    A!=B
+    A!=C
+    A!=P
+    A!=Q
+    A!=R
+    B!=C
+    B!=P
+    B!=Q
+    B!=R
+    C!=P
+    C!=Q
+    C!=R
+    P!=Q
+    P!=R
+    Q!=R
+    exist c circle st $six_points_cyclic(A,B,C,P,Q,R,c)
+
+
+# For ncoll A B E: points A, B, E are not collinear
+prop ncoll_points(A point,B point,E point):
+    not $three_points_collinear(A,B,E)
+
+# For ncoll P Q A B: points P,Q,A,B are not all collinear
+prop ncoll4_points(P point,Q point,A point,B point):
+    not $three_points_collinear(P,Q,A) 
+    not $three_points_collinear(P,Q,B)
+
+
+
+prop eqangle6_points(P point,A point,B point,Q point):
+    P!=A
+    P!=B
+    Q!=A
+    Q!=B
+    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),angle_of_two_rays(ray_with_end_point_and_direction(Q,A),ray_with_end_point_and_direction(Q,B)))
+
+# For eqratio: ratio equality (to be defined more precisely based on context)
+prop eqratio_points(A point,B point,C point,D point,M point,N point,P point,Q point):
+    A!=B
+    C!=D
+    M!=N
+    P!=Q
+    
+    length_of_finite_line(finite_line_of(A,B)) / length_of_finite_line(finite_line_of(C,D)) = length_of_finite_line(finite_line_of(M,N)) / length_of_finite_line(finite_line_of(P,Q))
+
+# For eqratio6 d b d c a b a c: ratio DB/DC = AB/AC
+prop eqratio6_points(D point,B point,C point,A point):
+    D!=B
+    D!=C
+    A!=B
+    A!=C
+    length_of_finite_line(finite_line_of(D,B)) / length_of_finite_line(finite_line_of(D,C)) = length_of_finite_line(finite_line_of(A,B)) / length_of_finite_line(finite_line_of(A,C))
+
+# For eqratio3 A B C D O O: ratio with three points (A, B, C, D, O, O)
+prop eqratio3_points(A point,B point,C point,D point,O point):
+    A!=B
+    C!=D
+    O=intersection_point(line_of(A,C),line_of(B,D))
+    length_of_finite_line(finite_line_of(A,O)) / length_of_finite_line(finite_line_of(C,O)) = length_of_finite_line(finite_line_of(B,O)) / length_of_finite_line(finite_line_of(D,O))
+  
+prop triangle_similar(A point,B point,C point,P point,Q point,R point):
+    $ncoll_points(A,B,C)
+    $ncoll_points(P,Q,R)
+    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C)),angle_of_two_rays(ray_with_end_point_and_direction(Q,P),ray_with_end_point_and_direction(Q,R)))
+    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)),angle_of_two_rays(ray_with_end_point_and_direction(R,P),ray_with_end_point_and_direction(R,Q)))
+    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,C)),angle_of_two_rays(ray_with_end_point_and_direction(P,Q),ray_with_end_point_and_direction(P,R)))
+    $eqratio_points(A,B,P,Q,B,C,Q,R)
+    $eqratio_points(A,C,P,R,C,B,R,Q)
+
+
+# Rule 1
+### If line AB is perpendicular to line CD, and line CD is perpendicular to line EF,
+### and points A, B, E are not collinear, then line AB is parallel to line EF.
+### 如果直线AB垂直于直线CD，直线CD垂直于直线EF，且点A、B、E不共线，则直线AB平行于直线EF。
+know:
+    forall A,B,C,D,E,F point:
+        $perp(line_of(A,B),line_of(C,D))
+        $perp(line_of(C,D),line_of(E,F))
+        $ncoll_points(A,B,E)
+        =>:
+            $parallel_line(line_of(A,B),line_of(E,F))
+
+# Rule 2
+### If segments OA, OB, OC, OD are all congruent (OA ≅ OB ≅ OC ≅ OD),
+### then points A, B, C, D are concyclic (lie on the same circle).
+### 如果线段OA、OB、OC、OD都相等（OA ≅ OB ≅ OC ≅ OD），则点A、B、C、D共圆。
+know:
+    forall O,A,B,C,D point:
+        $finite_line_congruence(finite_line_of(O,A),finite_line_of(O,B))
+        $finite_line_congruence(finite_line_of(O,B),finite_line_of(O,C))
+        $finite_line_congruence(finite_line_of(O,C),finite_line_of(O,D))
+        =>:
+            $cyclic_points(A,B,C,D)
+
+# Rule 3
+### rules.txt: eqangle A B P Q C D P Q => para A B C D
+### 自然语言：若 \(\angle(AB,PQ)=\angle(CD,PQ)\)（两条直线 AB 与 CD 相对同一参考直线 PQ 的夹角相等），则 AB ∥ CD。
+know:
+    forall l1,l2,l3 line:
+        angle_of_two_lines(l1,l3)=angle_of_two_lines(l2,l3)
+        =>:
+            $parallel_line(l1,l2)
+
+# Rule 4
+### rules.txt: cyclic A B P Q => eqangle P A P B Q A Q B
+### 自然语言：同圆定理（同弦所对圆周角相等）：若 A,B,P,Q 共圆，则 \(\angle APB = \angle AQB\)（同为弦 AB 所对的圆周角）。
+know:
+    forall A,B,P,Q point:
+        $cyclic_points(A,B,P,Q)
+        =>:
+            $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),angle_of_two_rays(ray_with_end_point_and_direction(Q,A),ray_with_end_point_and_direction(Q,B)))
+
+# Rule 5
+### rules.txt: eqangle6 P A P B Q A Q B, ncoll P Q A B => cyclic A B P Q
+### 自然语言：圆周角定理的逆：若 \(\angle APB=\angle AQB\)，并且不出现 P,Q,A,B 全共线的退化情况，则 A,B,P,Q 共圆。
+know:
+    forall P,A,B,Q point:
+        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),angle_of_two_rays(ray_with_end_point_and_direction(Q,A),ray_with_end_point_and_direction(Q,B)))
+        $ncoll4_points(P,Q,A,B)
+        =>:
+            $cyclic_points(A,B,P,Q)
+
+# Rule 6
+### rules.txt: cyclic A B C P Q R, eqangle C A C B R P R Q => cong A B P Q
+### 自然语言：同圆中“等角对等弦”：在同一圆上，若圆周角 \(\angle ACB\) 与 \(\angle PRQ\) 相等，则它们所对的弦 AB 与 PQ 相等。
+know:
+    forall A,B,C,P,Q,R point:
+        $cyclic6_points(A,B,C,P,Q,R)
+        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)),angle_of_two_rays(ray_with_end_point_and_direction(R,P),ray_with_end_point_and_direction(R,Q)))
+        =>:
+            $finite_line_congruence(finite_line_of(A,B),finite_line_of(P,Q))
+
+# Rule 7
+### rules.txt: midp E A B, midp F A C => para E F B C
+### 自然语言：三角形中位线定理：若 E、F 分别是 AB、AC 的中点，则 EF ∥ BC。
+know:
+    forall E,A,B,F,C point:
+        $is_mid_point(E,A,B)
+        $is_mid_point(F,A,C)
+        =>:
+            $parallel_line(line_of(E,F),line_of(B,C))
+
+# Rule 8
+### rules.txt: para A B C D, coll O A C, coll O B D => eqratio3 A B C D O O
+### 自然语言：平行线截比/相似带来的比例结论：AB ∥ CD 且 O 分别在 AC、BD 上时，会导出关于 A,B,C,D 与交点 O 的一个比例关系。
+know:
+    forall A,B,C,D,O point:
+        $parallel_line(line_of(A,B),line_of(C,D))
+        O=intersection_point(line_of(A,B),line_of(C,D))
+        =>:
+            $eqratio3_points(A,B,C,D,O)
+
+# Rule 9
+### rules.txt: perp A B C D, perp E F G H, npara A B E F => eqangle A B E F C D G H
+### 自然语言：若 AB ⟂ CD 且 EF ⟂ GH，则 \(\angle(AB,EF)=\angle(CD,GH)\)；再加 “AB 与 EF 不平行” 用来排除夹角为 0/180° 的退化情况。
+know:
+    forall A,B,C,D,E,F,G,H point:
+        $perp(line_of(A,B),line_of(C,D))
+        $perp(line_of(E,F),line_of(G,H))
+        not $parallel_line(line_of(A,B),line_of(E,F))
+        =>:
+            angle_of_two_lines(line_of(A,B),line_of(E,F))=angle_of_two_lines(line_of(C,D),line_of(G,H))
+
+# Rule 10
+### rules.txt: eqangle a b c d m n p q, eqangle c d e f p q r u => eqangle a b e f m n r u
+### 自然语言：第一组：∠(ab, cd) = ∠(mn, pq)第二组：∠(cd, ef) = ∠(pq, ru)
+### 结论：∠(ab, ef) = ∠(mn, ru)
+know:
+    forall A,B,C,D,M,N,P,Q,E,F,R,U point:
+        angle_of_two_lines(line_of(A,B),line_of(C,D))=angle_of_two_lines(line_of(M,N),line_of(P,Q))
+        angle_of_two_lines(line_of(C,D),line_of(E,F))=angle_of_two_lines(line_of(P,Q),line_of(R,U))
+        =>:
+            angle_of_two_lines(line_of(A,B),line_of(E,F))=angle_of_two_lines(line_of(M,N),line_of(R,U))
+
+# Rule 11
+### rules.txt: eqratio a b c d m n p q, eqratio c d e f p q r u => eqratio a b e f m n r u
+### 自然语言：比例关系的传递性：若 ab/cd = mn/pq 且 cd/ef = pq/ru，则 ab/ef = mn/ru。
+know:
+    forall A,B,C,D,M,N,P,Q,E,F,R,U point:
+        $eqratio_points(A,B,C,D,M,N,P,Q)
+        $eqratio_points(C,D,E,F,P,Q,R,U)
+        =>:
+            $eqratio_points(A,B,E,F,M,N,R,U)
+
+# Rule 12
+### rules.txt: eqratio6 d b d c a b a c, coll d b c, ncoll a b c => eqangle6 a b a d a d a c
+### 自然语言：若 DB/DC = AB/AC，且 D, B, C 共线，A, B, C 不共线，则角 BAD 等于角 CAD（即 AD 是角 BAC 的角平分线）。
+know:
+    forall D,B,C,A point:
+        $eqratio6_points(D,B,C,A)
+        $three_points_collinear(D,B,C)
+        D $in finite_line_of(B,C)
+        $ncoll_points(A,B,C)
+        =>:
+            $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,D)),angle_of_two_rays(ray_with_end_point_and_direction(A,D),ray_with_end_point_and_direction(A,C)))
+
+# Rule 13
+### rules.txt: eqangle6 a b a d a d a c, coll d b c, ncoll a b c => eqratio6 d b d c a b a c
+### 自然语言：Rule 12 的逆：若角 BAD 等于角 CAD（即 AD 是角 BAC 的角平分线），且 D, B, C 共线，A, B, C 不共线，则 DB/DC = AB/AC（角平分线定理）。
+know:
+    forall A,B,D,C point:
+        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,D)),angle_of_two_rays(ray_with_end_point_and_direction(A,D),ray_with_end_point_and_direction(A,C)))
+        $three_points_collinear(D,B,C)
+        D $in finite_line_of(B,C)
+        $ncoll_points(A,B,C)
+        =>:
+            $eqratio6_points(D,B,C,A)
+
+# Rule 14
+### rules.txt: cong O A O B, ncoll O A B => eqangle O A A B A B O B
+### 自然语言：等腰三角形底角相等：若 OA = OB（等腰三角形），且 O, A, B 不共线，则角 OAB 等于角 OBA。
+know:
+    forall O,A,B point:
+        $finite_line_congruence(finite_line_of(O,A),finite_line_of(O,B))
+        $ncoll_points(O,A,B)
+        =>:
+            $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,O),ray_with_end_point_and_direction(A,B)),angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,O)))
+
+# Rule 15
+### rules.txt: eqangle6 A O A B B A B O, ncoll O A B => cong O A O B
+### 自然语言：Rule 14 的逆：若角 AOB 等于角 BAO（即角 OAB = 角 OBA），且 O, A, B 不共线，则 OA = OB（等腰三角形判定）。
+know:
+    forall A,O,B point:
+        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,O),ray_with_end_point_and_direction(A,B)),angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,O)))
+        $ncoll_points(O,A,B)
+        =>:
+            $finite_line_congruence(finite_line_of(O,A),finite_line_of(O,B))
+
+# Rule 16
+### rules.txt: circle O A B C, perp O A A X => eqangle A X A B C A C B
+### 自然语言：圆的切线性质：若 O 为圆心，A, B, C 在圆上，且直线 OA 垂直于直线 AX（即 AX 是切线），则角 XAB 等于角 ACB（切线与弦的夹角等于同弧所对的圆周角）。
+know:
+    forall O,A,B,C,X point:
+        $center_of_circle_of_triangle(O,A,B,C)
+        $perp(line_of(O,A),line_of(A,X))
+        =>:
+            $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,X),ray_with_end_point_and_direction(A,B)),angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)))
+
+# Rule 17
+### rules.txt: circle O A B C, eqangle A X A B C A C B => perp O A A X
+### 自然语言：Rule 16 的逆：若 O 为圆心，A, B, C 在圆上，且角 XAB 等于角 ACB，则直线 OA 垂直于直线 AX（切线判定）。
+know:
+    forall O,A,B,C,X point:
+        $center_of_circle_of_triangle(O,A,B,C)
+        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,X),ray_with_end_point_and_direction(A,B)),angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)))
+        =>:
+            $perp(line_of(O,A),line_of(A,X))
+
+# Rule 18
+### rules.txt: circle O A B C, midp M B C => eqangle A B A C O B O M
+### 自然语言：圆的性质：若 O 为圆心，A, B, C 在圆上，且 M 是 BC 的中点，则角 BAC 等于角 BOM（圆心角与圆周角的关系）。
+know:
+    forall O,A,B,C,M point:
+        $center_of_circle_of_triangle(O,A,B,C)
+        $is_mid_point(M,B,C)
+        =>:
+            $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,C)),angle_of_two_rays(ray_with_end_point_and_direction(O,B),ray_with_end_point_and_direction(O,M)))
+
+# Rule 19
+### rules.txt: circle O A B C, coll M B C, eqangle A B A C O B O M => midp M B C
+### 自然语言：Rule 18 的逆：若 O 为圆心，A, B, C 在圆上，M 在直线 BC 上，且角 BAC 等于角 BOM，则 M 是 BC 的中点。
+know:
+    forall O,A,B,C,M point:
+        $center_of_circle_of_triangle(O,A,B,C)
+        $three_points_collinear(M,B,C)
+        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,C)),angle_of_two_rays(ray_with_end_point_and_direction(O,B),ray_with_end_point_and_direction(O,M)))
+        =>:
+            $is_mid_point(M,B,C)
+
+# Rule 20
+### rules.txt: perp A B B C, midp M A C => cong A M B M
+### 自然语言：直角三角形斜边中点性质：若 AB 垂直于 BC（即角 ABC 是直角），且 M 是 AC 的中点，则 AM = BM（直角三角形斜边上的中线等于斜边的一半，因此 M 到 A 和 B 的距离相等）。
+know:
+    forall A,B,C,M point:
+        $perp(line_of(A,B),line_of(B,C))
+        $is_mid_point(M,A,C)
+        =>:
+            $finite_line_congruence(finite_line_of(A,M),finite_line_of(B,M))
+
+# Rule 21
+### rules.txt: circle O A B C, coll O A C => perp A B B C
+### 自然语言：圆的性质：若 O 为圆心，A, B, C 在圆上，且 O, A, C 共线（即 AC 是直径），则 AB 垂直于 BC（直径所对的圆周角是直角）。
+know:
+    forall O,A,B,C point:
+        $center_of_circle_of_triangle(O,A,B,C)
+        $three_points_collinear(O,A,C)
+        =>:
+            $perp(line_of(A,B),line_of(B,C))
+
+# Rule 22
+### rules.txt: cyclic A B C D, para A B C D => eqangle A D C D C D C B
+### 自然语言：圆内接梯形的性质：若 A, B, C, D 共圆，且 AB ∥ CD，则角 ADC 等于角 BCD（同底角相等）。
+know:
+    forall A,B,C,D point:
+        $cyclic_points(A,B,C,D)
+        $parallel_line(line_of(A,B),line_of(C,D))
+        =>:
+            $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,D),ray_with_end_point_and_direction(C,D)),angle_of_two_rays(ray_with_end_point_and_direction(C,D),ray_with_end_point_and_direction(C,B)))
+
+# Rule 23
+### rules.txt: midp M A B, perp O M A B => cong O A O B
+### 自然语言：垂直平分线的性质：若 M 是 AB 的中点，且直线 OM 垂直于 AB，则 OA = OB（O 在 AB 的垂直平分线上，因此到 A 和 B 的距离相等）。
+know:
+    forall M,A,B,O point:
+        $is_mid_point(M,A,B)
+        $perp(line_of(O,M),line_of(A,B))
+        =>:
+            $finite_line_congruence(finite_line_of(O,A),finite_line_of(O,B))
+
+# Rule 24
+### rules.txt: cong A P B P, cong A Q B Q => perp A B P Q
+### 自然语言：到两点距离相等的点的轨迹：若 AP = BP 且 AQ = BQ（P 和 Q 都在 AB 的垂直平分线上），则 AB 垂直于 PQ。
+know:
+    forall A,P,B,Q point:
+        $finite_line_congruence(finite_line_of(A,P),finite_line_of(B,P))
+        $finite_line_congruence(finite_line_of(A,Q),finite_line_of(B,Q))
+        =>:
+            $perp(line_of(A,B),line_of(P,Q))
+
+# Rule 25
+### rules.txt: cong A P B P, cong A Q B Q, cyclic A B P Q => perp P A A Q
+### 自然语言：圆的性质：若 AP = BP，AQ = BQ，且 A, B, P, Q 共圆，则 PA 垂直于 AQ（A 是圆心，PA 和 AQ 是半径，因此垂直）。
+know:
+    forall A,P,B,Q point:
+        $finite_line_congruence(finite_line_of(A,P),finite_line_of(B,P))
+        $finite_line_congruence(finite_line_of(A,Q),finite_line_of(B,Q))
+        $cyclic_points(A,B,P,Q)
+        =>:
+            $perp(line_of(P,A),line_of(A,Q))
+
+# Rule 26
+### rules.txt: midp M A B, midp M C D => para A C B D
+### 自然语言：中点连线性质：若 M 既是 AB 的中点，也是 CD 的中点，则 AC ∥ BD（对角线互相平分的四边形是平行四边形）。
+know:
+    forall M,A,B,C,D point:
+        $is_mid_point(M,A,B)
+        $is_mid_point(M,C,D)
+        =>:
+            $parallel_line(line_of(A,C),line_of(B,D))
+
+# Rule 27
+### rules.txt: midp M A B, para A C B D, para A D B C => midp M C D
+### 自然语言：Rule 26 的逆：若 M 是 AB 的中点，且 AC ∥ BD，AD ∥ BC（即 ABCD 是平行四边形），则 M 也是 CD 的中点。
+know:
+    forall M,A,B,C,D point:
+        $is_mid_point(M,A,B)
+        $parallel_line(line_of(A,C),line_of(B,D))
+        $parallel_line(line_of(A,D),line_of(B,C))
+        =>:
+            $is_mid_point(M,C,D)
+
+# For sameside A O C B O D: points A and C are on the same side of line through O, and B and D are on the same side
+
+  
+# Rule 28
+### rules.txt: eqratio O A A C O B B D, coll O A C, coll O B D, ncoll A B C, sameside A O C B O D => para A B C D
+### 自然语言：比例判定平行：若 OA/AC = OB/BD，O 在 AC 上，O 在 BD 上，A, B, C 不共线，且 A, C 在 O 的同侧，B, D 在 O 的同侧，则 AB ∥ CD。
+know:
+    forall O,A,C,B,D point:
+        $eqratio_points(O,A,A,C,O,B,B,D)
+        $three_points_collinear(O,A,C)
+        $three_points_collinear(O,B,D)
+        $ncoll_points(A,B,C)
+        $point_between(A,C,O) or $point_between(C,O,A)
+        $point_between(B,D,O) or $point_between(D,O,B)
+        =>:
+            $parallel_line(line_of(A,B),line_of(C,D))
+
+# Rule 29
+### rules.txt: para A B A C => coll A B C
+### 自然语言：平行线的退化情况：若 AB ∥ AC（两条直线都经过点 A），则 A, B, C 共线（同一直线）。
+know:
+    forall A,B,C point:
+        $parallel_line(line_of(A,B),line_of(A,C))
+        =>:
+            $three_points_collinear(A,B,C)
+
+# Rule 30
+### rules.txt: midp M A B, midp N C D => eqratio M A A B N C C D
+### 自然语言：中点比例关系：若 M 是 AB 的中点，N 是 CD 的中点，则 MA/AB = NC/CD（都等于 1/2）。
+know:
+    forall M,A,B,N,C,D point:
+        $is_mid_point(M,A,B)
+        $is_mid_point(N,C,D)
+        =>:
+            $eqratio_points(M,A,A,B,N,C,C,D)
+
+
+
+
+
+
+
+    
+
+
+# Rule 31
+### rules.txt: eqangle A B P Q C D U V, perp P Q U V => perp A B C D
+### 自然语言：若直线 AB 与 PQ 的夹角等于直线 CD 与 UV 的夹角，且 PQ 垂直于 UV，则 AB 垂直于 CD。
+know:
+    forall A,B,P,Q,C,D,U,V point:
+        angle_of_two_lines(line_of(A,B),line_of(P,Q))=angle_of_two_lines(line_of(C,D),line_of(U,V))
+        $perp(line_of(P,Q),line_of(U,V))
+        =>:
+            $perp(line_of(A,B),line_of(C,D))
+
+# Rule 32
+### rules.txt: eqratio A B P Q C D U V, cong P Q U V => cong A B C D
+### 自然语言：若 AB/PQ = CD/UV，且 PQ = UV，则 AB = CD。
+know:
+    forall A,B,P,Q,C,D,U,V point:
+        $eqratio_points(A,B,P,Q,C,D,U,V)
+        $finite_line_congruence(finite_line_of(P,Q),finite_line_of(U,V))
+        =>:
+            $finite_line_congruence(finite_line_of(A,B),finite_line_of(C,D))
+
+# Rule 33
+### rules.txt: cong A B P Q, cong B C Q R, cong C A R P, ncoll A B C => contri* A B C P Q R
+### 自然语言：全等三角形判定（SSS）：若 AB = PQ，BC = QR，CA = RP，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
+know:
+    forall A,B,C,P,Q,R point:
+        $finite_line_congruence(finite_line_of(A,B),finite_line_of(P,Q))
+        $finite_line_congruence(finite_line_of(B,C),finite_line_of(Q,R))
+        $finite_line_congruence(finite_line_of(C,A),finite_line_of(R,P))
+        $ncoll_points(A,B,C)
+        $ncoll_points(P,Q,R)
+        =>:
+            $triangle_congruence(A,B,C,P,Q,R)
+
+# Rule 34
+### rules.txt: cong A B P Q, cong B C Q R, eqangle6 B A B C Q P Q R, ncoll A B C => contri* A B C P Q R
+### 自然语言：全等三角形判定（SAS）：若 AB = PQ，BC = QR，角 ABC = 角 PQR，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
+know:
+    forall A,B,C,P,Q,R point:
+        $finite_line_congruence(finite_line_of(A,B),finite_line_of(P,Q))
+        $finite_line_congruence(finite_line_of(B,C),finite_line_of(Q,R))
+        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C)),angle_of_two_rays(ray_with_end_point_and_direction(Q,P),ray_with_end_point_and_direction(Q,R)))
+        $ncoll_points(A,B,C)
+        $ncoll_points(P,Q,R)
+        =>:
+            $triangle_congruence(A,B,C,P,Q,R)
+
+# Rule 35
+### rules.txt: eqangle6 B A B C Q P Q R, eqangle6 C A C B R P R Q, ncoll A B C => simtri A B C P Q R
+### 自然语言：相似三角形判定（AA）：若角 ABC = 角 PQR，角 ACB = 角 PRQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 相似。
+know:
+    forall A,B,C,P,Q,R point:
+        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C)),angle_of_two_rays(ray_with_end_point_and_direction(Q,P),ray_with_end_point_and_direction(Q,R)))
+        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)),angle_of_two_rays(ray_with_end_point_and_direction(R,P),ray_with_end_point_and_direction(R,Q)))
+        $ncoll_points(A,B,C)
+        $ncoll_points(P,Q,R)
+        =>:
+            $triangle_similar(A,B,C,P,Q,R)
+
+# Rule 36
+### rules.txt: eqangle6 B A B C Q R Q P, eqangle6 C A C B R Q R P, ncoll A B C => simtri2 A B C P Q R
+### 自然语言：相似三角形判定（AA，交替方向）：若角 ABC = 角 QRP，角 ACB = 角 RQP，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 相似（交替方向）。
+###不必要
+
+# Rule 37
+### rules.txt: eqangle6 B A B C Q P Q R, eqangle6 C A C B R P R Q, ncoll A B C, cong A B P Q => contri A B C P Q R
+### 自然语言：全等三角形判定（ASA）：若角 ABC = 角 PQR，角 ACB = 角 PRQ，AB = PQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
+know:
+    forall A,B,C,P,Q,R point:
+        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C)),angle_of_two_rays(ray_with_end_point_and_direction(Q,P),ray_with_end_point_and_direction(Q,R)))
+        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)),angle_of_two_rays(ray_with_end_point_and_direction(R,P),ray_with_end_point_and_direction(R,Q)))
+        $ncoll_points(A,B,C)
+        $ncoll_points(P,Q,R)
+        $finite_line_congruence(finite_line_of(B,C),finite_line_of(Q,R))
+        =>:
+            $triangle_congruence(A,B,C,P,Q,R)
+
+# Rule 38
+### rules.txt: eqangle6 B A B C Q R Q P, eqangle6 C A C B R Q R P, ncoll A B C, cong A B P Q => contri2 A B C P Q R
+### 自然语言：全等三角形判定（AAS，交替方向）：若角 ABC = 角 QRP，角 ACB = 角 RQP，AB = PQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
+know:
+    forall A,B,C,P,Q,R point:
+        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C)),angle_of_two_rays(ray_with_end_point_and_direction(Q,R),ray_with_end_point_and_direction(Q,P)))
+        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)),angle_of_two_rays(ray_with_end_point_and_direction(R,Q),ray_with_end_point_and_direction(R,P)))
+        $ncoll_points(A,B,C)
+        $ncoll_points(P,Q,R)
+        $finite_line_congruence(finite_line_of(A,B),finite_line_of(P,Q))
+        =>:
+            $triangle_congruence(A,B,C,P,Q,R)
+
+# Rule 39
+### rules.txt: eqratio6 B A B C Q P Q R, eqratio6 C A C B R P R Q, ncoll A B C => simtri* A B C P Q R
+### 自然语言：相似三角形判定（SSS）：若 BA/BC = QP/QR，CA/CB = RP/RQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 相似。
+know:
+    forall A,B,C,P,Q,R point:
+        $eqratio_points(B,A,B,C,Q,P,Q,R)
+        $eqratio_points(C,A,C,B,R,P,R,Q)
+        $ncoll_points(A,B,C)
+        $ncoll_points(P,Q,R)
+        =>:
+            $triangle_similar(A,B,C,P,Q,R)
+
+# Rule 40
+### rules.txt: eqratio6 B A B C Q P Q R, eqangle6 B A B C Q P Q R, ncoll A B C => simtri* A B C P Q R
+### 自然语言：相似三角形判定（SAS）：若 BA/BC = QP/QR，角 ABC = 角 PQR，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 相似。
+know:
+    forall A,B,C,P,Q,R point:
+        $eqratio_points(B,A,B,C,Q,P,Q,R)
+        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C)),angle_of_two_rays(ray_with_end_point_and_direction(Q,P),ray_with_end_point_and_direction(Q,R)))
+        $ncoll_points(A,B,C)
+        $ncoll_points(P,Q,R)
+        =>:
+            $triangle_similar(A,B,C,P,Q,R)
+
+# Rule 41
+### rules.txt: eqratio6 B A B C Q P Q R, eqratio6 C A C B R P R Q, ncoll A B C, cong A B P Q => contri* A B C P Q R
+### 自然语言：全等三角形判定（SSS，通过比例）：若 BA/BC = QP/QR，CA/CB = RP/RQ，AB = PQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
+know:
+    forall A,B,C,P,Q,R point:
+        $eqratio_points(B,A,B,C,Q,P,Q,R)
+        $eqratio_points(C,A,C,B,R,P,R,Q)
+        $ncoll_points(A,B,C)
+        $ncoll_points(P,Q,R)
+        $finite_line_congruence(finite_line_of(A,B),finite_line_of(P,Q))
+        =>:
+            $triangle_congruence(A,B,C,P,Q,R)
+
+# Rule 42
+### rules.txt: para a b c d, coll m a d, coll n b c, eqratio6 m a m d n b n c, sameside m a d n b c => para m n a b
+### 自然语言：平行线截比定理：若 ab ∥ cd，m 在直线 ad 上，n 在直线 bc 上，ma/md = nb/nc，且 m, a, d 与 n, b, c 在各自直线的同侧，则 mn ∥ ab。
+### 注：sameside m a d 表示 m, a, d 在一条直线的同侧，这里简化为 m 不在 a 和 d 之间。
+know:
+    forall A,B,C,D,M,N point:
+        $parallel_line(line_of(A,B),line_of(C,D))
+        $three_points_collinear(M,A,D)
+        $three_points_collinear(N,B,C)
+        $eqratio_points(M,A,M,D,N,B,N,C)
+        $sameside_points(M,N,line_of(A,B))
+        $sameside_points(M,N,line_of(C,D))
+        =>:
+            $parallel_line(line_of(M,N),line_of(A,B))
+
+# Rule 43
+### rules.txt: para a b c d, coll m a d, coll n b c, para m n a b => eqratio6 m a m d n b n c
+### 自然语言：Rule 42 的逆：若 ab ∥ cd，m 在直线 ad 上，n 在直线 bc 上，且 mn ∥ ab，则 ma/md = nb/nc。
+know:
+    forall A,B,C,D,M,N point:
+        $parallel_line(line_of(A,B),line_of(C,D))
+        $three_points_collinear(M,A,D)
+        $three_points_collinear(N,B,C)
+        $parallel_line(line_of(M,N),line_of(A,B))
+        =>:
+            $eqratio_points(M,A,M,D,N,B,N,C)
