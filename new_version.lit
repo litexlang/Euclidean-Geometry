@@ -333,6 +333,8 @@ let fn ray_with_end_point_and_direction(A, B point) ray:
         B $in ray_with_end_point_and_direction(A,B)
 
 
+
+
 know: 
     forall A,B point,r ray:
         A!=B
@@ -346,6 +348,11 @@ know:
             $point_between(C, A, B) or $point_between(B, A, C)
         <=>:
             C $in ray_with_end_point_and_direction(A,B)
+    forall A,B,C point:
+        A!=B
+        C $in ray_with_end_point_and_direction(A,B)
+        =>:
+            C $in line_of(A,B)
     forall r ray:
         exist B point st r=ray_with_end_point_and_direction(end_point_of(r),B)
 
