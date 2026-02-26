@@ -1673,15 +1673,15 @@ prop not_sameside_points(A point,C point,l line):
     not C $in l
     not $parallel_line(l,line_of(A,C))
     intersection_point(l,line_of(A,C)) $in finite_line_of(A,C)
-# l is an outer tangent line of two circles
-prop is_cc_outertangent_line(c1,c2 circle,l line):
+# l is an external tangent line of two circles
+prop is_cc_external_tangent_line(c1,c2 circle,l line):
     c1!=c2
     distance_of_point_to_line(center_of_circle(c1),l)=radius_of_circle(c1)
     distance_of_point_to_line(center_of_circle(c2),l)=radius_of_circle(c2)
     $not_sameside_points(center_of_circle(c1),center_of_circle(c2),l)
-    
-# l is an inner tangent line of two circles
-prop is_cc_inertangent_line(c1,c2 circle,l line):
+
+# l is an internal tangent line of two circles
+prop is_cc_internal_tangent_line(c1,c2 circle,l line):
     c1!=c2
     distance_of_point_to_line(center_of_circle(c1),l)=radius_of_circle(c1)
     distance_of_point_to_line(center_of_circle(c2),l)=radius_of_circle(c2)

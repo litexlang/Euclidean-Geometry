@@ -371,14 +371,14 @@ These relations describe whether two points lie on the same side of a given line
 - `tangency_point_of_circles(c1, c2)`: The point of tangency between two circles
 - `tangent_points(A, O, B)`: The points of tangency of the two tangents from point A to the circle (with center O, passing through B)
 
-### 4. Common Tangents of Two Circles (Inner / Outer)
+### 4. Common Tangents of Two Circles (Internal / External)
 
-The file `new_version.lit` distinguishes **outer common tangents** and **inner common tangents** of two circles using a same-side test on the circle centers relative to the tangent line.
+The file `new_version.lit` distinguishes **external common tangents** and **internal common tangents** of two circles using a same-side test on the circle centers relative to the tangent line.
 
 **Key Predicates (classifying a tangent line)**:
-- `is_cc_outertangent_line(c1, c2, l)`: Line `l` is an **outer** common tangent of circles `c1` and `c2`
+- `is_cc_external_tangent_line(c1, c2, l)`: Line `l` is an **external** common tangent of circles `c1` and `c2`
   - Encoded as: `l` is tangent to both circles (distance from each center to `l` equals its radius) and the two centers are on **opposite sides** of `l` (`not_sameside_points(center_of_circle(c1), center_of_circle(c2), l)`).
-- `is_cc_inertangent_line(c1, c2, l)`: Line `l` is an **inner** common tangent of circles `c1` and `c2`
+- `is_cc_internal_tangent_line(c1, c2, l)`: Line `l` is an **internal** common tangent of circles `c1` and `c2`
   - Encoded as: `l` is tangent to both circles and the two centers are on the **same side** of `l` (`sameside_points(center_of_circle(c1), center_of_circle(c2), l)`).
 
 **Key Construction Predicates (tangency points)**:
