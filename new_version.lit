@@ -320,7 +320,7 @@ know:
 
 let fn angle_degree(a angle) R
 
-prop end_point_of_ray(A point,r ray):
+prop is_end_point_of_ray(A point,r ray):
     A $in r
     forall B,C point:
         B $in r
@@ -333,18 +333,24 @@ prop end_point_of_ray(A point,r ray):
 
 know:
     forall r ray:
-        exist A point st $end_point_of_ray(A,r)
+        exist A point st $is_end_point_of_ray(A,r)
 
-let fn end_point_of(r ray) point:
+let fn end_point_of_ray(r ray) point:
     =>:
-        $end_point_of_ray(end_point_of(r),r)
+        $is_end_point_of_ray(end_point_of_ray(r),r)
 
 
 let fn ray_with_end_point_and_direction(A, B point) ray:
-    A != B
-    =>:
-        $end_point_of_ray(A,ray_with_end_point_and_direction(A,B))
-        B $in ray_with_end_point_and_direction(A,B)
+    dom:
+        A != B
+
+## A is end point of ray_with_end_point_and_direction(A,B)
+know:
+    forall A,B point:
+        A != B
+        =>:
+            $is_end_point_of_ray(A,ray_with_end_point_and_direction(A,B))
+            B $in ray_with_end_point_and_direction(A,B)
 
 
 
@@ -352,7 +358,7 @@ let fn ray_with_end_point_and_direction(A, B point) ray:
 know: 
     forall A,B point,r ray:
         A!=B
-        $end_point_of_ray(A,r)
+        $is_end_point_of_ray(A,r)
         B $in r
         =>:
             r=ray_with_end_point_and_direction(A,B)
@@ -368,10 +374,10 @@ know:
         =>:
             C $in line_of(A,B)
     forall r ray:
-        exist B point st r=ray_with_end_point_and_direction(end_point_of(r),B)
+        exist B point st r=ray_with_end_point_and_direction(end_point_of_ray(r),B)
 
 prop two_rays_with_same_end_point(r1 ray, r2 ray):
-    end_point_of(r1)=end_point_of(r2)
+    end_point_of_ray(r1)=end_point_of_ray(r2)
 
 let fn angle_of_two_rays(r1 ray, r2 ray) angle:
     $two_rays_with_same_end_point(r1,r2)
@@ -406,7 +412,7 @@ know:
         =>:
             P $in angle_of_two_rays(r1,r2)
         <=>:
-            $ray_between(ray_with_end_point_and_direction(end_point_of(r1),P),r1,r2)
+            $ray_between(ray_with_end_point_and_direction(end_point_of_ray(r1),P),r1,r2)
 
 
 
@@ -854,10 +860,10 @@ prop is_converse_extension_ray(r,r1 ray):
         B $in r
         C $in r1
         B!=C
-        B!=end_point_of(r1)
-        C!=end_point_of(r1)
+        B!=end_point_of_ray(r1)
+        C!=end_point_of_ray(r1)
         =>:
-            $three_points_collinear(end_point_of(r1),B,C)
+            $three_points_collinear(end_point_of_ray(r1),B,C)
 let fn converse_extension_ray_of(r ray) ray:
     =>:
         $is_converse_extension_ray(converse_extension_ray_of(r),r)
@@ -890,7 +896,7 @@ let fn sides_of(a angle) cart(ray,ray):
         a=angle_of_two_rays(sides_of(a)[1],sides_of(a)[2])
 let fn start_point_of(a angle) point:
     =>:
-        $end_point_of_ray(start_point_of(a),sides_of(a)[1])    
+        $is_end_point_of_ray(start_point_of(a),sides_of(a)[1])    
  
 prop is_right_angle(a angle):
     $angle_congruence(a,angle_of_two_rays(sides_of(a)[2],converse_extension_ray_of(sides_of(a)[1])))
