@@ -1,16 +1,11 @@
 """
 # Litex Code Example: Hilbert's Axioms of Geometry
 
-# Below is the Hilbert axioms written in Litex code, along with a one-to-one correspondence with the definitions from Wikipedia. Although the following axioms are recognized as complete, some definitions and facts are implicitly omitted for simplicity. Here, I have made the necessary additions to ensure rigor and clarity.
+# Although the following axioms are recognized as complete, some definitions and facts are implicitly omitted for simplicity. Here, I have made the necessary additions to ensure rigor and clarity.
 
-# Read more about Hilbert's geometry axioms: https://en.wikipedia.org/wiki/Hilbert%27s_axioms .
+# Read more about Hilbert's geometry axioms:  .
 
-# Hilbert's axiom system is constructed with six primitive notions: three primitive terms:
-# point;
-# line;
-# plane+
-# and three primitive relations:
-# Betweenness, a ternary relation linking points;
+
 
 # Betweenness, a ternary relation linking points;
 # Lies on (Containment), three binary relations, one linking points and straight lines, one linking points and planes, and one linking straight lines and planes;

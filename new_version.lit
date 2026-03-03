@@ -1,3 +1,17 @@
+"""
+Part 1: Formalization of Hilbert's Axioms of Euclidean Geometry
+Reference: https://en.wikipedia.org/wiki/Hilbert%27s_axioms
+
+Below is the Hilbert axioms written in Litex code, along with a one-to-one correspondence with the definitions from the reference.
+"""
+
+# Hilbert's axiom system is constructed with six primitive notions: three primitive terms:
+# point;
+# line;
+# plane;
+# and three primitive relations:
+# Betweenness, a ternary relation linking points;
+
 # three primitive terms:
 have point nonempty_set
 have line nonempty_set
@@ -20,6 +34,7 @@ let fn line_of(A point,B point) line:
 
 know:
     forall A,B point:
+        A!=B
         A $in line_of(A, B)
         B $in line_of(A, B)
         forall l line:
@@ -556,7 +571,9 @@ know:
         =>:
             exist n N_pos st $archimedes_number(A,B,C,D,n)
 
-
+"""
+End of Part 1
+"""
 
 #concepts reffer to alpha geometry
 ##defs.txt
