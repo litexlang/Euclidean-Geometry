@@ -192,6 +192,10 @@ let fn finite_line_of(A point,B point) finite_line:
         A!=B
 
 know:
+    forall fl finite_line:
+        exist A,B point st {A != B, fl=finite_line_of(A,B)}
+
+know:
     forall A,B point:
         A!=B
         =>:
@@ -229,21 +233,44 @@ know:
 ### so that the segment AB is congruent to the segment A′B′.
 ### We indicate this relation by writing AB ≅ A′B′. Every segment is congruent to itself
 
-prop on_the_same_side_of_line(start point, end point, z point):
+prop on_the_same_side_of_line(z point, start point, end point):
     $three_points_collinear(start, end, z)
     $between(z, start, end) or $between(end, start, z)
+
+prop finite_line_congruence(fl1 finite_line,fl2 finite_line):
 
 know:
     forall A, B point, a2 line, A2 a2, side_signal_end_point a2:
         A != B
         =>:
-            exist B2 a2 st $on_the_same_side_of_line(A2,side_signal_end_point,B2)
+            exist B2 a2 st {$on_the_same_side_of_line(B2,A2,side_signal_end_point), $finite_line_congruence(finite_line_of(A2,B2),finite_line_of(A,B))}
 
 ## C2
-### If a segment AB is congruent to the segment A′B′ and also to the segment A″B″,
-### then the segment A′B′ is congruent to the segment A″B″
+### Reflexive: AB ≅ AB
+### Symmetric: AB ≅ CD => CD ≅ AB
+### Transitive: AB ≅ CD, CD ≅ EF => AB ≅ EF
 
 know:
+    forall A, B point:
+        A != B
+        =>:
+            $finite_line_congruence(finite_line_of(A,B),finite_line_of(B, A))
+    forall A, B, C, D point:
+        A != B
+        C != D
+        $finite_line_congruence(finite_line_of(A,B),finite_line_of(C,D))
+        =>:
+            $finite_line_congruence(finite_line_of(C, D),finite_line_of(A,B))
+    forall A, B, C, D, E, F point:
+        A != B
+        C != D
+        E != F
+        $finite_line_congruence(finite_line_of(A,B),finite_line_of(C,D))
+        $finite_line_congruence(finite_line_of(C,D),finite_line_of(E,F))
+        =>:
+            $finite_line_congruence(finite_line_of(A,B),finite_line_of(E,F))
+
+know:   
     forall l finite_line:
         $finite_line_congruence(l,l)
     forall l1,l2 finite_line:
@@ -261,17 +288,17 @@ know:
 ### Let AB and BC be two segments of a line a which have no points in common aside from the point B,
 ### and, furthermore, let A′B′ and B′C′ be two segments of the same or of another line a′ having, 
 ### likewise, no point other than B′ in common. Then, if AB ≅ A′B′ and BC ≅ B′C′, we have AC ≅ A'C'
-
+### AB ≅ A2B2 and BC ≅ B2C2 => AC ≅ A2C2
 know:
-    forall A,B,C,A',B',C' point:
+    forall A,B,C,A2,B2,C2 point:
         $three_points_collinear(A,B,C)
-        $three_points_collinear(A',B',C')
+        $three_points_collinear(A2,B2,C2)
         $point_between(B,A,C)
-        $point_between(B',A',C')
-        $finite_line_congruence(finite_line_of(A,B),finite_line_of(A',B'))
-        $finite_line_congruence(finite_line_of(B,C),finite_line_of(B',C'))
+        $point_between(B2,A2,C2)
+        $finite_line_congruence(finite_line_of(A,B),finite_line_of(A2,B2))
+        $finite_line_congruence(finite_line_of(B,C),finite_line_of(B2,C2))
         =>:
-            $finite_line_congruence(finite_line_of(A,C),finite_line_of(A',C'))
+            $finite_line_congruence(finite_line_of(A,C),finite_line_of(A2,C2))
 
 ## C4
 ### Let an angle ∠ (h,k) be given in the plane α and let a line a′ be given in a plane α′.
@@ -291,7 +318,7 @@ know:
     forall a angle:
         a $in power_set(point)
 
-let fn deg_of_angle(a angle) R
+let fn angle_degree(a angle) R
 
 prop end_point_of_ray(A point,r ray):
     A $in r
@@ -389,7 +416,7 @@ know:
     forall a1,a2 angle:
         $angle_congruence(a1,a2)
         =>:
-            deg_of_angle(a1)=deg_of_angle(a2)
+            angle_degree(a1)=angle_degree(a2)
 
 prop clock_wise_congruence(a angle,r ray,A point,B point):
     $ray_clock_wise_ray(r,ray_with_end_point_and_direction(A,B))
@@ -1408,8 +1435,8 @@ prop is_s_angle(a1 angle,a2 angle):
 let fn min_angle(a1 angle,a2 angle) angle:
     =>:
         min_angle(a1,a2) $in {a1,a2}
-        deg_of_angle(a1)<=deg_of_angle(min_angle(a1,a2))
-        deg_of_angle(a2)<=deg_of_angle(min_angle(a1,a2))
+        angle_degree(a1)<=angle_degree(min_angle(a1,a2))
+        angle_degree(a2)<=angle_degree(min_angle(a1,a2))
 
 let fn s_angle(a angle) angle:
     =>:
