@@ -10,12 +10,14 @@ Below is the Hilbert axioms written in Litex code, along with a one-to-one corre
 # line;
 # plane;
 # and three primitive relations:
-# Betweenness, a ternary relation linking points;
+# Between, a ternary relation linking points;
 
 # three primitive terms:
 have point nonempty_set
 have line nonempty_set
 have plane nonempty_set
+
+# All elements on a line or a plane are points (power_set: the set of all subsets of a set)
 know:
     forall l line:
         l $in power_set(point)
@@ -24,6 +26,7 @@ know:
 
 # three primitive relations
 #Incidence
+# We use the keyword `in` in set theory to denote the membership of an element to a set. Since a point on line and a line is a set of points, we use the keyword `in` to denote the membership of a point to a line.
 
 ## I1
 ### For every two points A and B there exists a line a that contains them both. We write AB = a or BA = a
@@ -33,26 +36,20 @@ let fn line_of(A point,B point) line:
         A!=B
 
 know:
-    forall A,B point:
+    forall A,B point, l line:
         A!=B
         A $in line_of(A, B)
         B $in line_of(A, B)
-        forall l line:
-            A $in l
-            B $in l
-            =>:
-                l = line_of(A, B)
+        A $in l
+        B $in l
+        =>:
+            l = line_of(A, B)
 
 ## I2
-### There exist at least two points on a line.
-
-prop exist_two_points_on_line(A point,B point,l line):
-    A!=B
-    A $in l  
-    B $in l
+### There exists at least two distinct points on a line.
 know:    
     forall l line:
-        exist A,B point st $exist_two_points_on_line(A, B,l )
+        exist A,B point st {A!=B, A $in l, B $in l}
 
 ## I3
 ### There exist at least three points that do not lie on the same line.
@@ -63,20 +60,14 @@ know:
 
 ## I4
 ### For every three points A, B, C not situated on the same line there exists exactly one plane α that contains all of them.
-### For every plane there exists a point which lies on it. 
 let fn plane_of(A point,B point,C point) plane:
     dom:
         not $three_points_collinear(A,B,C)
-prop exist_point_on_plane(A point,pl plane):
-    A $in pl
+
+### For every plane there exists a point which lies on it. 
 know:
-    forall A,B,C point:
-        not $three_points_collinear(A,B,C)
-        A $in plane_of(A,B,C)
-        B $in plane_of(A,B,C)
-        C $in plane_of(A,B,C)
     forall pl plane:
-        exist A point st $exist_point_on_plane(A,pl)
+        exist p point st p $in pl
 
 ##I5
 ### Every plane contains three points A, B, C which do not lie in the same line.
@@ -90,8 +81,8 @@ know:
         exist A,B,C point st $three_points_not_collinear_on_plane(A,B,C,pl)
 
 ## I6
-### If two points A, B of a line a lie in a plane α, then every point of a lies in α. 
-### In this case we say: "The line a lies in the plane α"
+### If two points A, B of a line lie in a plane pl, then every point of a lies in pl. 
+### In this case we say: "The line a lies in the plane pl"
 prop line_on_plane(l line, pl plane):
     <=>:
         forall A l:
