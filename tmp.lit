@@ -1,0 +1,24 @@
+have ray nonempty_set
+have angle nonempty_set
+
+let fn ray_of(start l, end l) ray:
+
+ray_of(start, end) = {z line_of(start, end) : $on_the_same_side_of_line(start, end, z)}
+
+
+
+prop side_of_line(l line, start l, s power_set(l)):
+    forall x l, end s:
+        $between(x, start, end)
+        =>:
+            x $in s
+    forall x s, y s:
+        !between(x, start, end)
+
+
+let fn side_of_line_of(l line, start l, end l) power_set(l):
+    dom:
+        start != end
+
+know:
+    forall l line, start l, end l:
