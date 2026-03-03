@@ -354,39 +354,40 @@ know:
 
 
 
-
 know: 
+    # A is end point of r, B is on r => r=ray_with_end_point_and_direction(A,B)
     forall A,B point,r ray:
         A!=B
         $is_end_point_of_ray(A,r)
         B $in r
         =>:
             r=ray_with_end_point_and_direction(A,B)
+
     forall A, B, C point:
         A != B
         =>:
             $point_between(C, A, B) or $point_between(B, A, C)
         <=>:
             C $in ray_with_end_point_and_direction(A,B)
+
+    # every point C on ray_with_end_point_and_direction(A, B) is on line_of(A, B)
     forall A,B,C point:
         A!=B
         C $in ray_with_end_point_and_direction(A,B)
         =>:
             C $in line_of(A,B)
+            
     forall r ray:
         exist B point st r=ray_with_end_point_and_direction(end_point_of_ray(r),B)
+
+## Angle: We define angle with direction.
+## We define the relationship between angle and ray.
 
 prop two_rays_with_same_end_point(r1 ray, r2 ray):
     end_point_of_ray(r1)=end_point_of_ray(r2)
 
 let fn angle_of_two_rays(r1 ray, r2 ray) angle:
     $two_rays_with_same_end_point(r1,r2)
-
-know:
-    forall r1,r2 ray:
-        $two_rays_with_same_end_point(r1,r2)
-        =>:
-            angle_of_two_rays(r1,r2)=angle_of_two_rays(r2,r1)
 
 prop ray_clock_wise_ray(r1 ray,r2 ray):
     $two_rays_with_same_end_point(r1,r2)
