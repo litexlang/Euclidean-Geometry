@@ -317,7 +317,7 @@ know:
 
 
 ##Todo: complete definition of angle
-let fn ray_with_end_point_and_direction(A point, B point) power_set(point):
+let fn ray_of(A point, B point) power_set(point):
     dom:
         A != B
 
@@ -326,24 +326,25 @@ know:
     forall A, B, C point:
         A != B
         =>:
-            $point_between(C, A, B) or $point_between(B, A, C)
+            $point_between(C, A, B) or $point_between(B, A, C) or C = A or C = B
         <=>:
-            C $in ray_with_end_point_and_direction(A,B)
+            C $in ray_of(A,B)
     forall A,B,C point:
         A!=B
         C $in line_of(A,B)
         $point_between(C,A,B) or $point_between(B,A,C)
+        C != A
         =>:
-            ray_with_end_point_and_direction(A,B)=ray_with_end_point_and_direction(A,C)
+            ray_of(A,B)=ray_of(A,C)
 
 
 
 know: 
-    # Every point C on ray_with_end_point_and_direction(A, B) is on line_of(A, B)
+    # Every point C on ray_of(A, B) is on line_of(A, B)
     # In fact, $point_between(C,A,B) or $point_between(B,A,C) could lead to C $in line_of(A,B)
     forall A,B,C point:
         A!=B
-        C $in ray_with_end_point_and_direction(A,B)
+        C $in ray_of(A,B)
         =>:
             C $in line_of(A,B)
             
@@ -359,8 +360,9 @@ let fn plane_of_point_and_line(A point,l line) plane:
 know:
     forall A point,l line:
         not A $in l
-        A $in plane_of_point_and_line(A,l)
-        $line_on_plane(l,plane_of_point_and_line(A,l))
+        =>:
+            A $in plane_of_point_and_line(A,l)
+            $line_on_plane(l,plane_of_point_and_line(A,l))
 
 #two points are on the same side of a line
 prop sameside_points(A point,C point,l line):
@@ -414,7 +416,7 @@ know:
         =>:
             P $in angle_of(A,B,C)
         <=>:
-            P $in ray_with_end_point_and_direction(A,B) or P $in ray_with_end_point_and_direction(A,C) or P $in area_of_angle(A,B,C)
+            P $in ray_of(A,B) or P $in ray_of(A,C) or P $in area_of_angle(A,B,C)
     
     
     
@@ -845,9 +847,9 @@ prop is_eq_dia_quadrangle(A,B,C,D point):
 
 prop is_incenter(I,A,B,C point):
     not $three_points_collinear(A,B,C)
-    $is_angle_bisector(A,ray_with_end_point_and_direction(A,I),ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,C))
-    $is_angle_bisector(B,ray_with_end_point_and_direction(B,I),ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C))
-    $is_angle_bisector(C,ray_with_end_point_and_direction(C,I),ray_with_end_point_and_direction(C,B),ray_with_end_point_and_direction(C,A))
+    $is_angle_bisector(A,ray_of(A,I),ray_of(A,B),ray_of(A,C))
+    $is_angle_bisector(B,ray_of(B,I),ray_of(B,A),ray_of(B,C))
+    $is_angle_bisector(C,ray_of(C,I),ray_of(C,B),ray_of(C,A))
 
 know:
     forall A,B,C point:
@@ -883,9 +885,9 @@ prop is_angle_exbisector(r ray ,r1 ray,r2 ray):
 
 prop is_exincenter(J,A,B,C point):
     not $three_points_collinear(A,B,C)
-    $is_angle_bisector(ray_with_end_point_and_direction(A,J),ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,C))
-    $is_angle_exbisector(ray_with_end_point_and_direction(B,J),ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C))
-    $is_angle_exbisector(ray_with_end_point_and_direction(B,J),ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B))
+    $is_angle_bisector(ray_of(A,J),ray_of(A,B),ray_of(A,C))
+    $is_angle_exbisector(ray_of(B,J),ray_of(B,A),ray_of(B,C))
+    $is_angle_exbisector(ray_of(B,J),ray_of(C,A),ray_of(C,B))
 
 let fn exincenter_of(A,B,C point) point:
     dom:
@@ -918,7 +920,7 @@ let fn ano_point_on_line(A point,l line) point:
 
 prop perp(l1,l2 line):
     $intersect_of_two_lines(l1,l2)
-    $is_right_angle(angle_of_two_rays(ray_with_end_point_and_direction(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l1)),ray_with_end_point_and_direction(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l2))))
+    $is_right_angle(angle_of_two_rays(ray_of(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l1)),ray_of(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l2))))
    
 prop is_foot(X,A point,l line):
     not A $in l 
@@ -1144,10 +1146,10 @@ know:
     forall A,B,C point:
         $is_iso_triangle(A,B,C)
         =>:
-            $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C)),angle_of_two_rays(ray_with_end_point_and_direction(C,B),ray_with_end_point_and_direction(C,A)))
+            $angle_congruence(angle_of_two_rays(ray_of(B,A),ray_of(B,C)),angle_of_two_rays(ray_of(C,B),ray_of(C,A)))
     forall A,B,C point:
         not $three_points_collinear(A,B,C)
-        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C)),angle_of_two_rays(ray_with_end_point_and_direction(C,B),ray_with_end_point_and_direction(C,A)))
+        $angle_congruence(angle_of_two_rays(ray_of(B,A),ray_of(B,C)),angle_of_two_rays(ray_of(C,B),ray_of(C,A)))
         =>:
             $is_iso_triangle(A,B,C)
 
@@ -1221,20 +1223,20 @@ know:
 # x is a point such that angle axb equals angle cde
 prop is_on_aline(X point,A point,B point,C point,D point,E point):
     not $three_points_collinear(C,D,E)
-    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,X),ray_with_end_point_and_direction(A,B)),angle_of_two_rays(ray_with_end_point_and_direction(D,C),ray_with_end_point_and_direction(D,E)))
+    $angle_congruence(angle_of_two_rays(ray_of(A,X),ray_of(A,B)),angle_of_two_rays(ray_of(D,C),ray_of(D,E)))
 
 # on_aline2: point on an angle line (variant)
 # x is a point such that angle xab equals angle cde
 prop is_on_aline2(X point,A point,B point,C point,D point,E point):
     not $three_points_collinear(C,D,E)
-    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(X,A),ray_with_end_point_and_direction(X,B)),angle_of_two_rays(ray_with_end_point_and_direction(D,C),ray_with_end_point_and_direction(D,E)))
+    $angle_congruence(angle_of_two_rays(ray_of(X,A),ray_of(X,B)),angle_of_two_rays(ray_of(D,C),ray_of(D,E)))
 
 # on_bline: point on the perpendicular bisector
 # x is a point such that xa = xb and angle axb = angle bax (x is on the perpendicular bisector of ab)
 prop is_on_bline(X point,A point,B point):
     A!=B
     $finite_line_congruence(finite_line_of(X,A),finite_line_of(X,B))
-    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,X),ray_with_end_point_and_direction(A,B)),angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,X)))
+    $angle_congruence(angle_of_two_rays(ray_of(A,X),ray_of(A,B)),angle_of_two_rays(ray_of(B,A),ray_of(B,X)))
 
 # on_circle: point on a circle
 # x is a point on the circle with center o and passing through a
@@ -1439,7 +1441,7 @@ prop is_risos(A point,B point,C point):
     not $three_points_collinear(A,B,C)
     $perp(line_of(A,B),line_of(A,C))
     $finite_line_congruence(finite_line_of(A,B),finite_line_of(A,C))
-    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C)),angle_of_two_rays(ray_with_end_point_and_direction(C,B),ray_with_end_point_and_direction(C,A)))
+    $angle_congruence(angle_of_two_rays(ray_of(B,A),ray_of(B,C)),angle_of_two_rays(ray_of(C,B),ray_of(C,A)))
 
 # s_angle: supplementary angle
 # a1 and a2 are supplementary angles
@@ -1460,7 +1462,7 @@ let fn angle_of_two_lines(l1 line,l2 line) angle:
     dom:
         $intersect_of_two_lines(l1,l2)
     =>:
-        angle_of_two_lines(l1,l2)=min_angle(angle_of_two_rays(ray_with_end_point_and_direction(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l1)),ray_with_end_point_and_direction(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l2))),s_angle(angle_of_two_rays(ray_with_end_point_and_direction(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l1)),ray_with_end_point_and_direction(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l2)))))
+        angle_of_two_lines(l1,l2)=min_angle(angle_of_two_rays(ray_of(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l1)),ray_of(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l2))),s_angle(angle_of_two_rays(ray_of(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l1)),ray_of(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l2)))))
 
 # shift: shift/translate point
 # x is the point such that xb = cd and xc = bd (translation of point b by vector cd)
@@ -1667,8 +1669,8 @@ prop is_ieq_triangle(A point,B point,C point):
     not $three_points_collinear(A,B,C)
     $finite_line_congruence(finite_line_of(A,B),finite_line_of(B,C))
     $finite_line_congruence(finite_line_of(B,C),finite_line_of(C,A))
-    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,C)),angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)))
-    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)),angle_of_two_rays(ray_with_end_point_and_direction(B,C),ray_with_end_point_and_direction(B,A)))
+    $angle_congruence(angle_of_two_rays(ray_of(A,B),ray_of(A,C)),angle_of_two_rays(ray_of(C,A),ray_of(C,B)))
+    $angle_congruence(angle_of_two_rays(ray_of(C,A),ray_of(C,B)),angle_of_two_rays(ray_of(B,C),ray_of(B,A)))
 
 let fn ieq_triangle_third_vertex(A point,B point) point:
     dom:
@@ -1756,7 +1758,7 @@ prop is_eqangle3(X point,A point,B point,D point,E point,F point):
     D!=E
     E!=F
     not $three_points_collinear(D,E,F)
-    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(X,A),ray_with_end_point_and_direction(X,B)),angle_of_two_rays(ray_with_end_point_and_direction(D,E),ray_with_end_point_and_direction(D,F)))
+    $angle_congruence(angle_of_two_rays(ray_of(X,A),ray_of(X,B)),angle_of_two_rays(ray_of(D,E),ray_of(D,F)))
 
 # tangent: tangent points from a point to a circle
 # x, y are the two tangent points from point a to the circle with center o passing through b
