@@ -332,7 +332,10 @@ know:
 let fn plane_of_point_and_line(A point,l line) plane:
     dom:
         not A $in l
-    =>:
+
+know:
+    forall A point,l line:
+        not A $in l
         A $in plane_of_point_and_line(A,l)
         l $line_on_plane(plane_of_point_and_line(A,l))
 
@@ -357,26 +360,23 @@ let fn angle_of(A point,B point,C point) power_set(point):
         A!=B
         A!=C
         B!=C
+        not $three_points_collinear(A,B,C)
 
 let fn area_of_angle(A point,B point,C point) power_set(point):
     dom:
         A!=B
         A!=C
         B!=C
-prop is_straight_angle(A point,B point,C point):
-    A!=B
-    A!=C
-    B!=C
-    $three_points_collinear(A,B,C)
-    $point_between(A,B,C)
+        not $three_points_collinear(A,B,C)
+
 
 know:
-    #not straight angle
+   
     forall A,B,C,P point:
         A!=B
         A!=C
         B!=C
-        not $is_straight_angle(A,B,C)
+        not $three_points_collinear(A,B,C)
         =>:
             P $in area_of_angle(A,B,C)
         <=>:
@@ -387,100 +387,79 @@ know:
         A!=B
         A!=C
         B!=C
-        not $is_straight_angle(A,B,C)
+        not $three_points_collinear(A,B,C)
         =>:
             P $in angle_of(A,B,C)
         <=>:
             P $in ray_with_end_point_and_direction(A,B) or P $in ray_with_end_point_and_direction(A,C) or P $in area_of_angle(A,B,C)
     
-    #for straight angle
-    forall A,B,C,P,side_signal_point point:
-        A!=B
-        A!=C
-        B!=C
-        $is_straight_angle(A,B,C)
-        not side_signal_point $in line_of(A,B)      
-        =>:
-            P $in area_of_angle(A,B,C)
-        <=>:
-            $sameside_points(P,side_signal_point,line_of(A,B))
-    forall A,B,C,P,side_signal_point point:
-        A!=B
-        A!=C
-        B!=C
-        $is_straight_angle(A,B,C)
-        not side_signal_point $in line_of(A,B)      
-        =>:
-            P $in angle_of(A,B,C)
-        <=>:
-            $sameside_points(P,side_signal_point,line_of(A,B)) or P $in line_of(A,B)
-
+    
     
     
 prop angle_congruence(A,B,C,D,E,F point):
     A!=B
     A!=C
     B!=C
+    not $three_points_collinear(A,B,C)
     D!=E
     D!=F
     E!=F
-    
+    not $three_points_collinear(D,E,F)
 
 know:
-    forall a1,a2 angle:
-        $angle_congruence(a1,a2)
+    forall A,B,C,D,E,F point:
+        $angle_congruence(A,B,C,D,E,F)
         =>:
-            angle_degree(a1)=angle_degree(a2)
+            $angle_congruence(D,E,F,A,B,C)
+            
 
-prop clock_wise_congruence(a angle,r ray,A point,B point):
-    $ray_clock_wise_ray(r,ray_with_end_point_and_direction(A,B))
-    $angle_congruence(a,angle_of_two_rays(r,ray_with_end_point_and_direction(A,B)))
-
-prop counter_clock_wise_congruence(a angle,r ray,A point,B point):
-    $ray_counter_clock_wise_ray(r,ray_with_end_point_and_direction(A,B))
-    $angle_congruence(a,angle_of_two_rays(r,ray_with_end_point_and_direction(A,B)))
 
 know:
-    forall a angle,A point,B point:
+    forall a1,a2 plane,A, B, C a1, D, E, side_signal_point a2:
         A!=B
+        A!=C
+        B!=C
+        not $three_points_collinear(A,B,C)
+        D!=E
         =>:
-            exist r ray st $clock_wise_congruence(a,r,A,B)
-    forall a angle,A point,B point:
-        A!=B
-        =>:
-            exist r ray st $counter_clock_wise_congruence(a,r,A,B)
+            exist F point st {$sameside_points(F,side_signal_point,line_of(D,E)),$angle_congruence(A,B,C,D,E,F)}
 
 ## C5
 ### If the angle ∠ (h, k) is congruent to the angle ∠ (h′, k′) and to the angle ∠ (h″, k″), 
 ### then the angle ∠ (h′, k′) is congruent to the angle ∠ (h″, k″)
-
+    
 know :
-    forall a1,a2 angle:
+    forall  A,B,C,D,E,F point: 
         =>:
-            $angle_congruence(a1,a2)
+            $angle_congruence(A,B,C,D,E,F)
         <=>:
-            $angle_congruence(a2,a1)
-    forall a angle:
-        $angle_congruence(a,a)
-    forall a1,a2,a3 angle:
-        $angle_congruence(a1,a2)
-        $angle_congruence(a2,a3)
+            $angle_congruence(D,E,F,A,B,C)
+
+    forall A,B,C point:
+        $angle_congruence(A,B,C,A,B,C)
+
+    forall A,B,C,D,E,F,G,H,I point:
+        $angle_congruence(A,B,C,D,E,F)
+        $angle_congruence(D,E,F,G,H,I)
         =>:
-            $angle_congruence(a1,a3)
+            $angle_congruence(A,B,C,G,H,I)
 
 ## C6
 ### If in the two triangles ABC and A′B′C′ the congruences AB ≅ A′B′, AC ≅ A′C′, ∠BAC ≅ ∠B′A′C′ hold,
 ### then the congruence ∠ABC ≅ ∠A′B′C′ holds
 ### (and, by a change of notation, it follows that ∠ACB ≅ ∠A′C′B′ also holds)
 
-have triangle nonempty_set:
 let fn triangle_of(A point,B point,C point) triangle:
     dom:
+        A!=B
+        A!=C
+        B!=C
         not $three_points_collinear(A,B,C)
 know: 
-    forall T triangle:
-        T $in power_set(point)
     forall A,B,C,P point:
+        A!=B
+        A!=C
+        B!=C
         not $three_points_collinear(A,B,C)
         =>:
             P $in triangle_of(A,B,C)
@@ -488,18 +467,20 @@ know:
             P $in finite_line_of(A,B) or P $in finite_line_of(B,C) or P $in finite_line_of(C,A)
 
 
-prop triangle_congruence(A point,B point,C point,A' point,B' point,C' point):
+prop triangle_congruence(A point,B point,C point,A1 point,B' point,C' point):
     not $three_points_collinear(A,B,C)
-    not $three_points_collinear(A',B',C')
-    $finite_line_congruence(finite_line_of(A,B),finite_line_of(A',B'))
-    $finite_line_congruence(finite_line_of(A,C),finite_line_of(A',C'))
-    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,C)),angle_of_two_rays(ray_with_end_point_and_direction(A',B'),ray_with_end_point_and_direction(A',C')))
+    not $three_points_collinear(A2,B2,C2)
+    $finite_line_congruence(finite_line_of(A,B),finite_line_of(A2,B2))
+    $finite_line_congruence(finite_line_of(A,C),finite_line_of(A2,C2))
+    $angle_congruence(angle_of(A,B,C),angle_of(A2,B2,C2))
+
 know:
-    forall A,B,C point,A',B',C' point:
-        $triangle_congruence(A,B,C,A',B',C')
+    forall A,B,C point,A2,B2,C2 point:
+        $triangle_congruence(A,B,C,A2,B2,C2)
         =>:
-            $triangle_congruence(C,B,A,C',B',A')
-            $triangle_congruence(B,A,C,B',A',C')
+            $triangle_congruence(C,B,A,C2,B2,A2)
+            $triangle_congruence(B,A,C,B2,A2,C2)
+
 
 # Parallel
 ## P1
