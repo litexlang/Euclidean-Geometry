@@ -182,18 +182,13 @@ know:
 ### it will also pass through either a point of the segment BC or a point of the segment AC.
 
 # Define finite_line as a segment of a line, i.e., a line with two endpoints.
-let finite_line nonempty_set
-know:
-    forall l finite_line:
-        l $in power_set(point)
 
-let fn finite_line_of(A point,B point) finite_line:
+
+let fn finite_line_of(A point,B point) power_set(point):
     dom:
         A!=B
 
-know:
-    forall fl finite_line:
-        exist A,B point st {A != B, fl=finite_line_of(A,B)}
+
 
 know:
     forall A,B point:
@@ -210,8 +205,9 @@ know:
         =>:
             C $in line_of(A,B)
             $point_between(C,A,B)
-prop line_intersect_finite_line(l line ,fl finite_line):
-    exist A point st {A $in l, A $in fl}
+prop line_intersect_finite_line(l line ,B ,C point):
+    exist A point st {A $in l, A $in finite_line_of(B,C)}
+
 know:
     forall A,B,C point ,l line:
         A!=B
@@ -219,9 +215,9 @@ know:
         B!=C
         not $three_points_collinear(A,B,C)
         $line_on_plane(l,plane_of(A,B,C))
-        $line_intersect_finite_line(l,finite_line_of(A,B))
+        $line_intersect_finite_line(l,A,B)
         =>:
-            $line_intersect_finite_line(l,finite_line_of(B,C)) or $line_intersect_finite_line(l,finite_line_of(A,C)) 
+            $line_intersect_finite_line(l,B,C) or $line_intersect_finite_line(l,A,C) 
 
 
 #Congruence
@@ -237,13 +233,13 @@ prop on_the_same_side_of_line(z point, start point, end point):
     $three_points_collinear(start, end, z)
     $between(z, start, end) or $between(end, start, z)
 
-prop finite_line_congruence(fl1 finite_line,fl2 finite_line):
+prop finite_line_congruence(A point,B point,A2 point,B2 point):
 
 know:
     forall A, B point, a2 line, A2 a2, side_signal_end_point a2:
         A != B
         =>:
-            exist B2 a2 st {$on_the_same_side_of_line(B2,A2,side_signal_end_point), $finite_line_congruence(finite_line_of(A2,B2),finite_line_of(A,B))}
+            exist B2 a2 st {$on_the_same_side_of_line(B2,A2,side_signal_end_point), $finite_line_congruence(A2,B2,A,B)}
 
 ## C2
 ### Reflexive: AB ≅ AB
@@ -254,35 +250,22 @@ know:
     forall A, B point:
         A != B
         =>:
-            $finite_line_congruence(finite_line_of(A,B),finite_line_of(B, A))
+            $finite_line_congruence(A,B,B,A)
     forall A, B, C, D point:
         A != B
         C != D
-        $finite_line_congruence(finite_line_of(A,B),finite_line_of(C,D))
+        $finite_line_congruence(A,B,C,D)
         =>:
-            $finite_line_congruence(finite_line_of(C, D),finite_line_of(A,B))
+            $finite_line_congruence(C,D,A,B)
     forall A, B, C, D, E, F point:
         A != B
         C != D
         E != F
-        $finite_line_congruence(finite_line_of(A,B),finite_line_of(C,D))
-        $finite_line_congruence(finite_line_of(C,D),finite_line_of(E,F))
+        $finite_line_congruence(A,B,C,D)
+        $finite_line_congruence(C,D,E,F)
         =>:
-            $finite_line_congruence(finite_line_of(A,B),finite_line_of(E,F))
+            $finite_line_congruence(A,B,E,F)
 
-know:   
-    forall l finite_line:
-        $finite_line_congruence(l,l)
-    forall l1,l2 finite_line:
-        =>:
-            $finite_line_congruence(l1,l2)
-        <=>:
-            $finite_line_congruence(l2,l1)
-    forall l1,l2,l3 finite_line:
-        $finite_line_congruence(l1,l2)
-        $finite_line_congruence(l2,l3)
-        =>:
-            $finite_line_congruence(l1,l3)
 
 ## C3
 ### Let AB and BC be two segments of a line a which have no points in common aside from the point B,
@@ -295,10 +278,10 @@ know:
         $three_points_collinear(A2,B2,C2)
         $point_between(B,A,C)
         $point_between(B2,A2,C2)
-        $finite_line_congruence(finite_line_of(A,B),finite_line_of(A2,B2))
-        $finite_line_congruence(finite_line_of(B,C),finite_line_of(B2,C2))
+        $finite_line_congruence(A,B,A2,B2)
+        $finite_line_congruence(B,C,B2,C2)
         =>:
-            $finite_line_congruence(finite_line_of(A,C),finite_line_of(A2,C2))
+            $finite_line_congruence(A,C,A2,C2)
 
 ## C4
 ### Let an angle ∠ (h,k) be given in the plane α and let a line a′ be given in a plane α′.
@@ -308,172 +291,175 @@ know:
 ### is congruent to the angle ∠ (h′, k′) and at the same time all interior points of the angle ∠ (h′, k′) lie upon the given side of a′. 
 ### We express this relation by means of the notation ∠ (h, k) ≅ ∠ (h′, k′)
 
-have ray nonempty_set
-have angle nonempty_set
+
 
 ##Todo: complete definition of angle
-know:
-    forall r ray:
-        r $in power_set(point)
-    forall a angle:
-        a $in power_set(point)
-
-let fn angle_degree(a angle) R
-
-prop is_end_point_of_ray(A point,r ray):
-    A $in r
-    forall B,C point:
-        B $in r
-        C $in r
-        B!=A
-        B!=C
-        C!=A
-        =>:
-            $point_between(B,A,C) or $point_between(C,A,B)
-
-know:
-    forall r ray:
-        exist A point st $is_end_point_of_ray(A,r)
-
-let fn end_point_of_ray(r ray) point:
-    =>:
-        $is_end_point_of_ray(end_point_of_ray(r),r)
-
-
-let fn ray_with_end_point_and_direction(A, B point) ray:
+let fn ray_with_end_point_and_direction(A point, B point) power_set(point):
     dom:
         A != B
 
-## A is end point of ray_with_end_point_and_direction(A,B)
+
 know:
-    forall A,B point:
-        A != B
-        =>:
-            $is_end_point_of_ray(A,ray_with_end_point_and_direction(A,B))
-            B $in ray_with_end_point_and_direction(A,B)
-
-
-
-know: 
-    # A is end point of r, B is on r => r=ray_with_end_point_and_direction(A,B)
-    forall A,B point,r ray:
-        A!=B
-        $is_end_point_of_ray(A,r)
-        B $in r
-        =>:
-            r=ray_with_end_point_and_direction(A,B)
-
     forall A, B, C point:
         A != B
         =>:
             $point_between(C, A, B) or $point_between(B, A, C)
         <=>:
             C $in ray_with_end_point_and_direction(A,B)
+    forall A,B,C point:
+        A!=B
+        C $in line_of(A,B)
+        $point_between(C,A,B) or $point_between(B,A,C)
+        =>:
+            ray_with_end_point_and_direction(A,B)=ray_with_end_point_and_direction(A,C)
 
-    # every point C on ray_with_end_point_and_direction(A, B) is on line_of(A, B)
+
+
+know: 
+    # Every point C on ray_with_end_point_and_direction(A, B) is on line_of(A, B)
+    # In fact, $point_between(C,A,B) or $point_between(B,A,C) could lead to C $in line_of(A,B)
     forall A,B,C point:
         A!=B
         C $in ray_with_end_point_and_direction(A,B)
         =>:
             C $in line_of(A,B)
             
-    forall r ray:
-        exist B point st r=ray_with_end_point_and_direction(end_point_of_ray(r),B)
 
 ## Angle: We define angle with direction.
 ## We define the relationship between angle and ray.
 
-prop two_rays_with_same_end_point(r1 ray, r2 ray):
-    end_point_of_ray(r1)=end_point_of_ray(r2)
+# plane of a point and a line
+let fn plane_of_point_and_line(A point,l line) plane:
+    dom:
+        not A $in l
 
-let fn angle_of_two_rays(r1 ray, r2 ray) angle:
-    $two_rays_with_same_end_point(r1,r2)
+know:
+    forall A point,l line:
+        not A $in l
+        A $in plane_of_point_and_line(A,l)
+        $line_on_plane(l,plane_of_point_and_line(A,l))
 
-prop ray_clock_wise_ray(r1 ray,r2 ray):
-    $two_rays_with_same_end_point(r1,r2)
+#two points are on the same side of a line
+prop sameside_points(A point,C point,l line):
+    A $in plane_of_point_and_line(C,l)
+    not A $in l
+    not C $in l
+    not $parallel_line(l,line_of(A,C))
+    not intersection_point(l,line_of(A,C)) $in finite_line_of(A,C)
 
-prop ray_counter_clock_wise_ray(r1 ray,r2 ray):
-    $two_rays_with_same_end_point(r1,r2)
+#two points are on the opposite side of a line
+prop not_sameside_points(A point,C point,l line):
+    A $in plane_of_point_and_line(C,l)
+    not A $in l
+    not C $in l
+    not $parallel_line(l,line_of(A,C))
+    intersection_point(l,line_of(A,C)) $in finite_line_of(A,C)
 
-prop ray_clock_between(r ray, r1 ray, r2 ray):
-    $ray_clock_wise_ray(r,r1)
-    $ray_counter_clock_wise_ray(r,r2)
+let fn angle_of(A point,B point,C point) power_set(point):
+    dom:
+        A!=B
+        A!=C
+        B!=C
+        not $three_points_collinear(A,B,C)
 
-prop ray_counter_clock_between(r ray, r1 ray, r2 ray):
-    $ray_counter_clock_wise_ray(r,r1)
-    $ray_clock_wise_ray(r,r2)
-
-prop ray_between(r ray,r1 ray,r2 ray):
-    $ray_clock_between(r,r1,r2) or $ray_counter_clock_between(r,r1,r2)
+let fn area_of_angle(A point,B point,C point) power_set(point):
+    dom:
+        A!=B
+        A!=C
+        B!=C
+        not $three_points_collinear(A,B,C)
 
 
 know:
-    forall P point,r1,r2 ray:
-        $two_rays_with_same_end_point(r1,r2)
+   
+    forall A,B,C,P point:
+        A!=B
+        A!=C
+        B!=C
+        not $three_points_collinear(A,B,C)
         =>:
-            P $in angle_of_two_rays(r1,r2)
+            P $in area_of_angle(A,B,C)
         <=>:
-            $ray_between(ray_with_end_point_and_direction(end_point_of_ray(r1),P),r1,r2)
+            $sameside_points(B,P,line_of(A,C))
+            $sameside_points(C,P,line_of(A,B))
 
-
-
-prop angle_congruence(a1 angle,a2 angle)
+    forall A,B,C,P point:
+        A!=B
+        A!=C
+        B!=C
+        not $three_points_collinear(A,B,C)
+        =>:
+            P $in angle_of(A,B,C)
+        <=>:
+            P $in ray_with_end_point_and_direction(A,B) or P $in ray_with_end_point_and_direction(A,C) or P $in area_of_angle(A,B,C)
+    
+    
+    
+    
+prop angle_congruence(A,B,C,D,E,F point):
+    A!=B
+    A!=C
+    B!=C
+    not $three_points_collinear(A,B,C)
+    D!=E
+    D!=F
+    E!=F
+    not $three_points_collinear(D,E,F)
 
 know:
-    forall a1,a2 angle:
-        $angle_congruence(a1,a2)
+    forall A,B,C,D,E,F point:
+        $angle_congruence(A,B,C,D,E,F)
         =>:
-            angle_degree(a1)=angle_degree(a2)
+            $angle_congruence(D,E,F,A,B,C)
+            
 
-prop clock_wise_congruence(a angle,r ray,A point,B point):
-    $ray_clock_wise_ray(r,ray_with_end_point_and_direction(A,B))
-    $angle_congruence(a,angle_of_two_rays(r,ray_with_end_point_and_direction(A,B)))
-
-prop counter_clock_wise_congruence(a angle,r ray,A point,B point):
-    $ray_counter_clock_wise_ray(r,ray_with_end_point_and_direction(A,B))
-    $angle_congruence(a,angle_of_two_rays(r,ray_with_end_point_and_direction(A,B)))
 
 know:
-    forall a angle,A point,B point:
+    forall a1,a2 plane,A, B, C a1, D, E, side_signal_point a2:
         A!=B
+        A!=C
+        B!=C
+        not $three_points_collinear(A,B,C)
+        D!=E
         =>:
-            exist r ray st $clock_wise_congruence(a,r,A,B)
-    forall a angle,A point,B point:
-        A!=B
-        =>:
-            exist r ray st $counter_clock_wise_congruence(a,r,A,B)
+            exist F point st {$sameside_points(F,side_signal_point,line_of(D,E)),$angle_congruence(A,B,C,D,E,F)}
 
 ## C5
 ### If the angle ∠ (h, k) is congruent to the angle ∠ (h′, k′) and to the angle ∠ (h″, k″), 
 ### then the angle ∠ (h′, k′) is congruent to the angle ∠ (h″, k″)
-
+    
 know :
-    forall a1,a2 angle:
+    forall  A,B,C,D,E,F point: 
         =>:
-            $angle_congruence(a1,a2)
+            $angle_congruence(A,B,C,D,E,F)
         <=>:
-            $angle_congruence(a2,a1)
-    forall a angle:
-        $angle_congruence(a,a)
-    forall a1,a2,a3 angle:
-        $angle_congruence(a1,a2)
-        $angle_congruence(a2,a3)
+            $angle_congruence(D,E,F,A,B,C)
+
+    forall A,B,C point:
+        $angle_congruence(A,B,C,A,B,C)
+
+    forall A,B,C,D,E,F,G,H,I point:
+        $angle_congruence(A,B,C,D,E,F)
+        $angle_congruence(D,E,F,G,H,I)
         =>:
-            $angle_congruence(a1,a3)
+            $angle_congruence(A,B,C,G,H,I)
 
 ## C6
 ### If in the two triangles ABC and A′B′C′ the congruences AB ≅ A′B′, AC ≅ A′C′, ∠BAC ≅ ∠B′A′C′ hold,
 ### then the congruence ∠ABC ≅ ∠A′B′C′ holds
 ### (and, by a change of notation, it follows that ∠ACB ≅ ∠A′C′B′ also holds)
 
-have triangle nonempty_set:
 let fn triangle_of(A point,B point,C point) triangle:
     dom:
+        A!=B
+        A!=C
+        B!=C
         not $three_points_collinear(A,B,C)
 know: 
-    forall T triangle:
-        T $in power_set(point)
     forall A,B,C,P point:
+        A!=B
+        A!=C
+        B!=C
         not $three_points_collinear(A,B,C)
         =>:
             P $in triangle_of(A,B,C)
@@ -481,69 +467,61 @@ know:
             P $in finite_line_of(A,B) or P $in finite_line_of(B,C) or P $in finite_line_of(C,A)
 
 
-prop triangle_congruence(A point,B point,C point,A' point,B' point,C' point):
+prop triangle_congruence(A point,B point,C point,A1 point,B' point,C' point):
     not $three_points_collinear(A,B,C)
-    not $three_points_collinear(A',B',C')
-    $finite_line_congruence(finite_line_of(A,B),finite_line_of(A',B'))
-    $finite_line_congruence(finite_line_of(A,C),finite_line_of(A',C'))
-    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,C)),angle_of_two_rays(ray_with_end_point_and_direction(A',B'),ray_with_end_point_and_direction(A',C')))
+    not $three_points_collinear(A2,B2,C2)
+    $finite_line_congruence(finite_line_of(A,B),finite_line_of(A2,B2))
+    $finite_line_congruence(finite_line_of(A,C),finite_line_of(A2,C2))
+    $angle_congruence(angle_of(A,B,C),angle_of(A2,B2,C2))
+
 know:
-    forall A,B,C point,A',B',C' point:
-        $triangle_congruence(A,B,C,A',B',C')
+    forall A,B,C point,A2,B2,C2 point:
+        $triangle_congruence(A,B,C,A2,B2,C2)
         =>:
-            $triangle_congruence(C,B,A,C',B',A')
-            $triangle_congruence(B,A,C,B',A',C')
+            $triangle_congruence(C,B,A,C2,B2,A2)
+            $triangle_congruence(B,A,C,B2,A2,C2)
+
 
 # Parallel
 ## P1
 ### Playfair's axiom: Let a be any line and A a point not on it. Then there is at most one line in the plane,
 ### determined by a and A, that passes through A and does not intersect a.
 
-prop plane_contains_two_lines(pl plane,l1 line,l2 line):
-    l1 $in pl
-    l2 $in pl
-prop point_on_two_lines(A point,l1 line,l2 line):
-    A $in l1
-    A $in l2
 prop line_coplanar(l1 line,l2 line):
-    exist pl plane st $plane_contains_two_lines(pl,l1,l2)
+    exist pl plane st {l1 $in pl,l2 $in pl}
 
 prop intersect_of_two_lines(l1 line,l2 line):
     $line_coplanar(l1,l2)
-    exist A point st $point_on_two_lines(A,l1,l2)
+    exist A point st {A $in l1,A $in l2}
     l1!=l2
 
 let fn intersection_point(l1,l2 line) point:
     $intersect_of_two_lines(l1,l2)
-    =>:
-        $point_on_two_lines(intersection_point(l1,l2),l1,l2)
+
+know:   
+    forall l1,l2 line:
+        $intersect_of_two_lines(l1,l2)
+        =>:
+            intersection_point(l1,l2) $in l1
+            intersection_point(l1,l2) $in l2
 
 prop parallel_line(l1 line,l2 line):
     $line_coplanar(l1,l2)
     not $intersect_of_two_lines(l1,l2)
+    l1!=l2
 
-let fn plane_of_point_and_line(A point,l line) plane:
-    dom:
-        not A $in l
-    =>:
-        A $in plane_of_point_and_line(A,l)
-        l $line_on_plane(plane_of_point_and_line(A,l))
-prop parallel_line_through_point_on_their_plane(A point,l line,l' line):
-    not A $in l
-    A $in l'
-    l' $line_on_plane(plane_of_point_and_line(A,l))
-    $parallel_line(l',l)
 know:
     forall A point,l line:
         not A $in l
         =>:
-            exist l' line st $parallel_line_through_point_on_their_plane(A,l,l')
+            exist l' line st {A $in l',$line_on_plane(l',plane_of_point_and_line(A,l)),$parallel_line(l',l)}
+
     forall A point,l line,l'1 line,l'2 line:
         not A $in l
         A $in l'1   
         A $in l'2
-        l'1 $line_on_plane(plane_of_point_and_line(A,l))
-        l'2 $line_on_plane(plane_of_point_and_line(A,l))
+        $line_on_plane(l'1,plane_of_point_and_line(A,l))
+        $line_on_plane(l'2,plane_of_point_and_line(A,l))
         $parallel_line(l'1,l)
         $parallel_line(l'2,l)   
         =>:
@@ -557,13 +535,19 @@ know:
 ### along the ray from A through B, will pass beyond the point B
 
 
-let fn length_of_finite_line(fl finite_line) R
+let fn length_of_finite_line(A point,B point) R_pos:
+    dom:
+        A!=B
+    
 
 know :
-    forall fl1,fl2 finite_line:
-        $finite_line_congruence(fl1,fl2)
+    forall A,B,C,D point:
+        A!=B
+        C!=D
+        $finite_line_congruence(finite_line_of(A,B),finite_line_of(C,D))
         =>:
-            length_of_finite_line(fl1)=length_of_finite_line(fl2)
+            length_of_finite_line(A,B)=length_of_finite_line(C,D)
+
 
 prop archimedes_number(A point,B point,C point,D point,n N_pos):
     A!=B
@@ -1681,21 +1665,7 @@ know:
 
 # cc_tangent0: common tangent of two circles (two points)
 
-#two points are on the same side of a line
-prop sameside_points(A point,C point,l line):
-    A $in plane_of_point_and_line(C,l)
-    not A $in l
-    not C $in l
-    not $parallel_line(l,line_of(A,C))
-    not intersection_point(l,line_of(A,C)) $in finite_line_of(A,C)
 
-#two points are on the opposite side of a line
-prop not_sameside_points(A point,C point,l line):
-    A $in plane_of_point_and_line(C,l)
-    not A $in l
-    not C $in l
-    not $parallel_line(l,line_of(A,C))
-    intersection_point(l,line_of(A,C)) $in finite_line_of(A,C)
 # l is an external tangent line of two circles
 prop is_cc_external_tangent_line(c1,c2 circle,l line):
     c1!=c2
