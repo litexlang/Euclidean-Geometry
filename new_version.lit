@@ -36,14 +36,13 @@ let fn line_of(A point,B point) line:
         A!=B
 
 know:
-    forall A,B point, l line:
-        A!=B
-        A $in line_of(A, B)
-        B $in line_of(A, B)
-        A $in l
-        B $in l
+    forall A,B point:
+        A $in line_of(A,B)
+        B $in line_of(A,B)
+    forall l line, A,B l:
+        A != B
         =>:
-            l = line_of(A, B)
+            l = line_of(A,B)
 
 ## I2
 ### There exists at least two distinct points on a line.
@@ -54,9 +53,10 @@ know:
 ## I3
 ### There exist at least three points that do not lie on the same line.
 prop three_points_collinear(A,B,C point):
+    B != C
     A $in line_of(B,C)
 know:
-    exist A,B,C point st not $three_points_collinear(A,B,C)
+    exist A,B,C point st {not $three_points_collinear(A,B,C)}
 
 ## I4
 ### For every three points A, B, C not situated on the same line there exists exactly one plane α that contains all of them.
@@ -64,21 +64,24 @@ let fn plane_of(A point,B point,C point) plane:
     dom:
         not $three_points_collinear(A,B,C)
 
-### For every plane there exists a point which lies on it. 
 know:
-    forall pl plane:
-        exist p point st p $in pl
+    forall A,B,C point:
+        A $in plane_of(A,B,C)
+        B $in plane_of(A,B,C)
+        C $in plane_of(A,B,C)
+    forall pl plane, A,B,C pl:
+        A != B
+        A != C
+        B != C
+        pl = plane_of(A,B,C)
 
 ##I5
 ### Every plane contains three points A, B, C which do not lie in the same line.
-prop three_points_not_collinear_on_plane(A point,B point, C point, pl plane):
-    A $in pl
-    B $in pl
-    C $in pl
+prop three_points_not_collinear_on_plane(pl plane, A, B, C pl):
     not $three_points_collinear(A,B,C)
 know:
     forall pl plane:
-        exist A,B,C point st $three_points_not_collinear_on_plane(A,B,C,pl)
+        exist A,B,C point st {$three_points_not_collinear_on_plane(pl,A,B,C)}
 
 ## I6
 ### If two points A, B of a line lie in a plane pl, then every point of a lies in pl. 
@@ -97,9 +100,7 @@ know:
 
 ## I7
 ### If two planes α, β have a point A in common, then they have at least a second point B in common
-prop exist_another_point_of_two_intersect_planes(A point,B point,p plane,q plane):
-    A $in p
-    A $in q
+prop another_point_of_two_intersect_planes(A point,B point,p plane,q plane):
     B $in p
     B $in q
     A!=B
@@ -109,11 +110,11 @@ know:
         A $in p
         A $in q
         =>:
-            exist B point st $exist_another_point_of_two_intersect_planes(A,B,p,q)
+            exist B point st {$another_point_of_two_intersect_planes(A,B,p,q)}
 
 ## I8
 ### There exist at least four points not lying in a plane    
-prop exist_four_points_not_on_any_plane(A point, B point, C point, D point):
+prop four_points_not_on_any_plane(A point, B point, C point, D point):
     A!=B
     A!=C
     A!=D
@@ -124,7 +125,7 @@ prop exist_four_points_not_on_any_plane(A point, B point, C point, D point):
         not $in(A,p) or not $in(B,p) or not $in(C,p) or not $in(D,p)
       
 know:
-    exist A,B,C,D point st $exist_four_points_not_on_any_plane(A,B,C,D)
+    exist A,B,C,D point st {$four_points_not_on_any_plane(A,B,C,D)}
     
 
 
@@ -132,19 +133,23 @@ know:
 ## B1
 ### If a point B lies between points A and C, B is also between C and A, 
 ### and there exists a line containing the distinct points A, B, C
-prop point_between(B point ,A point ,C point):
-    B!=A
-    B!=C
-    C!=A
-    $three_points_collinear(A,B,C)
+prop point_between(B point ,A point ,C point)
 know:
     forall B,A,C point:
         $point_between(B,A,C)
         =>:
             $point_between(B,C,A)
+    forall B,A,C point:
+        $point_between(B,A,C)
+        =>:
+            B != A
+            B != C
+            C != A
+            $three_points_collinear(A,B,C)
+    
 ## B2
 ### If A and C are two points, then there exists at least one point B on the line AC such that C lies between A and B
-prop exist_point_on_extension(A point,C point,B point):
+prop point_on_extension(A point,C point,B point):
     A!=C
     B $in line_of(A,C)
     $point_between(C,A,B)
@@ -152,7 +157,7 @@ know:
     forall A,C point:
         A!=C
         =>:
-            exist B point st $exist_point_on_extension(A,C,B)
+            exist B point st {$point_on_extension(A,C,B)}
 ## B3
 ### Of any three points situated on a line, there is no more than one which lies between the other two
 prop no_more_than_one_point_between_three_points_on_line(A point,B point ,C point):
@@ -188,7 +193,11 @@ let fn finite_line_of(A point,B point) power_set(point):
     dom:
         A!=B
 
-
+know:
+    forall A, B point:
+        A!=B
+        =>:
+            finite_line_of(A,B) $subset line_of(A,B)
 
 know:
     forall A,B point:
