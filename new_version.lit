@@ -215,6 +215,7 @@ know:
             C $in line_of(A,B)
             $point_between(C,A,B)
 prop line_intersect_finite_line(l line ,B ,C point):
+    B != C
     exist A point st {A $in l, A $in finite_line_of(B,C)}
 
 know:
@@ -239,10 +240,11 @@ know:
 ### We indicate this relation by writing AB ≅ A′B′. Every segment is congruent to itself
 
 prop on_the_same_side_of_line(z point, start point, end point):
-    $three_points_collinear(start, end, z)
-    $between(z, start, end) or $between(end, start, z)
+    start != end
+    $three_points_collinear(z, start, end)
+    $point_between(z, start, end) or $point_between(end, start, z) or z = end or z = start
 
-prop finite_line_congruence(A point,B point,A2 point,B2 point):
+prop finite_line_congruence(A point,B point,A2 point,B2 point)
 
 know:
     forall A, B point, a2 line, A2 a2, side_signal_end_point a2:
@@ -255,6 +257,9 @@ know:
 ### Symmetric: AB ≅ CD => CD ≅ AB
 ### Transitive: AB ≅ CD, CD ≅ EF => AB ≅ EF
 
+prop finite_line_congruence_transitive_result(A point,B point,C point,A2 point,B2 point,C2 point):
+    $finite_line_congruence(A,B,E,F)
+    
 know:
     forall A, B point:
         A != B
@@ -273,7 +278,7 @@ know:
         $finite_line_congruence(A,B,C,D)
         $finite_line_congruence(C,D,E,F)
         =>:
-            $finite_line_congruence(A,B,E,F)
+            $finite_line_congruence_transitive_result(A,B,C,E,F,A2,B2,C2)
 
 
 ## C3
