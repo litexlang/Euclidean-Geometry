@@ -259,7 +259,7 @@ know:
 
 prop finite_line_congruence_transitive_result(A point,B point,C point,A2 point,B2 point,C2 point):
     $finite_line_congruence(A,B,E,F)
-    
+
 know:
     forall A, B point:
         A != B
@@ -286,16 +286,25 @@ know:
 ### and, furthermore, let A′B′ and B′C′ be two segments of the same or of another line a′ having, 
 ### likewise, no point other than B′ in common. Then, if AB ≅ A′B′ and BC ≅ B′C′, we have AC ≅ A'C'
 ### AB ≅ A2B2 and BC ≅ B2C2 => AC ≅ A2C2
+
+prop finite_line_congruence_transitive_result(A point,B point,C point,A2 point,B2 point,C2 point):
+    $finite_line_congruence(A,C,A2,C2)
+
 know:
-    forall A,B,C,A2,B2,C2 point:
-        $three_points_collinear(A,B,C)
-        $three_points_collinear(A2,B2,C2)
-        $point_between(B,A,C)
-        $point_between(B2,A2,C2)
+    forall A, B, C, A2, B2, C2 point:
+        A != B
+        B != C
+        A != C
+        intersect(finite_line_of(A,B),finite_line_of(B,C)) = {B}
+        A2 != B2
+        B2 != C2
+        A2 != C2
+        intersect(finite_line_of(A2,B2),finite_line_of(B2,C2)) = {B2}
         $finite_line_congruence(A,B,A2,B2)
         $finite_line_congruence(B,C,B2,C2)
         =>:
-            $finite_line_congruence(A,C,A2,C2)
+            $finite_line_congruence_transitive_result(A,B,C,A2,B2,C2)
+        
 
 ## C4
 ### Let an angle ∠ (h,k) be given in the plane α and let a line a′ be given in a plane α′.
