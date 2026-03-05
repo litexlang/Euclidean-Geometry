@@ -337,7 +337,7 @@ know:
     forall A point,l line:
         not A $in l
         A $in plane_of_point_and_line(A,l)
-        l $line_on_plane(plane_of_point_and_line(A,l))
+        $line_on_plane(l,plane_of_point_and_line(A,l))
 
 #two points are on the same side of a line
 prop sameside_points(A point,C point,l line):
@@ -487,46 +487,41 @@ know:
 ### Playfair's axiom: Let a be any line and A a point not on it. Then there is at most one line in the plane,
 ### determined by a and A, that passes through A and does not intersect a.
 
-prop plane_contains_two_lines(pl plane,l1 line,l2 line):
-    l1 $in pl
-    l2 $in pl
-prop point_on_two_lines(A point,l1 line,l2 line):
-    A $in l1
-    A $in l2
 prop line_coplanar(l1 line,l2 line):
-    exist pl plane st $plane_contains_two_lines(pl,l1,l2)
+    exist pl plane st {l1 $in pl,l2 $in pl}
 
 prop intersect_of_two_lines(l1 line,l2 line):
     $line_coplanar(l1,l2)
-    exist A point st $point_on_two_lines(A,l1,l2)
+    exist A point st {A $in l1,A $in l2}
     l1!=l2
 
 let fn intersection_point(l1,l2 line) point:
     $intersect_of_two_lines(l1,l2)
-    =>:
-        $point_on_two_lines(intersection_point(l1,l2),l1,l2)
+
+know:   
+    forall l1,l2 line:
+        $intersect_of_two_lines(l1,l2)
+        =>:
+            intersection_point(l1,l2) $in l1
+            intersection_point(l1,l2) $in l2
 
 prop parallel_line(l1 line,l2 line):
     $line_coplanar(l1,l2)
     not $intersect_of_two_lines(l1,l2)
+    l1!=l2
 
-
-prop parallel_line_through_point_on_their_plane(A point,l line,l' line):
-    not A $in l
-    A $in l'
-    l' $line_on_plane(plane_of_point_and_line(A,l))
-    $parallel_line(l',l)
 know:
     forall A point,l line:
         not A $in l
         =>:
-            exist l' line st $parallel_line_through_point_on_their_plane(A,l,l')
+            exist l' line st {A $in l',$line_on_plane(l',plane_of_point_and_line(A,l)),$parallel_line(l',l)}
+
     forall A point,l line,l'1 line,l'2 line:
         not A $in l
         A $in l'1   
         A $in l'2
-        l'1 $line_on_plane(plane_of_point_and_line(A,l))
-        l'2 $line_on_plane(plane_of_point_and_line(A,l))
+        $line_on_plane(l'1,plane_of_point_and_line(A,l))
+        $line_on_plane(l'2,plane_of_point_and_line(A,l))
         $parallel_line(l'1,l)
         $parallel_line(l'2,l)   
         =>:
@@ -540,13 +535,19 @@ know:
 ### along the ray from A through B, will pass beyond the point B
 
 
-let fn length_of_finite_line(fl finite_line) R
+let fn length_of_finite_line(A point,B point) R_pos:
+    dom:
+        A!=B
+    
 
 know :
-    forall fl1,fl2 finite_line:
-        $finite_line_congruence(fl1,fl2)
+    forall A,B,C,D point:
+        A!=B
+        C!=D
+        $finite_line_congruence(finite_line_of(A,B),finite_line_of(C,D))
         =>:
-            length_of_finite_line(fl1)=length_of_finite_line(fl2)
+            length_of_finite_line(A,B)=length_of_finite_line(C,D)
+
 
 prop archimedes_number(A point,B point,C point,D point,n N_pos):
     A!=B
