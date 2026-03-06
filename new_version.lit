@@ -149,15 +149,16 @@ know:
     
 ## B2
 ### If A and C are two points, then there exists at least one point B on the line AC such that C lies between A and B
-prop point_on_extension(A point,C point,B point):
+prop is_point_on_extension(A point,C point,B point):
     A!=C
     B $in line_of(A,C)
     $point_between(C,A,B)
+
 know:
     forall A,C point:
         A!=C
         =>:
-            exist B point st {$point_on_extension(A,C,B)}
+            exist B point st {$is_point_on_extension(A,C,B)}
 ## B3
 ### Of any three points situated on a line, there is no more than one which lies between the other two
 prop no_more_than_one_point_between_three_points_on_line(A point,B point ,C point):
@@ -541,15 +542,15 @@ prop intersect_of_two_lines(l1 line,l2 line):
     exist A point st {A $in l1,A $in l2}
     l1!=l2
 
-let fn intersection_point(l1,l2 line) point:
+let fn intersection_point_of_two_lines(l1,l2 line) point:
     $intersect_of_two_lines(l1,l2)
 
 know:   
     forall l1,l2 line:
         $intersect_of_two_lines(l1,l2)
         =>:
-            intersection_point(l1,l2) $in l1
-            intersection_point(l1,l2) $in l2
+            intersection_point_of_two_lines(l1,l2) $in l1
+            intersection_point_of_two_lines (l1,l2) $in l2
 
 prop parallel_line(l1 line,l2 line):
     $line_coplanar(l1,l2)
@@ -692,6 +693,7 @@ know:
 
 let fn circle_of_center_with_radius(O point,r R_pos) circle
 
+
 let fn circle_of_center_and_point(O point,P point) circle:
     dom:
         O!=P
@@ -759,14 +761,17 @@ prop two_circles_coplanar(c1,c2 circle):
 
 
 prop two_circles_intersect(c1,c2 circle):
+    c1!=c2
     $two_circles_coplanar(c1,c2)
     length_of_finite_line(finite_line_of(center_of_circle(c1),center_of_circle(c2)))<radius_of_circle(c1)+radius_of_circle(c2)
 
 prop two_tangent_circles(c1,c2 circle):
+    c1!=c2
     $two_circles_coplanar(c1,c2)
     length_of_finite_line(finite_line_of(center_of_circle(c1),center_of_circle(c2)))=radius_of_circle(c1)+radius_of_circle(c2)
 
 prop two_disjiont_circles(c1,c2 circle):
+    c1!=c2
     $two_circles_coplanar(c1,c2)
     length_of_finite_line(finite_line_of(center_of_circle(c1),center_of_circle(c2)))>radius_of_circle(c1)+radius_of_circle(c2)
 
@@ -787,20 +792,39 @@ prop is_tangency_point_of_circles(A point,c1,c2 circle):
 let fn intersection_points_of_circles(c1,c2 circle) cart(point,point):
     dom:
         $two_circles_intersect(c1,c2)
-    =>:
-        $is_intersect_points_of_circles(intersection_points_of_circles(c1,c2)[1],intersection_points_of_circles(c1,c2)[2],c1,c2)
 
+know:
+    forall c1,c2 circle:
+        $two_circles_intersect(c1,c2)
+        =>:
+            exist A,B point st $is_intersect_points_of_circles(A,B,c1,c2)
+    forall c1,c2 circle:
+        $two_circles_intersect(c1,c2)
+        =>:
+            $is_intersect_points_of_circles(intersection_points_of_circles(c1,c2)[1],intersection_points_of_circles(c1,c2)[2],c1,c2)
+
+    
 let fn tangency_point_of_circles(c1,c2 circle) point:
     dom:
         $two_tangent_circles(c1,c2)
-    =>:
-        $is_tangency_point_of_circles(tangency_point_of_circles(c1,c2),c1,c2)
+
+know:
+    forall c1,c2 circle:
+        $two_tangent_circles(c1,c2)
+        =>:
+            exist A point st $is_tangency_point_of_circles(A,c1,c2)
+    forall c1,c2 circle:
+        $two_tangent_circles(c1,c2)
+        =>:
+            $is_tangency_point_of_circles(tangency_point_of_circles(c1,c2),c1,c2)
+        
     
 know:
     forall A,B point,c1,c2 circle:
         $is_intersect_points_of_circles(A,B,c1,c2)
         =>:
             {A,B}={intersection_points_of_circles(c1,c2)[1],intersection_points_of_circles(c1,c2)[2]}
+
     forall A point,c1,c2 circle:
         $is_tangency_point_of_circles(A,c1,c2)
         =>:
@@ -815,9 +839,9 @@ know:
     forall A,B,C point:
         not $three_points_collinear(A,B,C)
         =>:
-        A $in circle_of_triangle(A,B,C)
-        B $in circle_of_triangle(A,B,C)
-        C $in circle_of_triangle(A,B,C)
+            A $in circle_of_triangle(A,B,C)
+            B $in circle_of_triangle(A,B,C)
+            C $in circle_of_triangle(A,B,C)
 
 know: 
     forall c1,c2 circle, A,B,C point
@@ -829,7 +853,7 @@ know:
         C $in c2
         =>:
             c1=c2
-
+   
 
 
 #4 eq_quadrangle
@@ -932,9 +956,12 @@ prop is_eqangle2(A,B,C,X point):
     B!=C
     not $three_points_collinear(A,B,C)
     $angle_congruence(angle_of(A,B,X),angle_of(C,X,A))
+
+#9 eqdistance
+#same as axiom C1
    
 
-#9 incenter
+#10 incenter
 
 prop is_incenter(I,A,B,C point):
     not $three_points_collinear(A,B,C)
@@ -957,6 +984,12 @@ know:
         not $three_points_collinear(A,B,C)
         =>:
             $is_incenter(incenter_of(A,B,C),A,B,C)
+    forall A,B,C,I point:
+        $is_incenter(I,A,B,C)
+        =>:
+            I=incenter_of(A,B,C)
+
+#11 incenter2
 
 
 #10 converse_extension_ray
@@ -992,32 +1025,36 @@ let fn exincenter_of(A,B,C point) point:
         $is_exincenter(exincenter_of(A,B,C),A,B,C)
 
         
-#10
+#10 foot
+ let fn point_on_extension(A point,B point) point:
+    dom:
+        A!=B
 know:
-    forall a angle:
-        exist r1,r2 ray st a=angle_of_two_rays(r1,r2)
+    forall A,B point:
+        A!=B
+        =>:
+            $is_point_on_extension(A,B,point_on_extension(A,B))
+    
+ prop is_right_angle(A,B,C point):
+    $angle_congruence(angle_of(A,B,C),angle_of(A,B,point_on_extension(C,A)))
 
-let fn sides_of(a angle) cart(ray,ray):
-    =>:
-        a=angle_of_two_rays(sides_of(a)[1],sides_of(a)[2])
-let fn start_point_of(a angle) point:
-    =>:
-        $is_end_point_of_ray(start_point_of(a),sides_of(a)[1])    
- 
-prop is_right_angle(a angle):
-    $angle_congruence(a,angle_of_two_rays(sides_of(a)[2],converse_extension_ray_of(sides_of(a)[1])))
 
-let fn ano_point_on_line(A point,l line) point:
+let fn another_point_on_line(A point,l line) point:
     A $in l
-    =>:
-       ano_point_on_line(A,l) $in l
-       ano_point_on_line(A,l)!=A
+
+know:
+    forall A,l line:
+        A $in l
+        =>:
+            another_point_on_line(A,l) $in l
+            another_point_on_line(A,l)!=A
+            
         
 
 prop perp(l1,l2 line):
     $intersect_of_two_lines(l1,l2)
-    $is_right_angle(angle_of_two_rays(ray_of(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l1)),ray_of(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l2))))
-   
+    $is_right_angle(angle_of(intersection_point_of_two_lines(l1,l2),another_point_on_line(intersection_point_of_two_lines(l1,l2),l1),another_point_on_line(intersection_point_of_two_lines(l1,l2),l2)))
+
 prop is_foot(X,A point,l line):
     not A $in l 
     $perp(line_of(X,A),l)
@@ -1765,20 +1802,24 @@ prop is_ieq_triangle(A point,B point,C point):
     not $three_points_collinear(A,B,C)
     $finite_line_congruence(finite_line_of(A,B),finite_line_of(B,C))
     $finite_line_congruence(finite_line_of(B,C),finite_line_of(C,A))
-    $angle_congruence(angle_of_two_rays(ray_of(A,B),ray_of(A,C)),angle_of_two_rays(ray_of(C,A),ray_of(C,B)))
-    $angle_congruence(angle_of_two_rays(ray_of(C,A),ray_of(C,B)),angle_of_two_rays(ray_of(B,C),ray_of(B,A)))
+    $angle_congruence(angle_of(A,B,C),angle_of(C,A,B))
+    $angle_congruence(angle_of(A,B,C),angle_of(B,C,A))
 
 let fn ieq_triangle_third_vertex(A point,B point) point:
     dom:
         A!=B
-    =>:
-        $is_ieq_triangle(A,B,ieq_triangle_third_vertex(A,B))
 
 know:
     forall A,B point:
         A!=B
         =>:
             exist C point st $is_ieq_triangle(A,B,C)
+    forall A,B point:
+        A!=B
+        =>:
+            $is_ieq_triangle(A,B,ieq_triangle_third_vertex(A,B))
+
+
 
 # on_opline: point on opposite line
 # x is a point on line ab (same as on_line, but with different name)
