@@ -564,6 +564,7 @@ prop parallel_line(l1 line,l2 line):
     not $intersect_of_two_lines(l1,l2)
     l1!=l2
 
+
 know:
     forall A point,l line:
         not A $in l
@@ -1254,10 +1255,12 @@ know:
 #17 intersection_ll
 #define intersection point of two lines which we have already done in the parallel axiom
 
-#18 intersection_lp: intersection point of a line and a parallel line through a point
-#define intersection point of a line and a parallel line through a point
+#18 intersection_lp
+#construct intersection point of a line and a line parallel to a given line through a given point 
 
+# X is the intersection point of line l1 and the line through C parallel to l2
 prop is_intersection_lp(X point,C point,l1 line,l2 line):
+    $line_on_plane(l1,plane_of_point_and_line(C,l2))
     not $parallel_line(l2,l1)
     not C $in l1
     not C $in l2
@@ -1266,13 +1269,19 @@ prop is_intersection_lp(X point,C point,l1 line,l2 line):
 
 let fn intersection_lp(C point,l1 line,l2 line) point:
     dom:
+        $line_on_plane(l1,plane_of_point_and_line(C,l2))
         not $parallel_line(l2,l1)
         not C $in l1
         not C $in l2
-    =>:
-        $is_intersection_lp(intersection_lp(C,l1,l2),C,l1,l2)
-
 know:
+    forall C point,l1 line,l2 line:
+        $line_on_plane(l1,plane_of_point_and_line(C,l2))
+        not $parallel_line(l2,l1)
+        not C $in l1
+        not C $in l2
+        =>:
+            $is_intersection_lp(intersection_lp(C,l1,l2),C,l1,l2)
+
     forall C point,l1 line,l2 line:
         not $parallel_line(l2,l1)
         not C $in l1
@@ -1284,9 +1293,12 @@ know:
         =>:
             X=intersection_lp(C,l1,l2)
 
-# intersection_lt: intersection point of a line and a perpendicular line through a point
-# x is the intersection point of line ab and the line through c perpendicular to de
+#19 intersection_lt
+#construct intersection point of a line and a  line perpendicular to a given line through a given point
+
+# X is the intersection point of line l1 and the line through C perpendicular to l2
 prop is_intersection_lt(X point,C point,l1 line,l2 line):
+    $line_on_plane(l1,plane_of_point_and_line(C,l2))
     not C $in l1
     not C $in l2
     not $perp(l1,l2)
@@ -1295,28 +1307,41 @@ prop is_intersection_lt(X point,C point,l1 line,l2 line):
 
 let fn intersection_lt(C point,l1 line,l2 line) point:
     dom:
+        $line_on_plane(l1,plane_of_point_and_line(C,l2))
         not C $in l1
         not C $in l2
         not $perp(l1,l2)
-    =>:
-        $is_intersection_lt(intersection_lt(C,l1,l2),C,l1,l2)
-
 know:
     forall C point,l1 line,l2 line:
+        $line_on_plane(l1,plane_of_point_and_line(C,l2))
+        not C $in l1
+        not C $in l2
+        not $perp(l1,l2)
+        =>:
+            $is_intersection_lt(intersection_lt(C,l1,l2),C,l1,l2)
+
+    forall C point,l1 line,l2 line:
+        $line_on_plane(l1,plane_of_point_and_line(C,l2))
         not C $in l1
         not C $in l2
         not $perp(l1,l2)
         =>:
             exist X point st $is_intersection_lt(X,C,l1,l2)
+
     forall X,C point,l1 line,l2 line:
         $is_intersection_lt(X,C,l1,l2)
         =>:
             X=intersection_lt(C,l1,l2)
 
-# intersection_pp: intersection point of two parallel lines through given points
-# x is the point such that xa is parallel to bc and xd is parallel to ef
+#20 intersection_pp:
+#construct intersection point of two lines which are parallel to  given lines respectively through given points
+
+# X is the intersection point of line parallel to l1 through A and line parallel to l2 through D
+
 prop is_intersection_pp(X point,A point,D point,l1 line,l2 line):
     A!=D
+    $line_on_plane(l1,plane_of_point_and_line(A,l2))
+    D $in plane_of_point_and_line(A,l2)
     not $parallel_line(l2,l1)
     $parallel_line(l1,line_of(A,X))
     $parallel_line(l2,line_of(D,X))
@@ -1324,26 +1349,40 @@ prop is_intersection_pp(X point,A point,D point,l1 line,l2 line):
 let fn intersection_pp(A point,D point,l1 line,l2 line) point:
     dom:
         A!=D
+        $line_on_plane(l1,plane_of_point_and_line(A,l2))
+        D $in plane_of_point_and_line(A,l2)
         not $parallel_line(l2,l1)
-    =>:
-        $is_intersection_pp(intersection_pp(A,D,l1,l2),A,D,l1,l2)
 
 know:
     forall A,D point,l1 line,l2 line:
         A!=D
+        $line_on_plane(l1,plane_of_point_and_line(A,l2))
+        D $in plane_of_point_and_line(A,l2)
+        not $parallel_line(l2,l1)
+        =>:
+            $is_intersection_pp(intersection_pp(A,D,l1,l2),A,D,l1,l2)
+
+    forall A,D point,l1 line,l2 line:
+        $line_on_plane(l1,plane_of_point_and_line(A,l2))
+        D $in plane_of_point_and_line(A,l2)
         not $parallel_line(l2,l1)
         =>:
             exist X point st $is_intersection_pp(X,A,D,l1,l2)
+
     forall X,A,D point,l1 line,l2 line:
         $is_intersection_pp(X,A,D,l1,l2)
         =>:
             X=intersection_pp(A,D,l1,l2)
 
-# intersection_tt: intersection point of two perpendicular lines through given points
-# x is the point such that xa is perpendicular to bc and xd is perpendicular to ef
+#21 intersection_tt:
+#construct intersection point of two lines which are perpendicular to given lines respectively through given points
+
+# X is the intersection point of line perpendicular to l1 through A and line perpendicular to l2 through D
 prop is_intersection_tt(X point,A point,D point,l1 line,l2 line):
     A!=D
     not $parallel_line(l1,l2)
+    $line_on_plane(l1,plane_of_point_and_line(A,l2))
+    D $in plane_of_point_and_line(A,l2)
     $perp(line_of(X,A),l1)
     $perp(line_of(X,D),l2)
 
@@ -1351,72 +1390,94 @@ let fn intersection_tt(A point,D point,l1 line,l2 line) point:
     dom:
         A!=D
         not $parallel_line(l1,l2)
-    =>:
-        $is_intersection_tt(intersection_tt(A,D,l1,l2),A,D,l1,l2)
+        $line_on_plane(l1,plane_of_point_and_line(A,l2))
+        D $in plane_of_point_and_line(A,l2)
 
 know:
     forall A,D point,l1 line,l2 line:
         A!=D
         not $parallel_line(l1,l2)
+        $line_on_plane(l1,plane_of_point_and_line(A,l2))
+        D $in plane_of_point_and_line(A,l2)
+        =>:
+            $is_intersection_tt(intersection_tt(A,D,l1,l2),A,D,l1,l2)
+
+    forall A,D point,l1 line,l2 line:
+        $line_on_plane(l1,plane_of_point_and_line(A,l2))
+        D $in plane_of_point_and_line(A,l2)
         =>:
             exist X point st $is_intersection_tt(X,A,D,l1,l2)
+
     forall X,A,D point,l1 line,l2 line:
         $is_intersection_tt(X,A,D,l1,l2)
         =>:
             X=intersection_tt(A,D,l1,l2)
 
-# iso_triangle: isosceles triangle
-# triangle abc is isosceles with ab = ac and angle abc = angle acb
+#22 iso_triangle:
+#construct isosceles triangle with two equal sides and two equal angles
+# A,B,C are the vertices of the triangle
+# AB = AC
+# angle ABC = angle ACB
+
 prop is_iso_triangle(A point,B point,C point):
-    not $three_points_collinear(A,B,C)
+    $not_three_points_collinear(A,B,C)
     $finite_line_congruence(finite_line_of(A,B),finite_line_of(A,C))
+
 know:
     forall A,B,C point:
         $is_iso_triangle(A,B,C)
         =>:
             $angle_congruence(angle_of_two_rays(ray_of(B,A),ray_of(B,C)),angle_of_two_rays(ray_of(C,B),ray_of(C,A)))
     forall A,B,C point:
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
         $angle_congruence(angle_of_two_rays(ray_of(B,A),ray_of(B,C)),angle_of_two_rays(ray_of(C,B),ray_of(C,A)))
         =>:
             $is_iso_triangle(A,B,C)
 
-# lc_tangent: tangent point from a point to a circle
-# x is the point and circle with center o and passing through a, such that ax is tangent to the circle
+#23 lc_tangent:
+#construct tangent point from a point to a circle
+# A is the point on the circle
+# O is the center of the circle
+# X is the point on the tangent line
+# AX is tangent to the circle
+
 prop is_lc_tangent(X point,A point,O point):
     A!=O
+    X!=A
+    X $in plane_of_point_and_line(A,line_of(A,O))
     $perp(line_of(A,X),line_of(A,O))
+
 
 let fn lc_tangent(A point,O point) point:
     dom:
         A!=O
-    =>:
-        $is_lc_tangent(lc_tangent(A,O),A,O)
 
 know:
     forall A,O point:
         A!=O
         =>:
             exist X point st $is_lc_tangent(X,A,O)
-    
 
-# midpoint: already defined as mid_point_of, but keeping for consistency
-# This is already defined above, so we can add an alias or note
+    forall A,O point:
+        A!=O
+        =>:
+            $is_lc_tangent(lc_tangent(A,O),A,O)
+       
 
-# mirror: mirror point of a with respect to b
+#24 midpoint: already defined as mid_point_of, but keeping for consistency
+
+
+#25 mirror: mirror point of a with respect to b
 # x is the point on line ab such that ba = bx
 prop is_mirror(X point,A point,B point):
     A!=B
     X $in line_of(A,B)
-    X!=A
+    $is_point_on_extension(A,B,X)
     $finite_line_congruence(finite_line_of(B,A),finite_line_of(B,X))
 
 let fn mirror(A point,B point) point:
     dom:
         A!=B
-    =>:
-        $is_mirror(mirror(A,B),A,B)
-
 know:
     forall A,B point:
         A!=B
@@ -1426,8 +1487,12 @@ know:
         $is_mirror(X,A,B)
         =>:
             X=mirror(A,B)
+    forall A,B point:
+        A!=B
+        =>:
+            $is_mirror(mirror(A,B),A,B)
 
-# nsquare: construct a square point
+#26 nsquare: construct a square point
 # x is the point such that xa = ab and xa is perpendicular to ab
 prop is_nsquare(X point,A point,B point):
     A!=B
@@ -1437,59 +1502,66 @@ prop is_nsquare(X point,A point,B point):
 let fn nsquare(A point,B point) point:
     dom:
         A!=B
-    =>:
-        $is_nsquare(nsquare(A,B),A,B)
 
 know:
+    forall A,B point:
+        A!=B
+        =>:
+            $is_nsquare(nsquare(A,B),A,B)
+
     forall A,B point:
         A!=B
         =>:
             exist X point st $is_nsquare(X,A,B)
     
 
-# on_aline: point on an angle line
+#27 on_aline: 
 # x is a point such that angle axb equals angle cde
 prop is_on_aline(X point,A point,B point,C point,D point,E point):
-    not $three_points_collinear(C,D,E)
-    $angle_congruence(angle_of_two_rays(ray_of(A,X),ray_of(A,B)),angle_of_two_rays(ray_of(D,C),ray_of(D,E)))
+    $not_three_points_collinear(C,D,E)
+    $not_three_points_collinear(A,B,X)
+    $angle_congruence(angle_of(A,B,X),angle_of(C,D,E))
 
-# on_aline2: point on an angle line (variant)
+
+#28 on_aline2: 
 # x is a point such that angle xab equals angle cde
 prop is_on_aline2(X point,A point,B point,C point,D point,E point):
-    not $three_points_collinear(C,D,E)
-    $angle_congruence(angle_of_two_rays(ray_of(X,A),ray_of(X,B)),angle_of_two_rays(ray_of(D,C),ray_of(D,E)))
+    $not_three_points_collinear(C,D,E)
+    $not_three_points_collinear(A,B,X)
+    $angle_congruence(angle_of(X,A,B),angle_of(C,D,E))
 
-# on_bline: point on the perpendicular bisector
+#29 on_bline: 
 # x is a point such that xa = xb and angle axb = angle bax (x is on the perpendicular bisector of ab)
 prop is_on_bline(X point,A point,B point):
     A!=B
     $finite_line_congruence(finite_line_of(X,A),finite_line_of(X,B))
     $angle_congruence(angle_of_two_rays(ray_of(A,X),ray_of(A,B)),angle_of_two_rays(ray_of(B,A),ray_of(B,X)))
 
-# on_circle: point on a circle
-# x is a point on the circle with center o and passing through a
+#30 on_circle: 
+# x is a point on the circle with center o and passing through a,which we have already defined
 
-# on_line: point on a line
-# x is a point on line ab
+#31 on_line: 
+# x is a point on line ab,which we have already defined by using $in
 
 
-# on_pline: point on a parallel line
+#32 on_pline: 
 # x is a point such that xa is parallel to bc
 prop is_on_pline(X point,A point,B point,C point):
     B!=C
-    not $three_points_collinear(A,B,C)
+    $not_three_points_collinear(A,B,C)
     $parallel_line(line_of(X,A),line_of(B,C))
 
-# on_tline: point on a perpendicular line
+#33 on_tline: 
 # x is a point such that xa is perpendicular to bc
 prop is_on_tline(X point,A point,B point,C point):
     B!=C
+    $not_three_points_collinear(A,B,C)
     $perp(line_of(X,A),line_of(B,C))
 
-# orthocenter: orthocenter of a triangle
+#34 orthocenter: 
 # x is the orthocenter of triangle abc (intersection of altitudes)
 prop is_orthocenter(X point,A point,B point,C point):
-    not $three_points_collinear(A,B,C)
+    $not_three_points_collinear(A,B,C)
     $perp(line_of(X,A),line_of(B,C))
     $perp(line_of(X,B),line_of(C,A))
     $perp(line_of(X,C),line_of(A,B))
@@ -1497,23 +1569,27 @@ prop is_orthocenter(X point,A point,B point,C point):
 let fn orthocenter_of(A point,B point,C point) point:
     dom:
         not $three_points_collinear(A,B,C)
-    =>:
-        $is_orthocenter(orthocenter_of(A,B,C),A,B,C)
 
 know:
     forall A,B,C point:
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
+        =>:
+        $is_orthocenter(orthocenter_of(A,B,C),A,B,C)
+    
+    forall A,B,C point:
+        $not_three_points_collinear(A,B,C)
         =>:
             exist X point st $is_orthocenter(X,A,B,C)
+
     forall X,A,B,C point:
         $is_orthocenter(X,A,B,C)
         =>:
             X=orthocenter_of(A,B,C)
 
-# parallelogram: parallelogram
+#35 parallelogram: 
 # x is the fourth vertex of parallelogram abc (where abcd is a parallelogram)
 prop is_parallelogram(A point,B point,C point,X point):
-    not $three_points_collinear(A,B,C)
+    $not_three_points_collinear(A,B,C)
     $parallel_line(line_of(A,B),line_of(C,X))
     $parallel_line(line_of(A,X),line_of(B,C))
     $finite_line_congruence(finite_line_of(A,B),finite_line_of(C,X))
@@ -1521,25 +1597,28 @@ prop is_parallelogram(A point,B point,C point,X point):
 
 let fn parallelogram_fourth_vertex(A point,B point,C point) point:
     dom:
-        not $three_points_collinear(A,B,C)
-    =>:
-        $is_parallelogram(A,B,C,parallelogram_fourth_vertex(A,B,C))
+        $not_three_points_collinear(A,B,C)
 
 know:
     forall A,B,C point:
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
+    =>:
+        $is_parallelogram(A,B,C,parallelogram_fourth_vertex(A,B,C))
+
+    forall A,B,C point:
+        $not_three_points_collinear(A,B,C)
         =>:
             exist X point st $is_parallelogram(A,B,C,X)
+
     forall X,A,B,C point:
         $is_parallelogram(A,B,C,X)
         =>:
             X=parallelogram_fourth_vertex(A,B,C)
 
-# pentagon: pentagon (five points forming a pentagon)
+#36 pentagon: 
 # This is a construction predicate for a pentagon with vertices a, b, c, d, e
-have Pentagon nonempty_set
+have Pentagon nonempty_set  
 prop is_pentagon(A point,B point,C point,D point,E point):
-    # A pentagon is defined by five distinct points
     A!=B
     A!=C
     A!=D
@@ -1550,73 +1629,103 @@ prop is_pentagon(A point,B point,C point,D point,E point):
     C!=D
     C!=E
     D!=E
-    not $three_points_collinear(A,B,C)
-    not $three_points_collinear(A,B,D)
-    not $three_points_collinear(A,B,E)
-    not $three_points_collinear(A,C,D)
-    not $three_points_collinear(A,C,E)
-    not $three_points_collinear(A,D,E)
-    not $three_points_collinear(B,C,D)
-    not $three_points_collinear(B,C,E)
-    not $three_points_collinear(B,D,E)
-    not $three_points_collinear(C,D,E)
+    $not_three_points_collinear(A,B,C)
+    $not_three_points_collinear(A,B,D)
+    $not_three_points_collinear(A,B,E)
+    $not_three_points_collinear(A,C,D)
+    $not_three_points_collinear(A,C,E)
+    $not_three_points_collinear(A,D,E)
+    $not_three_points_collinear(B,C,D)
+    $not_three_points_collinear(B,C,E)
+    $not_three_points_collinear(B,D,E)
+    $not_three_points_collinear(C,D,E)
+    D $in plane_of(A,B,C)
+    E $in plane_of(A,B,C)
 know:
     forall p Pentagon:
         p $in power_set(point)
     forall p Pentagon:
         $is_pentagon(p)
 
-# psquare: construct a square point (positive rotation)
+#37 psquare: construct a square point (considering rotation direction by signal point C)
 # x is the point such that xa = ab and xa is perpendicular to ab (rotated 90 degrees)
-prop is_psquare(X point,A point,B point):
+#the definition is same as nsquare but we define its rotation direction by our signal point C
+prop is_psquare(X point,A point,B point,C point):
     A!=B
+    A!=C
+    B!=C
+    $not_three_points_collinear(A,B,C)
     $finite_line_congruence(finite_line_of(X,A),finite_line_of(A,B))
     $perp(line_of(X,A),line_of(A,B))
+    X $in plane_of(A,B,C)
+    $not_sameside_points(X, C, line_of(A,B))
 
-let fn psquare(A point,B point) point:
+let fn psquare(A point,B point,C point) point:
     dom:
         A!=B
-    =>:
-        $is_psquare(psquare(A,B),A,B)
+        A!=C
+        B!=C
+        $not_three_points_collinear(A,B,C)
 
 know:
-    forall A,B point:
+    forall A,B,C point:
+        A!=B
+        A!=C
+        B!=C
+        $not_three_points_collinear(A,B,C)
+        =>:
+            $is_psquare(psquare(A,B,C),A,B,C)
+
+    forall A,B,C point:
+        A!=B
+        A!=C
+        B!=C
+        $not_three_points_collinear(A,B,C)
+        =>:
+            exist X point st $is_psquare(X,A,B,C)
+
+    forall X,A,B,C point:
         A!=B
         =>:
-            exist X point st $is_psquare(X,A,B)
+            X=psquare(A,B,C)
 
-# quadrangle: quadrangle (four points forming a quadrilateral)
+# 38 quadrangle: quadrangle (four points forming a quadrilateral)
+# we have already defined quadrangle as a set of four points
 
-# r_trapezoid: right trapezoid (trapezoid with a right angle)
+
+#39 r_trapezoid: right trapezoid (trapezoid with a right angle)
 # d is the fourth vertex of a right trapezoid abcd where ab ∥ cd and ab ⟂ ad
 prop is_r_trapezoid(A point,B point,C point,D point):
-    not $three_points_collinear(A,B,C)
+    $not_three_points_collinear(A,B,C)
     $parallel_line(line_of(A,B),line_of(C,D))
     $perp(line_of(A,B),line_of(A,D))
 
 let fn r_trapezoid_fourth_vertex(A point,B point,C point) point:
     dom:
-        not $three_points_collinear(A,B,C)
-    =>:
-        $is_r_trapezoid(A,B,C,r_trapezoid_fourth_vertex(A,B,C))
+        $not_three_points_collinear(A,B,C)
 
 know:
     forall A,B,C point:
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
         =>:
-            exist D point st $is_r_trapezoid(A,B,C,D)
+            $is_r_trapezoid(r_trapezoid_fourth_vertex(A,B,C),A,B,C)
 
-# r_triangle: right triangle
+    forall A,B,C point:
+        $not_three_points_collinear(A,B,C)
+        =>:
+            exist D point st $is_r_trapezoid(D,A,B,C)
+
+#40 r_triangle: right triangle
 # triangle abc is a right triangle with right angle at a (ab ⟂ ac)
 prop is_r_triangle(A point,B point,C point):
-    not $three_points_collinear(A,B,C)
+    $not_three_points_collinear(A,B,C)
     $perp(line_of(A,B),line_of(A,C))
 
-# rectangle: rectangle
+#41 rectangle: rectangle
 # d is the fourth vertex of rectangle abcd
 prop is_rectangle(A point,B point,C point,D point):
-    not $three_points_collinear(A,B,C)
-    not $three_points_collinear(A,B,D)
+    $not_three_points_collinear(A,B,C)
+    $not_three_points_collinear(A,B,D)
     $perp(line_of(A,B),line_of(B,C))
     $parallel_line(line_of(A,B),line_of(C,D))
     $parallel_line(line_of(A,D),line_of(B,C))
@@ -1627,19 +1736,23 @@ prop is_rectangle(A point,B point,C point,D point):
 
 let fn rectangle_fourth_vertex(A point,B point,C point) point:
     dom:
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
         $perp(line_of(A,B),line_of(B,C))
-    =>:
-        $is_rectangle(A,B,C,rectangle_fourth_vertex(A,B,C))
 
 know:
     forall A,B,C point:
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
+        $perp(line_of(A,B),line_of(B,C))
+        =>:
+            $is_rectangle(A,B,C,rectangle_fourth_vertex(A,B,C))
+
+    forall A,B,C point:
+        $not_three_points_collinear(A,B,C)
         $perp(line_of(A,B),line_of(B,C))
         =>:
             exist D point st $is_rectangle(A,B,C,D)
 
-# reflect: reflection point
+#42 reflect: reflection point
 # x is the reflection of point a across line bc
 prop is_reflect(X point,A point,l line):
     not A $in l
@@ -1650,10 +1763,13 @@ prop is_reflect(X point,A point,l line):
 let fn reflect(A point,l line) point:
     dom:
         not A $in l
-    =>:
-        $is_reflect(reflect(A,l),A,l)
 
 know:
+    forall A,l line:
+        not A $in l
+        =>:
+            $is_reflect(reflect(A,l),A,l)
+
     forall A,l line:
         not A $in l
         =>:
@@ -1663,57 +1779,98 @@ know:
         =>:
             X=reflect(A,l)
 
-# risos: right isosceles triangle
+#43 risos: right isosceles triangle
 # triangle abc is a right isosceles triangle with right angle at a
 prop is_risos(A point,B point,C point):
-    not $three_points_collinear(A,B,C)
+    $not_three_points_collinear(A,B,C)
     $perp(line_of(A,B),line_of(A,C))
     $finite_line_congruence(finite_line_of(A,B),finite_line_of(A,C))
-    $angle_congruence(angle_of_two_rays(ray_of(B,A),ray_of(B,C)),angle_of_two_rays(ray_of(C,B),ray_of(C,A)))
+    $angle_congruence(angle_of(B,A,C),angle_of(C,B,A))
 
-# s_angle: supplementary angle
-# a1 and a2 are supplementary angles
-prop is_s_angle(a1 angle,a2 angle):
-    a1=angle_of_two_rays(converse_extension_ray_of(sides_of(a2)[1]),sides_of(a2)[2])
+#44 s_angle: supplementary angle
 
-let fn min_angle(a1 angle,a2 angle) angle:
-    =>:
-        min_angle(a1,a2) $in {a1,a2}
-        angle_degree(a1)<=angle_degree(min_angle(a1,a2))
-        angle_degree(a2)<=angle_degree(min_angle(a1,a2))
+prop is_s_angle(A,B,C,D point):
+    $not_three_points_collinear(A,B,C)
+    $is_point_on_extension(C,A,B)
 
-let fn s_angle(a angle) angle:
-    =>:
-        $is_s_angle(s_angle(a),a)
+let fn s_angle(A point,B point,C point) power_set(point):
+    dom:
+        $not_three_points_collinear(A,B,C)
+know:
+    forall A,B,C point:
+        $not_three_points_collinear(A,B,C)
+        =>:
+            s_angle(A,B,C)=angle_of(A,B,point_on_extension(C,A))
+
+let angle_degree(A point,B point,C point) R_pos:
+    dom:
+        $not_three_points_collinear(A,B,C)
+        A!=B
+        A!=C
+        B!=C
+
+let fn min_angle(A point,B point,C point,D point,E point,F point) angle:
+    dom:
+        $not_three_points_collinear(A,B,C)
+        $not_three_points_collinear(D,E,F)
+        A!=B
+        A!=C
+        B!=C
+        D!=E
+        D!=F
+
+know:
+    forall A,B,C,D,E,F point:
+        $not_three_points_collinear(A,B,C)
+        $not_three_points_collinear(D,E,F)
+        A!=B
+        A!=C
+        B!=C
+        D!=E
+        D!=F
+        =>:
+            min_angle(A,B,C,D,E,F) $in {angle_of(A,B,C),angle_of(D,E,F)}
+            angle_degree(A,B,C)>=angle_degree(min_angle(A,B,C,D,E,F))
+            angle_degree(D,E,F)>=angle_degree(min_angle(A,B,C,D,E,F))
+
+
 
 let fn angle_of_two_lines(l1 line,l2 line) angle:
     dom:
         $intersect_of_two_lines(l1,l2)
     =>:
-        angle_of_two_lines(l1,l2)=min_angle(angle_of_two_rays(ray_of(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l1)),ray_of(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l2))),s_angle(angle_of_two_rays(ray_of(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l1)),ray_of(intersection_point(l1,l2),ano_point_on_line(intersection_point(l1,l2),l2)))))
+        angle_of_two_lines(l1,l2)=min_angle(angle_of(intersection_point_of_two_lines(l1,l2),another_point_on_line(intersection_point_of_two_lines(l1,l2),l1),another_point_on_line(intersection_point_of_two_lines(l1,l2),l2)),s_angle(angle_of(intersection_point_of_two_lines(l1,l2),another_point_on_line(intersection_point_of_two_lines(l1,l2),l1),another_point_on_line(intersection_point_of_two_lines(l1,l2),l2))))
 
-# shift: shift/translate point
+#45 shift: shift/translate point
 # x is the point such that xb = cd and xc = bd (translation of point b by vector cd)
 prop is_shift(X point,B point,C point,D point):
+    B!=C
+    B!=D
+    C!=D
     $finite_line_congruence(finite_line_of(X,B),finite_line_of(C,D))
-    $parallel_line(line_of(X,B),line_of(C,D))
-    $parallel_line(line_of(B,D),line_of(X,C))
+    $finite_line_congruence(finite_line_of(X,C),finite_line_of(B,D))
 
 let fn shift(B point,C point,D point) point:
     dom:
-        D!=B
-    =>:
-        $is_shift(shift(B,C,D),B,C,D)
-
+        B!=C
+        B!=D
+        C!=D
 know:
     forall B,C,D point:
-        D!=B
+        B!=C
+        B!=D
+        C!=D
+        =>:
+            $is_shift(X,B,C,D)
+
+
+    forall B,C,D point:
+        B!=C
+        B!=D
+        C!=D
         =>:
             exist X point st $is_shift(X,B,C,D)
-    forall X,B,C,D point:
-        $is_shift(X,B,C,D)
-        =>:
-            X=shift(B,C,D)
+   
 
 # square: construct a square
 # x and y are the third and fourth vertices of square abxy
