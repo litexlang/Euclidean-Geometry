@@ -55,14 +55,21 @@ know:
 prop three_points_collinear(A,B,C point):
     B != C
     A $in line_of(B,C)
+prop not_three_points_collinear(A,B,C point):
+    A!=B
+    A!=C
+    B!=C
+    not A $in line_of(B,C)
+    not B $in line_of(A,C)
+    not C $in line_of(A,B)  
 know:
-    exist A,B,C point st {not $three_points_collinear(A,B,C)}
+    exist A,B,C point st {$not_three_points_collinear(A,B,C)}
 
 ## I4
 ### For every three points A, B, C not situated on the same line there exists exactly one plane α that contains all of them.
 let fn plane_of(A point,B point,C point) plane:
     dom:
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
 
 know:
     forall A,B,C point:
@@ -78,7 +85,7 @@ know:
 ##I5
 ### Every plane contains three points A, B, C which do not lie in the same line.
 prop three_points_not_collinear_on_plane(pl plane, A, B, C pl):
-    not $three_points_collinear(A,B,C)
+    $not_three_points_collinear(A,B,C)
 know:
     forall pl plane:
         exist A,B,C point st {$three_points_not_collinear_on_plane(pl,A,B,C)}
@@ -145,7 +152,7 @@ know:
             B != A
             B != C
             C != A
-            $three_points_collinear(A,B,C)
+            $not_three_points_collinear(A,B,C)
     
 ## B2
 ### If A and C are two points, then there exists at least one point B on the line AC such that C lies between A and B
@@ -179,7 +186,7 @@ prop no_more_than_one_point_between_three_points_on_line(A point,B point ,C poin
             not $point_between(B, C, A)
 know:
     forall A,B,C point:
-        $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
         =>:
             $no_more_than_one_point_between_three_points_on_line(A,B,C)
 
@@ -224,7 +231,7 @@ know:
         A!=B
         A!=C
         B!=C
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
         $line_on_plane(l,plane_of(A,B,C))
         $line_intersect_finite_line(l,A,B)
         =>:
@@ -242,7 +249,7 @@ know:
 
 prop on_the_same_side_of_line(z point, start point, end point):
     start != end
-    $three_points_collinear(z, start, end)
+    $not_three_points_collinear(z, start, end)
     $point_between(z, start, end) or $point_between(end, start, z) or z = end or z = start
 
 prop finite_line_congruence(A point,B point,A2 point,B2 point)
@@ -386,14 +393,14 @@ let fn angle_of(A point,B point,C point) power_set(point):
         A!=B
         A!=C
         B!=C
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
 
 know:
     forall A,B,C point:
         A!=B
         A!=C
         B!=C
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
         =>:
             angle_of(A,B,C)=angle_of(A,C,B)
     forall A,B,C,D,E point:
@@ -402,7 +409,7 @@ know:
         B!=C
         D!=A
         E!=A
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
         D $in ray_of(A,B)
         E $in ray_of(A,C)
         =>:
@@ -413,7 +420,7 @@ let fn area_of_angle(A point,B point,C point) power_set(point):
         A!=B
         A!=C
         B!=C
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
             =>:
                 angle_of(A,B,C)=angle_of(A,C,B)
 
@@ -423,7 +430,7 @@ know:
         A!=B
         A!=C
         B!=C
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
         =>:
             P $in area_of_angle(A,B,C)
         <=>:
@@ -434,7 +441,7 @@ know:
         A!=B
         A!=C
         B!=C
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
         =>:
             P $in angle_of(A,B,C)
         <=>:
@@ -447,11 +454,11 @@ prop angle_congruence(A,B,C,D,E,F point):
     A!=B
     A!=C
     B!=C
-    not $three_points_collinear(A,B,C)
+    $not_three_points_collinear(A,B,C)
     D!=E
     D!=F
     E!=F
-    not $three_points_collinear(D,E,F)
+    $not_three_points_collinear(D,E,F)
 
 know:
     forall A,B,C,D,E,F point:
@@ -466,7 +473,7 @@ know:
         A!=B
         A!=C
         B!=C
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
         D!=E
         =>:
             exist F point st {$sameside_points(F,side_signal_point,line_of(D,E)),$angle_congruence(A,B,C,D,E,F)}
@@ -501,13 +508,13 @@ let fn triangle_of(A point,B point,C point) power_set(point):
         A!=B
         A!=C
         B!=C
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
 know: 
     forall A,B,C,P point:
         A!=B
         A!=C
         B!=C
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
         =>:
             P $in triangle_of(A,B,C)
         <=>:
@@ -515,8 +522,8 @@ know:
 
 
 prop triangle_congruence(A point,B point,C point,A1 point,B' point,C' point):
-    not $three_points_collinear(A,B,C)
-    not $three_points_collinear(A2,B2,C2)
+    $not_three_points_collinear(A,B,C)
+    $not_three_points_collinear(A2,B2,C2)
     $finite_line_congruence(finite_line_of(A,B),finite_line_of(A2,B2))
     $finite_line_congruence(finite_line_of(A,C),finite_line_of(A2,C2))
     $angle_congruence(angle_of(A,B,C),angle_of(A2,B2,C2))
@@ -627,7 +634,7 @@ prop is_angle_bisector(A,B,C,X point):
     A!=B
     A!=C
     B!=C
-    not $three_points_collinear(A,B,C)
+    $not_three_points_collinear(A,B,C)
     X $in angle_of(A,B,C)
     $angle_congruence(angle_of(A,X,B),angle_of(A,X,C))
 
@@ -636,7 +643,7 @@ let fn angle_bisector_point(A,B,C point) point:
         A!=B
         A!=C
         B!=C
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
     
 
 know:
@@ -644,7 +651,7 @@ know:
         A!=B
         A!=C
         B!=C
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
         =>:
             $is_angle_bisector(A,B,C,angle_bisector_point(A,B,C))
     forall A,B,C,X point:
@@ -658,7 +665,7 @@ prop angle_mirror(A,B,C,X point):
     A!=B
     A!=C
     B!=C
-    not $three_points_collinear(A,B,C)
+    $not_three_points_collinear(A,B,C)
     $sameside_points(X,C,line_of(A,B))
     $not_sameside_points(X,B,line_of(A,C))
     $angle_congruence(angle_of(A,B,C),angle_of(A,X,C))
@@ -668,14 +675,14 @@ let fn angle_mirror_point(A,B,C point) point:
         A!=B
         A!=C
         B!=C
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
     
 know:
     forall A,B,C point:
         A!=B
         A!=C
         B!=C
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
         =>:
             $angle_mirror(A,B,C,angle_mirror_point(A,B,C))
     forall A,B,C,X point:
@@ -833,11 +840,11 @@ know:
 
 let fn circle_of_triangle(A point,B point,C point) circle:
     dom:
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
 
 know:
     forall A,B,C point:
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
         =>:
             A $in circle_of_triangle(A,B,C)
             B $in circle_of_triangle(A,B,C)
@@ -864,8 +871,8 @@ know:
         q $in power_set(point)
 
 prop is_quadrangle(A,B,C,D point):
-    not $three_points_collinear(A,B,C)
-    not $three_points_collinear(B,C,D)
+    $not_three_points_collinear(A,B,C)
+    $not_three_points_collinear(B,C,D)
     not $three_points_collinear(C,D,A)
     A $in plane_of(B,C,D)
 
@@ -954,77 +961,12 @@ prop is_eqangle2(A,B,C,X point):
     A!=B
     A!=C
     B!=C
-    not $three_points_collinear(A,B,C)
+    $not_three_points_collinear(A,B,C)
     $angle_congruence(angle_of(A,B,X),angle_of(C,X,A))
 
 #9 eqdistance
 #same as axiom C1
    
-
-#10 incenter
-
-prop is_incenter(I,A,B,C point):
-    not $three_points_collinear(A,B,C)
-    $is_angle_bisector(A,B,C,I)
-    $is_angle_bisector(B,C,A,I)
-    $is_angle_bisector(C,A,B,I)
-
-know:
-    forall A,B,C point:
-        not $three_points_collinear(A,B,C)
-        =>:
-            exist I point st $is_incenter(I,A,B,C)
-            
-let fn incenter_of(A,B,C point) point:
-    dom:
-        not $three_points_collinear(A,B,C)
-    
-know:
-    forall A,B,C point:
-        not $three_points_collinear(A,B,C)
-        =>:
-            $is_incenter(incenter_of(A,B,C),A,B,C)
-    forall A,B,C,I point:
-        $is_incenter(I,A,B,C)
-        =>:
-            I=incenter_of(A,B,C)
-
-#11 incenter2
-
-
-#10 converse_extension_ray
-prop is_converse_extension_ray(r,r1 ray):
-    $two_rays_with_same_end_point(r,r1)
-    forall B,C point:
-        B $in r
-        C $in r1
-        B!=C
-        B!=end_point_of_ray(r1)
-        C!=end_point_of_ray(r1)
-        =>:
-            $three_points_collinear(end_point_of_ray(r1),B,C)
-let fn converse_extension_ray_of(r ray) ray:
-    =>:
-        $is_converse_extension_ray(converse_extension_ray_of(r),r)
-    
-prop is_angle_exbisector(r ray ,r1 ray,r2 ray):
-    $two_rays_with_same_end_point(r1,r2)
-    $ray_between(r2,r1,r)
-    $is_angle_bisector(r,converse_extension_ray_of(r1),r2)
-
-prop is_exincenter(J,A,B,C point):
-    not $three_points_collinear(A,B,C)
-    $is_angle_bisector(ray_of(A,J),ray_of(A,B),ray_of(A,C))
-    $is_angle_exbisector(ray_of(B,J),ray_of(B,A),ray_of(B,C))
-    $is_angle_exbisector(ray_of(B,J),ray_of(C,A),ray_of(C,B))
-
-let fn exincenter_of(A,B,C point) point:
-    dom:
-        not $three_points_collinear(A,B,C)
-    =>:
-        $is_exincenter(exincenter_of(A,B,C),A,B,C)
-
-        
 #10 foot
  let fn point_on_extension(A point,B point) point:
     dom:
@@ -1062,14 +1004,122 @@ prop is_foot(X,A point,l line):
 
 know:
     forall A point,l line:
-        exist X point st $is_foot(X,A,l)
+        not A $in l
+        =>:
+            exist X point st $is_foot(X,A,l)
+    
 let fn foot(A point,l line) point:
     dom:
         not A $in l
-    =>:
-        $is_foot(foot(A,l),A,l)
 
-#11
+know:
+    forall A point,l line:
+        not A $in l
+        =>:
+            $is_foot(foot(A,l),A,l)
+
+    forall A point,l line,X point:
+        $is_foot(X,A,l)
+        =>:
+            X=foot(A,l)
+
+#11 incenter
+
+prop is_incenter(I,A,B,C point):
+    not $three_points_collinear(A,B,C)
+    $is_angle_bisector(A,B,C,I)
+    $is_angle_bisector(B,C,A,I)
+    $is_angle_bisector(C,A,B,I)
+
+know:
+    forall A,B,C point:
+        $not_three_points_collinear(A,B,C)
+        =>:
+            exist I point st $is_incenter(I,A,B,C)
+            
+let fn incenter_of(A,B,C point) point:
+    dom:
+        $not_three_points_collinear(A,B,C)
+    
+know:
+    forall A,B,C point:
+        $not_three_points_collinear(A,B,C)
+        =>:
+            $is_incenter(incenter_of(A,B,C),A,B,C)
+    forall A,B,C,I point:
+        $is_incenter(I,A,B,C)
+        =>:
+            I=incenter_of(A,B,C)
+
+#11 incenter2
+#construct three feet of incenter to the sides of the triangle
+let fn feet_of_incenter(I,A,B,C point) cart(point,point,point):
+    dom:
+        $not_three_points_collinear(A,B,C)
+        $is_incenter(I,A,B,C)
+
+know:
+    forall I,A,B,C point:
+        $not_three_points_collinear(A,B,C)
+        $is_incenter(I,A,B,C)
+        =>:
+            $is_foot(feet_of_incenter(I,A,B,C)[1],I,line_of(A,B))
+            $is_foot(feet_of_incenter(I,A,B,C)[2],I,line_of(B,C))   
+            $is_foot(feet_of_incenter(I,A,B,C)[3],I,line_of(C,A))
+    
+
+
+#12 exincenter
+
+#we set up which ray to be conversely extended: when the point order is A,B,C, the ray to be conversely extended is ray_of(A,C)
+prop is_angle_exbisector(A,B,C,X point):
+    $not_three_points_collinear(A,B,C)
+    $is_angle_bisector(A,B,point_on_extension(C,A),X)
+
+prop is_exincenter(J,A,B,C point):
+    $not_three_points_collinear(A,B,C)
+    $is_angle_bisector(A,B,C,J)
+    $is_angle_exbisector(B,C,A,J)
+    $is_angle_exbisector(C,B,A,J)
+
+let fn exincenter_of(A,B,C point) point:
+    dom:
+        $not_three_points_collinear(A,B,C)
+
+know:
+    forall A,B,C point:
+        $not_three_points_collinear(A,B,C)
+        =>:
+            exist J point st $is_exincenter(J,A,B,C)
+
+    forall A,B,C point:
+        $not_three_points_collinear(A,B,C)
+        =>:
+            $is_exincenter(exincenter_of(A,B,C),A,B,C)
+
+    forall A,B,C,J point:   
+        $is_exincenter(J,A,B,C)
+        =>:
+            J=exincenter_of(A,B,C)
+#13 excenter2
+#construct three feet of excenter to the sides of the triangle
+
+let fn feet_of_excenter(J,A,B,C point) cart(point,point,point):
+    dom:
+        $not_three_points_collinear(A,B,C)
+        $is_exincenter(J,A,B,C)
+
+know:
+    forall J,A,B,C point:
+        $not_three_points_collinear(A,B,C)
+        $is_exincenter(J,A,B,C)
+        =>:
+            $is_foot(feet_of_excenter(J,A,B,C)[1],J,line_of(A,B))
+            $is_foot(feet_of_excenter(J,A,B,C)[2],J,line_of(B,C))
+            $is_foot(feet_of_excenter(J,A,B,C)[3],J,line_of(C,A))
+
+#14 mid_point and centroid
+
 prop is_mid_point(M,A,B point):
     A!=B
     M $in finite_line_of(A,B)
@@ -1077,39 +1127,65 @@ prop is_mid_point(M,A,B point):
 
 let fn  mid_point_of(A,B point) point:
     A!=B
-    =>:
-        $is_mid_point(mid_point_of(A,B),A,B)
+
+know:
+    forall A,B point:
+        A!=B
+        =>:
+            exist M point st $is_mid_point(M,A,B)
+    forall A,B,M point:
+        $is_mid_point(M,A,B)
+        =>:
+            M=mid_point_of(A,B)
+    forall A,B point:
+        A!=B
+        =>:
+            $is_mid_point(mid_point_of(A,B),A,B)
 
 prop is_centroid(G,A,B,C point):
-    not $three_points_collinear(A,B,C)
-    $is_mid_point(intersection_point(line_of(A,G),line_of(B,C)),B,C)
-    $is_mid_point(intersection_point(line_of(B,G),line_of(C,A)),C,A)
-    $is_mid_point(intersection_point(line_of(C,G),line_of(A,B)),A,B)
+    $not_three_points_collinear(A,B,C)
+    $is_mid_point(intersection_point_of_two_lines(line_of(A,G),line_of(B,C)),B,C)
+    $is_mid_point(intersection_point_of_two_lines(line_of(B,G),line_of(C,A)),C,A)
+    $is_mid_point(intersection_point_of_two_lines(line_of(C,G),line_of(A,B)),A,B)
 
 know:
     forall A,B,C point:
-        not $three_points_collinear(A,B,C)
+        $not_three_points_collinear(A,B,C)
         =>:
             exist G point st $is_centroid(G,A,B,C)
 
 let fn centroid_of(A,B,C point) point:
     dom:
-        not $three_points_collinear(A,B,C)
-    =>:
-        $is_centroid(centroid_of(A,B,C),A,B,C)
+        $not_three_points_collinear(A,B,C)
+know:
+    forall A,B,C,G point:
+        $is_centroid(G,A,B,C)
+        =>:
+            G=centroid_of(A,B,C)
+    forall A,B,C point:
+        $not_three_points_collinear(A,B,C)
+        =>:
+            $is_centroid(centroid_of(A,B,C),A,B,C)
 
-#12
+#15 intersection_cc
+#define two circles intersection which we have already done in the part of circle
+
+#16 intersection_lc
+#define line and circle intersection 
+
+#define distance of a point to a line
 let fn distance_of_point_to_line(A point,l line) R_pos:
     not A $in l
-    =>:
-        distance_of_point_to_line(A,l)=length_of_finite_line(A,foot(A,l))
 
-prop line_and_circle_on_plane(l line,c circle,pl plane):
-    $line_on_plane(l,pl)
-    $circle_on_plane(c,pl)
+know:
+    forall A,l line:
+        not A $in l
+        =>:
+            distance_of_point_to_line(A,l)=length_of_finite_line(A,foot(A,l))
 
+#before defining intersection_lc, we need to make sure everything is on the same plane
 prop line_and_circle_coplanar(l line,c circle):
-    exist pl plane st $line_and_circle_on_plane(l,c,pl)
+    exist pl plane st {$line_on_plane(l,pl),$circle_on_plane(c,pl)}
 
 prop intersect_of_line_and_circle(l line,c circle):
     $line_and_circle_coplanar(l,c)
@@ -1139,29 +1215,48 @@ prop is_tangency_point_of_line_and_circle(A point,l line,c circle):
 let fn intersect_points_of_line_and_circle(l line,c circle) cart(point,point):
     dom:
         $intersect_of_line_and_circle(l,c)
-    =>:
-        $is_intersect_points_of_line_and_circle(intersect_points_of_line_and_circle(l,c)[1],intersect_points_of_line_and_circle(l,c)[2],l,c)
-
-let fn tangency_point_of_line_and_circle(l line,c circle) point:
-    dom:
-        $line_is_tangent_to_circle(l,c)
-    =>:
-        $is_tangency_point_of_line_and_circle(tangency_point_of_line_and_circle(l,c),l,c)
 know:
-    forall A,B point, l line,c circle:
+    forall l line,c circle:
+        $intersect_of_line_and_circle(l,c)
+        =>:
+            exist A,B point st $is_intersect_points_of_line_and_circle(A,B,l,c)
+
+    forall A,B point,l line,c circle:
         $is_intersect_points_of_line_and_circle(A,B,l,c)
         =>:
             {A,B}={intersect_points_of_line_and_circle(l,c)[1],intersect_points_of_line_and_circle(l,c)[2]}
+
+    forall l line,c circle:
+        $intersect_of_line_and_circle(l,c)
+        =>:
+            $is_intersect_points_of_line_and_circle(intersect_points_of_line_and_circle(l,c)[1],intersect_points_of_line_and_circle(l,c)[2],l,c)
+    
+let fn tangency_point_of_line_and_circle(l line,c circle) point:
+    dom:
+        $line_is_tangent_to_circle(l,c)
+
+know:
+    forall l line,c circle:
+        $line_is_tangent_to_circle(l,c)
+        =>:
+            exist A point st $is_tangency_point_of_line_and_circle(A,l,c)
+    
     forall A point,l line,c circle:
         $is_tangency_point_of_line_and_circle(A,l,c)
         =>:
             A=tangency_point_of_line_and_circle(l,c)
 
+    forall l line,c circle:
+        $line_is_tangent_to_circle(l,c)
+        =>:
+            $is_tangency_point_of_line_and_circle(tangency_point_of_line_and_circle(l,c),l,c)
 
+#17 intersection_ll
+#define intersection point of two lines which we have already done in the parallel axiom
 
+#18 intersection_lp: intersection point of a line and a parallel line through a point
+#define intersection point of a line and a parallel line through a point
 
-# intersection_lp: intersection point of a line and a parallel line through a point
-# x is the intersection point of line ab and the line through c parallel to mn
 prop is_intersection_lp(X point,C point,l1 line,l2 line):
     not $parallel_line(l2,l1)
     not C $in l1
