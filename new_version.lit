@@ -926,7 +926,7 @@ know:
         exist D point st $is_eq_quadrangle(A,B,C,D)
 
 #6 eq_triangle
-have Eq_triangle power_set(triangle)
+have Eq_triangle power_set(point)
 
 know:
     Eq_triangle $is_nonempty_set
@@ -1872,26 +1872,39 @@ know:
             exist X point st $is_shift(X,B,C,D)
    
 
-# square: construct a square
+#46 square: construct a square
 # x and y are the third and fourth vertices of square abxy
 prop is_square(A point,B point,X point,Y point):
     A!=B
     $is_rectangle(A,B,X,Y)
     $finite_line_congruence(finite_line_of(A,B),finite_line_of(B,X))
 
+#47 isquare: construct a square from two points
+# x is the third vertex of square abx
 let fn square_third_vertex(A point,B point) point:
     dom:
         A!=B
-    =>:
-        $is_psquare(square_third_vertex(A,B),B,A)
+
+know:
+    forall A,B point:
+        A!=B
+        =>:
+            $is_nsquare(square_third_vertex(A,B),A,B)
+
 
 let fn square_fourth_vertex(A point,B point,X point) point:
     dom:
         A!=B
         $perp(line_of(A,B),line_of(B,X))
         $finite_line_congruence(finite_line_of(A,B),finite_line_of(B,X))
-    =>:
-        $is_square(A,B,X,square_fourth_vertex(A,B,X))
+
+know:
+    forall A,B,X point:
+        A!=B
+        $perp(line_of(A,B),line_of(B,X))
+        $finite_line_congruence(finite_line_of(A,B),finite_line_of(B,X))
+        =>:
+            $is_square(A,B,X,square_fourth_vertex(A,B,X))
 
 know:
     forall A,B point:
@@ -1899,21 +1912,23 @@ know:
         =>:
             exist X,Y point st $is_square(A,B,X,Y)
 
-# isquare: construct a square from three points
-# d is the fourth vertex of square abcd
 
 
-# trapezoid: trapezoid
-# d is the fourth vertex of trapezoid abcd where ab ∥ cd
 
+#48 trapezoid: construct a trapezoid from three points
 
 let fn trapezoid_fourth_vertex(A point,B point,C point) point:
     dom:
         A!=B
         A!=C
         B!=C
-    =>:
-        $is_trapezoid(A,B,C,trapezoid_fourth_vertex(A,B,C))
+know:
+    forall A,B,C point:
+        A!=B
+        A!=C
+        B!=C
+        =>:
+            $is_trapezoid(A,B,C,trapezoid_fourth_vertex(A,B,C)) 
 
 know:
     forall A,B,C point:
@@ -1923,20 +1938,24 @@ know:
         =>:
             exist D point st $is_trapezoid(A,B,C,D)
 
-# triangle: triangle
+#49 triangle: construct a triangle from 
 # This is a construction predicate for a triangle with vertices a, b, c
+#we have already use triangle_of(A,B,C) to denote a triangle with vertices A, B, C
 
 
-# triangle12: triangle with ratio 1:2
+#50 triangle12: triangle with ratio 1:2
 # c is a point such that the ratio of ab to ac is 1:2
 prop is_triangle12(A point,B point,C point):
-    not $three_points_collinear(A,B,C)
+    $not_three_points_collinear(A,B,C)
     length_of_finite_line(finite_line_of(A,B)) / length_of_finite_line(finite_line_of(A,C)) = 1 / 2
 
 let fn triangle12_third_vertex(A point,B point) point:
     dom:
         A!=B
-    =>:
+know:
+    forall A,B point:
+        A!=B
+        =>:
         $is_triangle12(A,B,triangle12_third_vertex(A,B))
 
 know:
