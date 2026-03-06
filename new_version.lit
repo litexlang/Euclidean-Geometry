@@ -692,12 +692,22 @@ know:
 
 let fn circle_of_center_with_radius(O point,r R_pos) circle
 
+let fn circle_of_center_and_point(O point,P point) circle:
+    dom:
+        O!=P
+
+
 know:
     forall O,P point,r R_pos:
         =>:
             P $in circle_of_center_with_radius(O,r)
         <=>:
             length_of_finite_line(finite_line_of(O,P))= r
+    forall O,P point:
+        O!=P
+        =>:
+            P $in circle_of_center_and_point(O,P)
+            circle_of_center_and_point(O,P)=circle_of_center_with_radius(O,length_of_finite_line(finite_line_of(O,P)))
         
     forall c circle:
         exist O point,r R_pos st c=circle_of_center_with_radius(O,r)
@@ -743,12 +753,9 @@ prop circle_on_plane(c circle,pl plane):
         =>:
             p $in pl
 
-prop two_circles_on_plane(c1,c2 circle,pl plane):
-    $circle_on_plane(c1,pl)
-    $circle_on_plane(c2,pl)
 
 prop two_circles_coplanar(c1,c2 circle):
-    exist pl plane st $two_circles_on_plane(c1,c2,pl)
+    exist pl plane st {$circle_on_plane(c1,pl),$circle_on_plane(c2,pl)}
 
 
 prop two_circles_intersect(c1,c2 circle):
@@ -811,17 +818,6 @@ know:
         A $in circle_of_triangle(A,B,C)
         B $in circle_of_triangle(A,B,C)
         C $in circle_of_triangle(A,B,C)
-know:
-    forall c circle,A,B,C point:
-        A $in c
-        B $in c
-        C $in c
-        =>:
-            c=circle_of_triangle(A,B,C)
-
-prop center_of_circle_of_triangle(O,A,B,C point):
-    not $three_points_collinear(A,B,C)
-    length_of_finite_line(finite_line_of(O,A))=length_of_finite_line(finite_line_of(O,B))=length_of_finite_line(finite_line_of(O,C))
 
 know: 
     forall c1,c2 circle, A,B,C point
@@ -834,22 +830,6 @@ know:
         =>:
             c1=c2
 
-    forall A,B,C point:
-        not $three_points_collinear(A,B,C)
-        =>:
-            exist O point st $center_of_circle_of_triangle(O,A,B,C)
-
-    forall A,B,C,O point:
-        $center_of_circle_of_triangle(O,A,B,C)
-        =>:
-            circle_of_triangle(A,B,C)=circle_of_center_with_radius(O,length_of_finite_line(finite_line_of(O,A)))
-
-    forall A,B,C point,c circle:
-        A $in c
-        B $in c
-        C $in c
-        =>:
-            center_of_circle(c)=center_of_circle_of_triangle(A,B,C)
 
 
 #4 eq_quadrangle
