@@ -740,7 +740,7 @@ know:
 let fn radius_of_circle(c circle) R_pos:
     
 know:
-    forall c circle ,A c
+    forall c circle ,A c:
         length_of_finite_line(finite_line_of(A,center_of_circle(c)))=radius_of_circle(c)
 
 prop three_points_on_circle(c circle,A,B,C point):
