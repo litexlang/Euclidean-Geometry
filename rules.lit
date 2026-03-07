@@ -50,12 +50,12 @@ prop cyclic6_points(A point,B point,C point,P point,Q point,R point):
 
 # For ncoll A B E: points A, B, E are not collinear
 prop ncoll_points(A point,B point,E point):
-    not $three_points_collinear(A,B,E)
+    $not_three_points_collinear(A,B,E)
 
 # For ncoll P Q A B: points P,Q,A,B are not all collinear
 prop ncoll4_points(P point,Q point,A point,B point):
-    not $three_points_collinear(P,Q,A) 
-    not $three_points_collinear(P,Q,B)
+    $not_three_points_collinear(P,Q,A) 
+    $not_three_points_collinear(P,Q,B)
 
 
 
@@ -64,7 +64,9 @@ prop eqangle6_points(P point,A point,B point,Q point):
     P!=B
     Q!=A
     Q!=B
-    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),angle_of_two_rays(ray_with_end_point_and_direction(Q,A),ray_with_end_point_and_direction(Q,B)))
+    $not_three_points_collinear(P,A,B)
+    $not_three_points_collinear(Q,A,B)
+    $angle_congruence(angle_of(P,A,B),angle_of(Q,A,B))
 
 # For eqratio: ratio equality (to be defined more precisely based on context)
 prop eqratio_points(A point,B point,C point,D point,M point,N point,P point,Q point):
@@ -73,7 +75,7 @@ prop eqratio_points(A point,B point,C point,D point,M point,N point,P point,Q po
     M!=N
     P!=Q
     
-    length_of_finite_line(finite_line_of(A,B)) / length_of_finite_line(finite_line_of(C,D)) = length_of_finite_line(finite_line_of(M,N)) / length_of_finite_line(finite_line_of(P,Q))
+    length_of_finite_line(A,B) / length_of_finite_line(C,D) = length_of_finite_line(M,N) / length_of_finite_line(P,Q)
 
 # For eqratio6 d b d c a b a c: ratio DB/DC = AB/AC
 prop eqratio6_points(D point,B point,C point,A point):
@@ -81,21 +83,21 @@ prop eqratio6_points(D point,B point,C point,A point):
     D!=C
     A!=B
     A!=C
-    length_of_finite_line(finite_line_of(D,B)) / length_of_finite_line(finite_line_of(D,C)) = length_of_finite_line(finite_line_of(A,B)) / length_of_finite_line(finite_line_of(A,C))
+    length_of_finite_line(D,B) / length_of_finite_line(D,C) = length_of_finite_line(A,B) / length_of_finite_line(A,C)
 
 # For eqratio3 A B C D O O: ratio with three points (A, B, C, D, O, O)
 prop eqratio3_points(A point,B point,C point,D point,O point):
     A!=B
     C!=D
-    O=intersection_point(line_of(A,C),line_of(B,D))
-    length_of_finite_line(finite_line_of(A,O)) / length_of_finite_line(finite_line_of(C,O)) = length_of_finite_line(finite_line_of(B,O)) / length_of_finite_line(finite_line_of(D,O))
+    O=intersection_point_of_two_lines(line_of(A,C),line_of(B,D))
+    length_of_finite_line(A,O) / length_of_finite_line(C,O) = length_of_finite_line(B,O) / length_of_finite_line(D,O)
   
 prop triangle_similar(A point,B point,C point,P point,Q point,R point):
     $ncoll_points(A,B,C)
     $ncoll_points(P,Q,R)
-    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C)),angle_of_two_rays(ray_with_end_point_and_direction(Q,P),ray_with_end_point_and_direction(Q,R)))
-    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)),angle_of_two_rays(ray_with_end_point_and_direction(R,P),ray_with_end_point_and_direction(R,Q)))
-    $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,C)),angle_of_two_rays(ray_with_end_point_and_direction(P,Q),ray_with_end_point_and_direction(P,R)))
+    $angle_congruence(angle_of(B,A,C),angle_of(Q,P,R))
+    $angle_congruence(angle_of(C,A,B),angle_of(R,P,Q))
+    $angle_congruence(angle_of(A,B,C),angle_of(P,Q,R))
     $eqratio_points(A,B,P,Q,B,C,Q,R)
     $eqratio_points(A,C,P,R,C,B,R,Q)
 
@@ -140,25 +142,25 @@ know:
     forall A,B,P,Q point:
         $cyclic_points(A,B,P,Q)
         =>:
-            $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),angle_of_two_rays(ray_with_end_point_and_direction(Q,A),ray_with_end_point_and_direction(Q,B)))
+            $angle_congruence(angle_of(P,A,B),angle_of(Q,A,B))
 
 # Rule 5
 ### rules.txt: eqangle6 P A P B Q A Q B, ncoll P Q A B => cyclic A B P Q
 ### 自然语言：圆周角定理的逆：若 \(\angle APB=\angle AQB\)，并且不出现 P,Q,A,B 全共线的退化情况，则 A,B,P,Q 共圆。
 know:
     forall P,A,B,Q point:
-        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(P,A),ray_with_end_point_and_direction(P,B)),angle_of_two_rays(ray_with_end_point_and_direction(Q,A),ray_with_end_point_and_direction(Q,B)))
+        $angle_congruence(angle_of(P,A,B),angle_of(Q,A,B))
         $ncoll4_points(P,Q,A,B)
         =>:
             $cyclic_points(A,B,P,Q)
 
 # Rule 6
 ### rules.txt: cyclic A B C P Q R, eqangle C A C B R P R Q => cong A B P Q
-### 自然语言：同圆中“等角对等弦”：在同一圆上，若圆周角 \(\angle ACB\) 与 \(\angle PRQ\) 相等，则它们所对的弦 AB 与 PQ 相等。
+### 自然语言：同圆中"等角对等弦"：在同一圆上，若圆周角 \(\angle ACB\) 与 \(\angle PRQ\) 相等，则它们所对的弦 AB 与 PQ 相等。
 know:
     forall A,B,C,P,Q,R point:
         $cyclic6_points(A,B,C,P,Q,R)
-        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)),angle_of_two_rays(ray_with_end_point_and_direction(R,P),ray_with_end_point_and_direction(R,Q)))
+        $angle_congruence(angle_of(C,A,B),angle_of(R,P,Q))
         =>:
             $finite_line_congruence(finite_line_of(A,B),finite_line_of(P,Q))
 
@@ -178,7 +180,7 @@ know:
 know:
     forall A,B,C,D,O point:
         $parallel_line(line_of(A,B),line_of(C,D))
-        O=intersection_point(line_of(A,B),line_of(C,D))
+        O=intersection_point_of_two_lines(line_of(A,C),line_of(B,D))
         =>:
             $eqratio3_points(A,B,C,D,O)
 
@@ -224,14 +226,14 @@ know:
         D $in finite_line_of(B,C)
         $ncoll_points(A,B,C)
         =>:
-            $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,D)),angle_of_two_rays(ray_with_end_point_and_direction(A,D),ray_with_end_point_and_direction(A,C)))
+            $angle_congruence(angle_of(A,B,D),angle_of(A,D,C))
 
 # Rule 13
 ### rules.txt: eqangle6 a b a d a d a c, coll d b c, ncoll a b c => eqratio6 d b d c a b a c
 ### 自然语言：Rule 12 的逆：若角 BAD 等于角 CAD（即 AD 是角 BAC 的角平分线），且 D, B, C 共线，A, B, C 不共线，则 DB/DC = AB/AC（角平分线定理）。
 know:
     forall A,B,D,C point:
-        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,D)),angle_of_two_rays(ray_with_end_point_and_direction(A,D),ray_with_end_point_and_direction(A,C)))
+        $angle_congruence(angle_of(A,B,D),angle_of(A,D,C))
         $three_points_collinear(D,B,C)
         D $in finite_line_of(B,C)
         $ncoll_points(A,B,C)
@@ -246,14 +248,14 @@ know:
         $finite_line_congruence(finite_line_of(O,A),finite_line_of(O,B))
         $ncoll_points(O,A,B)
         =>:
-            $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,O),ray_with_end_point_and_direction(A,B)),angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,O)))
+            $angle_congruence(angle_of(A,O,B),angle_of(B,A,O))
 
 # Rule 15
 ### rules.txt: eqangle6 A O A B B A B O, ncoll O A B => cong O A O B
 ### 自然语言：Rule 14 的逆：若角 AOB 等于角 BAO（即角 OAB = 角 OBA），且 O, A, B 不共线，则 OA = OB（等腰三角形判定）。
 know:
     forall A,O,B point:
-        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,O),ray_with_end_point_and_direction(A,B)),angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,O)))
+        $angle_congruence(angle_of(A,O,B),angle_of(B,A,O))
         $ncoll_points(O,A,B)
         =>:
             $finite_line_congruence(finite_line_of(O,A),finite_line_of(O,B))
@@ -263,10 +265,10 @@ know:
 ### 自然语言：圆的切线性质：若 O 为圆心，A, B, C 在圆上，且直线 OA 垂直于直线 AX（即 AX 是切线），则角 XAB 等于角 ACB（切线与弦的夹角等于同弧所对的圆周角）。
 know:
     forall O,A,B,C,X point:
-        $center_of_circle_of_triangle(O,A,B,C)
+        O=center_of_circle(circle_of_triangle(A,B,C))
         $perp(line_of(O,A),line_of(A,X))
         =>:
-            $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,X),ray_with_end_point_and_direction(A,B)),angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)))
+            $angle_congruence(angle_of(A,X,B),angle_of(C,A,B))
 
 # Rule 17
 ### rules.txt: circle O A B C, eqangle A X A B C A C B => perp O A A X
@@ -274,7 +276,7 @@ know:
 know:
     forall O,A,B,C,X point:
         $center_of_circle_of_triangle(O,A,B,C)
-        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,X),ray_with_end_point_and_direction(A,B)),angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)))
+        $angle_congruence(angle_of(A,X,B),angle_of(C,A,B))
         =>:
             $perp(line_of(O,A),line_of(A,X))
 
@@ -286,7 +288,7 @@ know:
         $center_of_circle_of_triangle(O,A,B,C)
         $is_mid_point(M,B,C)
         =>:
-            $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,C)),angle_of_two_rays(ray_with_end_point_and_direction(O,B),ray_with_end_point_and_direction(O,M)))
+            $angle_congruence(angle_of(A,B,C),angle_of(O,B,M))
 
 # Rule 19
 ### rules.txt: circle O A B C, coll M B C, eqangle A B A C O B O M => midp M B C
@@ -295,7 +297,7 @@ know:
     forall O,A,B,C,M point:
         $center_of_circle_of_triangle(O,A,B,C)
         $three_points_collinear(M,B,C)
-        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,B),ray_with_end_point_and_direction(A,C)),angle_of_two_rays(ray_with_end_point_and_direction(O,B),ray_with_end_point_and_direction(O,M)))
+        $angle_congruence(angle_of(A,B,C),angle_of(O,B,M))
         =>:
             $is_mid_point(M,B,C)
 
@@ -327,7 +329,7 @@ know:
         $cyclic_points(A,B,C,D)
         $parallel_line(line_of(A,B),line_of(C,D))
         =>:
-            $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(A,D),ray_with_end_point_and_direction(C,D)),angle_of_two_rays(ray_with_end_point_and_direction(C,D),ray_with_end_point_and_direction(C,B)))
+            $angle_congruence(angle_of(A,D,C),angle_of(C,D,B))
 
 # Rule 23
 ### rules.txt: midp M A B, perp O M A B => cong O A O B
@@ -466,7 +468,7 @@ know:
     forall A,B,C,P,Q,R point:
         $finite_line_congruence(finite_line_of(A,B),finite_line_of(P,Q))
         $finite_line_congruence(finite_line_of(B,C),finite_line_of(Q,R))
-        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C)),angle_of_two_rays(ray_with_end_point_and_direction(Q,P),ray_with_end_point_and_direction(Q,R)))
+        $angle_congruence(angle_of(B,A,C),angle_of(Q,P,R))
         $ncoll_points(A,B,C)
         $ncoll_points(P,Q,R)
         =>:
@@ -477,8 +479,8 @@ know:
 ### 自然语言：相似三角形判定（AA）：若角 ABC = 角 PQR，角 ACB = 角 PRQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 相似。
 know:
     forall A,B,C,P,Q,R point:
-        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C)),angle_of_two_rays(ray_with_end_point_and_direction(Q,P),ray_with_end_point_and_direction(Q,R)))
-        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)),angle_of_two_rays(ray_with_end_point_and_direction(R,P),ray_with_end_point_and_direction(R,Q)))
+        $angle_congruence(angle_of(B,A,C),angle_of(Q,P,R))
+        $angle_congruence(angle_of(C,A,B),angle_of(R,P,Q))
         $ncoll_points(A,B,C)
         $ncoll_points(P,Q,R)
         =>:
@@ -494,8 +496,8 @@ know:
 ### 自然语言：全等三角形判定（ASA）：若角 ABC = 角 PQR，角 ACB = 角 PRQ，AB = PQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
 know:
     forall A,B,C,P,Q,R point:
-        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C)),angle_of_two_rays(ray_with_end_point_and_direction(Q,P),ray_with_end_point_and_direction(Q,R)))
-        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)),angle_of_two_rays(ray_with_end_point_and_direction(R,P),ray_with_end_point_and_direction(R,Q)))
+        $angle_congruence(angle_of(B,A,C),angle_of(Q,P,R))
+        $angle_congruence(angle_of(C,A,B),angle_of(R,P,Q))
         $ncoll_points(A,B,C)
         $ncoll_points(P,Q,R)
         $finite_line_congruence(finite_line_of(B,C),finite_line_of(Q,R))
@@ -507,8 +509,8 @@ know:
 ### 自然语言：全等三角形判定（AAS，交替方向）：若角 ABC = 角 QRP，角 ACB = 角 RQP，AB = PQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
 know:
     forall A,B,C,P,Q,R point:
-        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C)),angle_of_two_rays(ray_with_end_point_and_direction(Q,R),ray_with_end_point_and_direction(Q,P)))
-        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(C,A),ray_with_end_point_and_direction(C,B)),angle_of_two_rays(ray_with_end_point_and_direction(R,Q),ray_with_end_point_and_direction(R,P)))
+        $angle_congruence(angle_of(B,A,C),angle_of(Q,R,P))
+        $angle_congruence(angle_of(C,A,B),angle_of(R,Q,P))
         $ncoll_points(A,B,C)
         $ncoll_points(P,Q,R)
         $finite_line_congruence(finite_line_of(A,B),finite_line_of(P,Q))
@@ -533,7 +535,7 @@ know:
 know:
     forall A,B,C,P,Q,R point:
         $eqratio_points(B,A,B,C,Q,P,Q,R)
-        $angle_congruence(angle_of_two_rays(ray_with_end_point_and_direction(B,A),ray_with_end_point_and_direction(B,C)),angle_of_two_rays(ray_with_end_point_and_direction(Q,P),ray_with_end_point_and_direction(Q,R)))
+        $angle_congruence(angle_of(B,A,C),angle_of(Q,P,R))
         $ncoll_points(A,B,C)
         $ncoll_points(P,Q,R)
         =>:
