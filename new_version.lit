@@ -966,7 +966,8 @@ prop is_eqangle2(A,B,C,X point):
 #same as axiom C1
    
 #10 foot
- let fn point_on_extension(A point,B point) point:
+
+let fn point_on_extension(A point,B point) point:
     dom:
         A!=B
 know:
