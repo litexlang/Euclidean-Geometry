@@ -849,7 +849,7 @@ know:
             C $in circle_of_triangle(A,B,C)
 
 know: 
-    forall c1,c2 circle, A,B,C point
+    forall c1,c2 circle, A,B,C point:
         A $in c1
         B $in c1
         C $in c1
