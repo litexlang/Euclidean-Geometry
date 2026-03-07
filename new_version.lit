@@ -976,7 +976,7 @@ know:
         =>:
             $is_point_on_extension(A,B,point_on_extension(A,B))
     
- prop is_right_angle(A,B,C point):
+prop is_right_angle(A,B,C point):
     $angle_congruence(angle_of(A,B,C),angle_of(A,B,point_on_extension(C,A)))
 
 
