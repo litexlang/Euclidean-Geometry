@@ -523,7 +523,7 @@ prop triangle_congruence(A point,B point,C point,A1 point,B' point,C' point):
     $not_three_points_collinear(A2,B2,C2)
     $finite_line_congruence(A,B,A2,B2)
     $finite_line_congruence(A,C,A2,C2)
-    $angle_congruence(angle_of(A,B,C),angle_of(A2,B2,C2))
+    $angle_congruence(A,B,C,A2,B2,C2)
 
 know:
     forall A,B,C point,A2,B2,C2 point:
@@ -557,9 +557,17 @@ know:
             intersection_point_of_two_lines (l1,l2) $in l2
 
 prop parallel_line(l1 line,l2 line):
-    $line_coplanar(l1,l2)
-    not $intersect_of_two_lines(l1,l2)
-    l1!=l2
+    
+know:
+    forall l1,l2 line:
+        l1!=l2
+        $parallel_line(l1,l2)
+        =>:
+            $line_coplanar(l1,l2)
+            not $intersect_of_two_lines(l1,l2)
+    forall l line:
+        $parallel_line(l,l)
+            
 
 
 know:
@@ -634,7 +642,7 @@ prop is_angle_bisector(A,B,C,X point):
     B!=C
     $not_three_points_collinear(A,B,C)
     X $in angle_of(A,B,C)
-    $angle_congruence(angle_of(A,X,B),angle_of(A,X,C))
+    $angle_congruence(A,X,B,A,X,C)
 
 let fn angle_bisector_point(A,B,C point) point:
     dom:
@@ -666,7 +674,7 @@ prop angle_mirror(A,B,C,X point):
     $not_three_points_collinear(A,B,C)
     $sameside_points(X,C,line_of(A,B))
     $not_sameside_points(X,B,line_of(A,C))
-    $angle_congruence(angle_of(A,B,C),angle_of(A,X,C))
+    $angle_congruence(A,B,C,A,X,C)
 
 let fn angle_mirror_point(A,B,C point) point:
     dom:
@@ -870,8 +878,9 @@ know:
 
 prop is_quadrangle(A,B,C,D point):
     $not_three_points_collinear(A,B,C)
+    $not_three_points_collinear(A,B,D)
     $not_three_points_collinear(B,C,D)
-    not $three_points_collinear(C,D,A)
+    $not_three_points_collinear(C,D,A)
     A $in plane_of(B,C,D)
 
 let fn quadrangle_of(A,B,C,D point) Quadrangle:
@@ -960,7 +969,7 @@ prop is_eqangle2(A,B,C,X point):
     A!=C
     B!=C
     $not_three_points_collinear(A,B,C)
-    $angle_congruence(angle_of(A,B,X),angle_of(C,X,A))
+    $angle_congruence(A,B,X,C,X,A)
 
 #9 eqdistance
 #same as axiom C1
@@ -977,7 +986,7 @@ know:
             $is_point_on_extension(A,B,point_on_extension(A,B))
     
 prop is_right_angle(A,B,C point):
-    $angle_congruence(angle_of(A,B,C),angle_of(A,B,point_on_extension(C,A)))
+    $angle_congruence(A,B,C,A,B,point_on_extension(C,A))
 
 
 let fn another_point_on_line(A point,l line) point:
@@ -1425,10 +1434,10 @@ know:
     forall A,B,C point:
         $is_iso_triangle(A,B,C)
         =>:
-            $angle_congruence(angle_of_two_rays(ray_of(B,A),ray_of(B,C)),angle_of_two_rays(ray_of(C,B),ray_of(C,A)))
+            $angle_congruence(B,A,C,C,B,A)
     forall A,B,C point:
         $not_three_points_collinear(A,B,C)
-        $angle_congruence(angle_of_two_rays(ray_of(B,A),ray_of(B,C)),angle_of_two_rays(ray_of(C,B),ray_of(C,A)))
+        $angle_congruence(B,A,C,C,B,A)
         =>:
             $is_iso_triangle(A,B,C)
 
@@ -1518,7 +1527,7 @@ know:
 prop is_on_aline(X point,A point,B point,C point,D point,E point):
     $not_three_points_collinear(C,D,E)
     $not_three_points_collinear(A,B,X)
-    $angle_congruence(angle_of(A,B,X),angle_of(C,D,E))
+    $angle_congruence(A,B,X,C,D,E)
 
 
 #28 on_aline2: 
@@ -1526,14 +1535,14 @@ prop is_on_aline(X point,A point,B point,C point,D point,E point):
 prop is_on_aline2(X point,A point,B point,C point,D point,E point):
     $not_three_points_collinear(C,D,E)
     $not_three_points_collinear(A,B,X)
-    $angle_congruence(angle_of(X,A,B),angle_of(C,D,E))
+    $angle_congruence(X,A,B,C,D,E)
 
 #29 on_bline: 
 # x is a point such that xa = xb and angle axb = angle bax (x is on the perpendicular bisector of ab)
 prop is_on_bline(X point,A point,B point):
     A!=B
     $finite_line_congruence(finite_line_of(X,A),finite_line_of(X,B))
-    $angle_congruence(angle_of_two_rays(ray_of(A,X),ray_of(A,B)),angle_of_two_rays(ray_of(B,A),ray_of(B,X)))
+    $angle_congruence(A,X,B,B,A,X)
 
 #30 on_circle: 
 # x is a point on the circle with center o and passing through a,which we have already defined
@@ -1783,7 +1792,7 @@ prop is_risos(A point,B point,C point):
     $not_three_points_collinear(A,B,C)
     $perp(line_of(A,B),line_of(A,C))
     $finite_line_congruence(finite_line_of(A,B),finite_line_of(A,C))
-    $angle_congruence(angle_of(B,A,C),angle_of(C,B,A))
+    $angle_congruence(B,A,C,C,B,A)
 
 #44 s_angle: supplementary angle
 
@@ -1836,8 +1845,13 @@ know:
 let fn angle_of_two_lines(l1 line,l2 line) angle:
     dom:
         $intersect_of_two_lines(l1,l2)
-    =>:
-        angle_of_two_lines(l1,l2)=min_angle(angle_of(intersection_point_of_two_lines(l1,l2),another_point_on_line(intersection_point_of_two_lines(l1,l2),l1),another_point_on_line(intersection_point_of_two_lines(l1,l2),l2)),s_angle(angle_of(intersection_point_of_two_lines(l1,l2),another_point_on_line(intersection_point_of_two_lines(l1,l2),l1),another_point_on_line(intersection_point_of_two_lines(l1,l2),l2))))
+
+know:
+    forall l1,l2 line:
+        l1!=l2
+        $intersect_of_two_lines(l1,l2)
+        =>:
+            angle_of_two_lines(l1,l2)=min_angle(angle_of(intersection_point_of_two_lines(l1,l2),another_point_on_line(intersection_point_of_two_lines(l1,l2),l1),another_point_on_line(intersection_point_of_two_lines(l1,l2),l2)),s_angle(angle_of(intersection_point_of_two_lines(l1,l2),another_point_on_line(intersection_point_of_two_lines(l1,l2),l1),another_point_on_line(intersection_point_of_two_lines(l1,l2),l2))))
 
 #45 shift: shift/translate point
 # x is the point such that xb = cd and xc = bd (translation of point b by vector cd)
@@ -2015,8 +2029,8 @@ prop is_angle_trisect(A point,B point,C point,D point,E point):
     $not_three_points_collinear(A,C,D)
     D $in angle_of(A,B,C)
     E $in angle_of(A,C,B)
-    $angle_congruence(angle_of(A,B,D),angle_of(A,E,D))
-    $angle_congruence(angle_of(A,C,E),angle_of(A,D,E))
+    $angle_congruence(A,B,D,A,E,D)
+    $angle_congruence(A,C,E,A,D,E)
 
 know:
     forall A,B,C point:
@@ -2070,8 +2084,8 @@ prop is_ieq_triangle(A point,B point,C point):
     $not_three_points_collinear(A,B,C)
     $finite_line_congruence(finite_line_of(A,B),finite_line_of(B,C))
     $finite_line_congruence(finite_line_of(B,C),finite_line_of(C,A))
-    $angle_congruence(angle_of(A,B,C),angle_of(C,A,B))
-    $angle_congruence(angle_of(A,B,C),angle_of(B,C,A))
+    $angle_congruence(A,B,C,C,A,B)
+    $angle_congruence(A,B,C,B,C,A)
 
 let fn ieq_triangle_third_vertex(A point,B point) point:
     dom:
@@ -2163,7 +2177,7 @@ prop is_eqangle3(X point,A point,B point,D point,E point,F point):
     E!=F
     $not_three_points_collinear(A,B,X)
     $not_three_points_collinear(D,E,F)
-    $angle_congruence(angle_of(X,A,B),angle_of(D,E,F))
+    $angle_congruence(X,A,B,D,E,F)
 
 #61 tangent: tangent points from a point to a circle
 # x, y are the two tangent points from point a to the circle with center o passing through b
