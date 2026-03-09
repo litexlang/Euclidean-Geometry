@@ -56,6 +56,8 @@ prop ncoll_points(A point,B point,E point):
 prop ncoll4_points(P point,Q point,A point,B point):
     $not_three_points_collinear(P,Q,A) 
     $not_three_points_collinear(P,Q,B)
+    $not_three_points_collinear(Q,A,B)
+    $not_three_points_collinear(A,B,P)
 
 
 
@@ -66,7 +68,7 @@ prop eqangle6_points(P point,A point,B point,Q point):
     Q!=B
     $not_three_points_collinear(P,A,B)
     $not_three_points_collinear(Q,A,B)
-    $angle_congruence(angle_of(P,A,B),angle_of(Q,A,B))
+    $angle_congruence(P,A,B,Q,A,B)
 
 # For eqratio: ratio equality (to be defined more precisely based on context)
 prop eqratio_points(A point,B point,C point,D point,M point,N point,P point,Q point):
@@ -74,7 +76,6 @@ prop eqratio_points(A point,B point,C point,D point,M point,N point,P point,Q po
     C!=D
     M!=N
     P!=Q
-    
     length_of_finite_line(A,B) / length_of_finite_line(C,D) = length_of_finite_line(M,N) / length_of_finite_line(P,Q)
 
 # For eqratio6 d b d c a b a c: ratio DB/DC = AB/AC
@@ -87,6 +88,7 @@ prop eqratio6_points(D point,B point,C point,A point):
 
 # For eqratio3 A B C D O O: ratio with three points (A, B, C, D, O, O)
 prop eqratio3_points(A point,B point,C point,D point,O point):
+    $intersect_of_two_lines(line_of(A,C),line_of(B,D))
     A!=B
     C!=D
     O=intersection_point_of_two_lines(line_of(A,C),line_of(B,D))
@@ -95,9 +97,9 @@ prop eqratio3_points(A point,B point,C point,D point,O point):
 prop triangle_similar(A point,B point,C point,P point,Q point,R point):
     $ncoll_points(A,B,C)
     $ncoll_points(P,Q,R)
-    $angle_congruence(angle_of(B,A,C),angle_of(Q,P,R))
-    $angle_congruence(angle_of(C,A,B),angle_of(R,P,Q))
-    $angle_congruence(angle_of(A,B,C),angle_of(P,Q,R))
+    $angle_congruence(B,A,C,Q,P,R)
+    $angle_congruence(C,A,B,R,P,Q)
+    $angle_congruence(A,B,C,P,Q,R)
     $eqratio_points(A,B,P,Q,B,C,Q,R)
     $eqratio_points(A,C,P,R,C,B,R,Q)
 
@@ -108,6 +110,9 @@ prop triangle_similar(A point,B point,C point,P point,Q point,R point):
 ### 如果直线AB垂直于直线CD，直线CD垂直于直线EF，且点A、B、E不共线，则直线AB平行于直线EF。
 know:
     forall A,B,C,D,E,F point:
+        A!=B
+        C!=D
+        E!=F
         $perp(line_of(A,B),line_of(C,D))
         $perp(line_of(C,D),line_of(E,F))
         $ncoll_points(A,B,E)
@@ -120,9 +125,13 @@ know:
 ### 如果线段OA、OB、OC、OD都相等（OA ≅ OB ≅ OC ≅ OD），则点A、B、C、D共圆。
 know:
     forall O,A,B,C,D point:
-        $finite_line_congruence(finite_line_of(O,A),finite_line_of(O,B))
-        $finite_line_congruence(finite_line_of(O,B),finite_line_of(O,C))
-        $finite_line_congruence(finite_line_of(O,C),finite_line_of(O,D))
+        O!=A
+        O!=B
+        O!=C
+        O!=D
+        $finite_line_congruence(O,A,O,B)
+        $finite_line_congruence(O,B,O,C)
+        $finite_line_congruence(O,C,O,D)
         =>:
             $cyclic_points(A,B,C,D)
 
@@ -131,6 +140,9 @@ know:
 ### 自然语言：若 \(\angle(AB,PQ)=\angle(CD,PQ)\)（两条直线 AB 与 CD 相对同一参考直线 PQ 的夹角相等），则 AB ∥ CD。
 know:
     forall l1,l2,l3 line:
+        l1!=l2
+        l1!=l3
+        l2!=l3
         angle_of_two_lines(l1,l3)=angle_of_two_lines(l2,l3)
         =>:
             $parallel_line(l1,l2)
@@ -142,14 +154,14 @@ know:
     forall A,B,P,Q point:
         $cyclic_points(A,B,P,Q)
         =>:
-            $angle_congruence(angle_of(P,A,B),angle_of(Q,A,B))
+            $angle_congruence(P,A,B,Q,A,B)
 
 # Rule 5
 ### rules.txt: eqangle6 P A P B Q A Q B, ncoll P Q A B => cyclic A B P Q
 ### 自然语言：圆周角定理的逆：若 \(\angle APB=\angle AQB\)，并且不出现 P,Q,A,B 全共线的退化情况，则 A,B,P,Q 共圆。
 know:
     forall P,A,B,Q point:
-        $angle_congruence(angle_of(P,A,B),angle_of(Q,A,B))
+        $angle_congruence(P,A,B,Q,A,B)
         $ncoll4_points(P,Q,A,B)
         =>:
             $cyclic_points(A,B,P,Q)
@@ -160,15 +172,19 @@ know:
 know:
     forall A,B,C,P,Q,R point:
         $cyclic6_points(A,B,C,P,Q,R)
-        $angle_congruence(angle_of(C,A,B),angle_of(R,P,Q))
+        $angle_congruence(C,A,B,R,P,Q)
         =>:
-            $finite_line_congruence(finite_line_of(A,B),finite_line_of(P,Q))
+            $finite_line_congruence(A,B,P,Q)
 
 # Rule 7
 ### rules.txt: midp E A B, midp F A C => para E F B C
 ### 自然语言：三角形中位线定理：若 E、F 分别是 AB、AC 的中点，则 EF ∥ BC。
 know:
     forall E,A,B,F,C point:
+        A!=B
+        A!=C
+        B!=C
+        $ncoll_points(A,B,C)
         $is_mid_point(E,A,B)
         $is_mid_point(F,A,C)
         =>:
@@ -179,7 +195,12 @@ know:
 ### 自然语言：平行线截比/相似带来的比例结论：AB ∥ CD 且 O 分别在 AC、BD 上时，会导出关于 A,B,C,D 与交点 O 的一个比例关系。
 know:
     forall A,B,C,D,O point:
+        A!=B
+        C!=D
+        A!=C
+        B!=D
         $parallel_line(line_of(A,B),line_of(C,D))
+        $intersect_of_two_lines(line_of(A,C),line_of(B,D))
         O=intersection_point_of_two_lines(line_of(A,C),line_of(B,D))
         =>:
             $eqratio3_points(A,B,C,D,O)
@@ -189,6 +210,10 @@ know:
 ### 自然语言：若 AB ⟂ CD 且 EF ⟂ GH，则 \(\angle(AB,EF)=\angle(CD,GH)\)；再加 “AB 与 EF 不平行” 用来排除夹角为 0/180° 的退化情况。
 know:
     forall A,B,C,D,E,F,G,H point:
+        A!=B
+        C!=D
+        E!=F
+        G!=H
         $perp(line_of(A,B),line_of(C,D))
         $perp(line_of(E,F),line_of(G,H))
         not $parallel_line(line_of(A,B),line_of(E,F))
@@ -201,6 +226,12 @@ know:
 ### 结论：∠(ab, ef) = ∠(mn, ru)
 know:
     forall A,B,C,D,M,N,P,Q,E,F,R,U point:
+        A!=B
+        C!=D
+        E!=F
+        M!=N
+        P!=Q
+        R!=U
         angle_of_two_lines(line_of(A,B),line_of(C,D))=angle_of_two_lines(line_of(M,N),line_of(P,Q))
         angle_of_two_lines(line_of(C,D),line_of(E,F))=angle_of_two_lines(line_of(P,Q),line_of(R,U))
         =>:
@@ -226,14 +257,14 @@ know:
         D $in finite_line_of(B,C)
         $ncoll_points(A,B,C)
         =>:
-            $angle_congruence(angle_of(A,B,D),angle_of(A,D,C))
+            $angle_congruence(A,B,D,A,D,C)
 
 # Rule 13
 ### rules.txt: eqangle6 a b a d a d a c, coll d b c, ncoll a b c => eqratio6 d b d c a b a c
 ### 自然语言：Rule 12 的逆：若角 BAD 等于角 CAD（即 AD 是角 BAC 的角平分线），且 D, B, C 共线，A, B, C 不共线，则 DB/DC = AB/AC（角平分线定理）。
 know:
     forall A,B,D,C point:
-        $angle_congruence(angle_of(A,B,D),angle_of(A,D,C))
+        $angle_congruence(A,B,D,A,D,C)
         $three_points_collinear(D,B,C)
         D $in finite_line_of(B,C)
         $ncoll_points(A,B,C)
@@ -245,38 +276,45 @@ know:
 ### 自然语言：等腰三角形底角相等：若 OA = OB（等腰三角形），且 O, A, B 不共线，则角 OAB 等于角 OBA。
 know:
     forall O,A,B point:
-        $finite_line_congruence(finite_line_of(O,A),finite_line_of(O,B))
+        $finite_line_congruence(O,A,O,B)
         $ncoll_points(O,A,B)
         =>:
-            $angle_congruence(angle_of(A,O,B),angle_of(B,A,O))
+            $angle_congruence(A,O,B,B,A,O)
 
 # Rule 15
 ### rules.txt: eqangle6 A O A B B A B O, ncoll O A B => cong O A O B
 ### 自然语言：Rule 14 的逆：若角 AOB 等于角 BAO（即角 OAB = 角 OBA），且 O, A, B 不共线，则 OA = OB（等腰三角形判定）。
 know:
     forall A,O,B point:
-        $angle_congruence(angle_of(A,O,B),angle_of(B,A,O))
+        $angle_congruence(A,O,B,B,A,O)
         $ncoll_points(O,A,B)
         =>:
-            $finite_line_congruence(finite_line_of(O,A),finite_line_of(O,B))
+            $finite_line_congruence(O,A,O,B)
 
 # Rule 16
 ### rules.txt: circle O A B C, perp O A A X => eqangle A X A B C A C B
 ### 自然语言：圆的切线性质：若 O 为圆心，A, B, C 在圆上，且直线 OA 垂直于直线 AX（即 AX 是切线），则角 XAB 等于角 ACB（切线与弦的夹角等于同弧所对的圆周角）。
 know:
     forall O,A,B,C,X point:
+        O!=A
+        A!=X
+        $not_three_points_collinear(A,B,C)
         O=center_of_circle(circle_of_triangle(A,B,C))
         $perp(line_of(O,A),line_of(A,X))
         =>:
-            $angle_congruence(angle_of(A,X,B),angle_of(C,A,B))
+            $angle_congruence(A,X,B,C,A,B)
 
 # Rule 17
 ### rules.txt: circle O A B C, eqangle A X A B C A C B => perp O A A X
 ### 自然语言：Rule 16 的逆：若 O 为圆心，A, B, C 在圆上，且角 XAB 等于角 ACB，则直线 OA 垂直于直线 AX（切线判定）。
 know:
     forall O,A,B,C,X point:
-        $center_of_circle_of_triangle(O,A,B,C)
-        $angle_congruence(angle_of(A,X,B),angle_of(C,A,B))
+        O!=A
+        A!=X
+        $not_three_points_collinear(A,B,C)
+        O=center_of_circle(circle_of_triangle(A,B,C))
+        length_of_finite_line(O,A)>length_of_finite_line(O,X)
+        $angle_congruence(A,X,B,C,A,B)
         =>:
             $perp(line_of(O,A),line_of(A,X))
 
@@ -285,19 +323,19 @@ know:
 ### 自然语言：圆的性质：若 O 为圆心，A, B, C 在圆上，且 M 是 BC 的中点，则角 BAC 等于角 BOM（圆心角与圆周角的关系）。
 know:
     forall O,A,B,C,M point:
-        $center_of_circle_of_triangle(O,A,B,C)
+        O=center_of_circle(circle_of_triangle(A,B,C))
         $is_mid_point(M,B,C)
         =>:
-            $angle_congruence(angle_of(A,B,C),angle_of(O,B,M))
+            $angle_congruence(A,B,C,O,B,M)
 
 # Rule 19
 ### rules.txt: circle O A B C, coll M B C, eqangle A B A C O B O M => midp M B C
 ### 自然语言：Rule 18 的逆：若 O 为圆心，A, B, C 在圆上，M 在直线 BC 上，且角 BAC 等于角 BOM，则 M 是 BC 的中点。
 know:
     forall O,A,B,C,M point:
-        $center_of_circle_of_triangle(O,A,B,C)
+        O=center_of_circle(circle_of_triangle(A,B,C))
         $three_points_collinear(M,B,C)
-        $angle_congruence(angle_of(A,B,C),angle_of(O,B,M))
+        $angle_congruence(A,B,C,O,B,M)
         =>:
             $is_mid_point(M,B,C)
 
@@ -306,17 +344,21 @@ know:
 ### 自然语言：直角三角形斜边中点性质：若 AB 垂直于 BC（即角 ABC 是直角），且 M 是 AC 的中点，则 AM = BM（直角三角形斜边上的中线等于斜边的一半，因此 M 到 A 和 B 的距离相等）。
 know:
     forall A,B,C,M point:
+        A!=B
+        B!=C
+        A!=C
         $perp(line_of(A,B),line_of(B,C))
         $is_mid_point(M,A,C)
         =>:
-            $finite_line_congruence(finite_line_of(A,M),finite_line_of(B,M))
+            $finite_line_congruence(A,M,B,M)
 
 # Rule 21
 ### rules.txt: circle O A B C, coll O A C => perp A B B C
 ### 自然语言：圆的性质：若 O 为圆心，A, B, C 在圆上，且 O, A, C 共线（即 AC 是直径），则 AB 垂直于 BC（直径所对的圆周角是直角）。
 know:
     forall O,A,B,C point:
-        $center_of_circle_of_triangle(O,A,B,C)
+        $not_three_points_collinear(A,B,C)
+        O=center_of_circle(circle_of_triangle(A,B,C))
         $three_points_collinear(O,A,C)
         =>:
             $perp(line_of(A,B),line_of(B,C))
@@ -329,25 +371,31 @@ know:
         $cyclic_points(A,B,C,D)
         $parallel_line(line_of(A,B),line_of(C,D))
         =>:
-            $angle_congruence(angle_of(A,D,C),angle_of(C,D,B))
+            $angle_congruence(D,A,C,C,B,D)
 
 # Rule 23
 ### rules.txt: midp M A B, perp O M A B => cong O A O B
 ### 自然语言：垂直平分线的性质：若 M 是 AB 的中点，且直线 OM 垂直于 AB，则 OA = OB（O 在 AB 的垂直平分线上，因此到 A 和 B 的距离相等）。
 know:
     forall M,A,B,O point:
+        A!=B
+        A!=O
+        B!=O
+        M!=O
         $is_mid_point(M,A,B)
         $perp(line_of(O,M),line_of(A,B))
         =>:
-            $finite_line_congruence(finite_line_of(O,A),finite_line_of(O,B))
+            $finite_line_congruence(O,A,O,B)
 
 # Rule 24
 ### rules.txt: cong A P B P, cong A Q B Q => perp A B P Q
 ### 自然语言：到两点距离相等的点的轨迹：若 AP = BP 且 AQ = BQ（P 和 Q 都在 AB 的垂直平分线上），则 AB 垂直于 PQ。
 know:
     forall A,P,B,Q point:
-        $finite_line_congruence(finite_line_of(A,P),finite_line_of(B,P))
-        $finite_line_congruence(finite_line_of(A,Q),finite_line_of(B,Q))
+        A!=B
+        P!=Q
+        $finite_line_congruence(A,P,B,P)
+        $finite_line_congruence(A,Q,B,Q)
         =>:
             $perp(line_of(A,B),line_of(P,Q))
 
@@ -356,8 +404,10 @@ know:
 ### 自然语言：圆的性质：若 AP = BP，AQ = BQ，且 A, B, P, Q 共圆，则 PA 垂直于 AQ（A 是圆心，PA 和 AQ 是半径，因此垂直）。
 know:
     forall A,P,B,Q point:
-        $finite_line_congruence(finite_line_of(A,P),finite_line_of(B,P))
-        $finite_line_congruence(finite_line_of(A,Q),finite_line_of(B,Q))
+        P!=A
+        Q!=A
+        $finite_line_congruence(A,P,B,P)
+        $finite_line_congruence(A,Q,B,Q)
         $cyclic_points(A,B,P,Q)
         =>:
             $perp(line_of(P,A),line_of(A,Q))
@@ -367,6 +417,8 @@ know:
 ### 自然语言：中点连线性质：若 M 既是 AB 的中点，也是 CD 的中点，则 AC ∥ BD（对角线互相平分的四边形是平行四边形）。
 know:
     forall M,A,B,C,D point:
+        A!=C
+        B!=D
         $is_mid_point(M,A,B)
         $is_mid_point(M,C,D)
         =>:
@@ -377,6 +429,10 @@ know:
 ### 自然语言：Rule 26 的逆：若 M 是 AB 的中点，且 AC ∥ BD，AD ∥ BC（即 ABCD 是平行四边形），则 M 也是 CD 的中点。
 know:
     forall M,A,B,C,D point:
+        A!=C
+        B!=D
+        A!=D
+        B!=C
         $is_mid_point(M,A,B)
         $parallel_line(line_of(A,C),line_of(B,D))
         $parallel_line(line_of(A,D),line_of(B,C))
@@ -395,6 +451,7 @@ know:
         $three_points_collinear(O,A,C)
         $three_points_collinear(O,B,D)
         $ncoll_points(A,B,C)
+        C!=D
         $point_between(A,C,O) or $point_between(C,O,A)
         $point_between(B,D,O) or $point_between(D,O,B)
         =>:
@@ -405,6 +462,8 @@ know:
 ### 自然语言：平行线的退化情况：若 AB ∥ AC（两条直线都经过点 A），则 A, B, C 共线（同一直线）。
 know:
     forall A,B,C point:
+        A!=B
+        A!=C
         $parallel_line(line_of(A,B),line_of(A,C))
         =>:
             $three_points_collinear(A,B,C)
@@ -433,6 +492,10 @@ know:
 ### 自然语言：若直线 AB 与 PQ 的夹角等于直线 CD 与 UV 的夹角，且 PQ 垂直于 UV，则 AB 垂直于 CD。
 know:
     forall A,B,P,Q,C,D,U,V point:
+        A!=B
+        P!=Q
+        C!=D
+        U!=V
         angle_of_two_lines(line_of(A,B),line_of(P,Q))=angle_of_two_lines(line_of(C,D),line_of(U,V))
         $perp(line_of(P,Q),line_of(U,V))
         =>:
@@ -444,18 +507,18 @@ know:
 know:
     forall A,B,P,Q,C,D,U,V point:
         $eqratio_points(A,B,P,Q,C,D,U,V)
-        $finite_line_congruence(finite_line_of(P,Q),finite_line_of(U,V))
+        $finite_line_congruence(P,Q,U,V)
         =>:
-            $finite_line_congruence(finite_line_of(A,B),finite_line_of(C,D))
+            $finite_line_congruence(A,B,C,D)
 
 # Rule 33
 ### rules.txt: cong A B P Q, cong B C Q R, cong C A R P, ncoll A B C => contri* A B C P Q R
 ### 自然语言：全等三角形判定（SSS）：若 AB = PQ，BC = QR，CA = RP，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
 know:
     forall A,B,C,P,Q,R point:
-        $finite_line_congruence(finite_line_of(A,B),finite_line_of(P,Q))
-        $finite_line_congruence(finite_line_of(B,C),finite_line_of(Q,R))
-        $finite_line_congruence(finite_line_of(C,A),finite_line_of(R,P))
+        $finite_line_congruence(A,B,P,Q)
+        $finite_line_congruence(B,C,Q,R)
+        $finite_line_congruence(C,A,R,P)
         $ncoll_points(A,B,C)
         $ncoll_points(P,Q,R)
         =>:
@@ -466,9 +529,9 @@ know:
 ### 自然语言：全等三角形判定（SAS）：若 AB = PQ，BC = QR，角 ABC = 角 PQR，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
 know:
     forall A,B,C,P,Q,R point:
-        $finite_line_congruence(finite_line_of(A,B),finite_line_of(P,Q))
-        $finite_line_congruence(finite_line_of(B,C),finite_line_of(Q,R))
-        $angle_congruence(angle_of(B,A,C),angle_of(Q,P,R))
+        $finite_line_congruence(A,B,P,Q)
+        $finite_line_congruence(B,C,Q,R)
+        $angle_congruence(B,A,C,Q,P,R)
         $ncoll_points(A,B,C)
         $ncoll_points(P,Q,R)
         =>:
@@ -479,8 +542,8 @@ know:
 ### 自然语言：相似三角形判定（AA）：若角 ABC = 角 PQR，角 ACB = 角 PRQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 相似。
 know:
     forall A,B,C,P,Q,R point:
-        $angle_congruence(angle_of(B,A,C),angle_of(Q,P,R))
-        $angle_congruence(angle_of(C,A,B),angle_of(R,P,Q))
+        $angle_congruence(B,A,C,Q,P,R)
+        $angle_congruence(C,A,B,R,P,Q)
         $ncoll_points(A,B,C)
         $ncoll_points(P,Q,R)
         =>:
@@ -496,11 +559,11 @@ know:
 ### 自然语言：全等三角形判定（ASA）：若角 ABC = 角 PQR，角 ACB = 角 PRQ，AB = PQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
 know:
     forall A,B,C,P,Q,R point:
-        $angle_congruence(angle_of(B,A,C),angle_of(Q,P,R))
-        $angle_congruence(angle_of(C,A,B),angle_of(R,P,Q))
+        $angle_congruence(B,A,C,Q,P,R)
+        $angle_congruence(C,A,B,R,P,Q)
         $ncoll_points(A,B,C)
         $ncoll_points(P,Q,R)
-        $finite_line_congruence(finite_line_of(B,C),finite_line_of(Q,R))
+        $finite_line_congruence(B,C,Q,R)
         =>:
             $triangle_congruence(A,B,C,P,Q,R)
 
@@ -509,11 +572,11 @@ know:
 ### 自然语言：全等三角形判定（AAS，交替方向）：若角 ABC = 角 QRP，角 ACB = 角 RQP，AB = PQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
 know:
     forall A,B,C,P,Q,R point:
-        $angle_congruence(angle_of(B,A,C),angle_of(Q,R,P))
-        $angle_congruence(angle_of(C,A,B),angle_of(R,Q,P))
+        $angle_congruence(B,A,C,Q,R,P)
+        $angle_congruence(C,A,B,R,Q,P)
         $ncoll_points(A,B,C)
         $ncoll_points(P,Q,R)
-        $finite_line_congruence(finite_line_of(A,B),finite_line_of(P,Q))
+        $finite_line_congruence(A,B,P,Q)
         =>:
             $triangle_congruence(A,B,C,P,Q,R)
 
@@ -535,7 +598,7 @@ know:
 know:
     forall A,B,C,P,Q,R point:
         $eqratio_points(B,A,B,C,Q,P,Q,R)
-        $angle_congruence(angle_of(B,A,C),angle_of(Q,P,R))
+        $angle_congruence(B,A,C,Q,P,R)
         $ncoll_points(A,B,C)
         $ncoll_points(P,Q,R)
         =>:
@@ -550,7 +613,7 @@ know:
         $eqratio_points(C,A,C,B,R,P,R,Q)
         $ncoll_points(A,B,C)
         $ncoll_points(P,Q,R)
-        $finite_line_congruence(finite_line_of(A,B),finite_line_of(P,Q))
+        $finite_line_congruence(A,B,P,Q)
         =>:
             $triangle_congruence(A,B,C,P,Q,R)
 
@@ -560,6 +623,9 @@ know:
 ### 注：sameside m a d 表示 m, a, d 在一条直线的同侧，这里简化为 m 不在 a 和 d 之间。
 know:
     forall A,B,C,D,M,N point:
+        A!=B
+        C!=D
+        M!=N
         $parallel_line(line_of(A,B),line_of(C,D))
         $three_points_collinear(M,A,D)
         $three_points_collinear(N,B,C)
@@ -574,6 +640,9 @@ know:
 ### 自然语言：Rule 42 的逆：若 ab ∥ cd，m 在直线 ad 上，n 在直线 bc 上，且 mn ∥ ab，则 ma/md = nb/nc。
 know:
     forall A,B,C,D,M,N point:
+        A!=B
+        C!=D
+        M!=N
         $parallel_line(line_of(A,B),line_of(C,D))
         $three_points_collinear(M,A,D)
         $three_points_collinear(N,B,C)
