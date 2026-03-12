@@ -6,7 +6,7 @@ This repository formalizes Euclidean geometry in the **Litex** language. It is o
 
 - **`foundations_of_geometry/`** — Formalization of **Hilbert's axioms** (the *Foundations of Geometry*). This is the strictest and most rigorous axiomatic system for Euclidean geometry; the files here give a one-to-one encoding of Hilbert’s axiom system in Litex.
 
-- **`alphageometry_formalization/`** — Formalization of the geometric content from **AlphaGeometry** (DeepMind’s well-known AI-for-geometry project). AlphaGeometry’s defs and rules include a large body of geometric theorems and inference rules; Litex expresses these definitions and rules in a clear, compact way.
+- **`alphageometry_formalization/`** — Formalization of the geometric content from **AlphaGeometry** (DeepMind’s well-known AI-for-geometry project). AlphaGeometry’s defs and rules include a large body of geometric theorems and inference rules; Litex expresses these definitions and rules in a clear, compact way. The original AlphaGeometry files do not give formal definitions for the concepts they introduce; here we supply definitions based on the axioms and basic objects (points, lines, planes), making the formalization more complete.
 
 Litex makes it straightforward to write and maintain both the foundational axioms and the richer theorem library, providing math enthusiasts with a rigorous and comprehensive foundation for understanding and exploring Euclidean geometry.
 

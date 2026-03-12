@@ -8,6 +8,12 @@
   (new_version.lit) and concepts (defs.lit) and provides the inference
   rules used in Euclidean geometry reasoning.
 
+  AlphaGeometry introduces predicates such as "is angle bisector",
+  "three points on a circle", etc., but does not give formal definitions
+  for these concepts. Here we supply concrete definitions for each of
+  them in terms of the underlying geometry (points, lines, congruence,
+  between, etc.).
+
   Reference (AlphaGeometry):
   https://github.com/google-deepmind/alphageometry/blob/main/rules.txt
 
