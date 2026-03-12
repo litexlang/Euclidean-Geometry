@@ -1,0 +1,626 @@
+"""
+  This file formalizes Hilbert's axioms in the Litex language, with a
+  one-to-one correspondence to the definitions given in the reference.
+  Hilbert's axioms form a stricter axiomatic system built on Euclidean
+  geometry, making the foundations of geometry more rigorous and explicit.
+
+  Reference:
+  https://en.wikipedia.org/wiki/Hilbert%27s_axioms
+  https://math.berkeley.edu/~wodzicki/160/Hilbert.pdf
+"""
+
+# Hilbert's axiom system is constructed with six primitive notions: three primitive terms:
+# point;
+# line;
+# plane;
+# and three primitive relations:
+# Between, a ternary relation linking points;
+
+# three primitive terms:
+have point nonempty_set
+have line nonempty_set
+have plane nonempty_set
+
+# All elements on a line or a plane are points (power_set: the set of all subsets of a set)
+know:
+    forall l line:
+        l $in power_set(point)
+    forall pl plane:
+        pl $in power_set(point)
+
+# three primitive relations
+#Incidence
+# We use the keyword `in` in set theory to denote the membership of an element to a set. Since a point on line and a line is a set of points, we use the keyword `in` to denote the membership of a point to a line.
+
+## I1
+### For every two points A and B there exists a line a that contains them both. We write AB = a or BA = a
+### For every two points there exists no more than one line that contains them both
+let fn line_of(A point,B point) line:
+    dom:
+        A!=B
+
+know:
+    forall A,B point:
+        A $in line_of(A,B)
+        B $in line_of(A,B)
+    forall l line, A,B l:
+        A != B
+        =>:
+            l = line_of(A,B)
+
+## I2
+### There exists at least two distinct points on a line.
+know:    
+    forall l line:
+        exist A,B point st {A!=B, A $in l, B $in l}
+
+## I3
+### There exist at least three points that do not lie on the same line.
+prop three_points_collinear(A,B,C point):
+    B != C
+    A $in line_of(B,C)
+prop not_three_points_collinear(A,B,C point):
+    A!=B
+    A!=C
+    B!=C
+    not A $in line_of(B,C)
+    not B $in line_of(A,C)
+    not C $in line_of(A,B)  
+know:
+    exist A,B,C point st {$not_three_points_collinear(A,B,C)}
+
+## I4
+### For every three points A, B, C not situated on the same line there exists exactly one plane α that contains all of them.
+let fn plane_of(A point,B point,C point) plane:
+    dom:
+        $not_three_points_collinear(A,B,C)
+
+know:
+    forall A,B,C point:
+        A $in plane_of(A,B,C)
+        B $in plane_of(A,B,C)
+        C $in plane_of(A,B,C)
+    forall pl plane, A,B,C pl:
+        A != B
+        A != C
+        B != C
+        pl = plane_of(A,B,C)
+
+##I5
+### Every plane contains three points A, B, C which do not lie in the same line.
+prop three_points_not_collinear_on_plane(pl plane, A, B, C pl):
+    $not_three_points_collinear(A,B,C)
+know:
+    forall pl plane:
+        exist A,B,C point st {$three_points_not_collinear_on_plane(pl,A,B,C)}
+
+## I6
+### If two points A, B of a line lie in a plane pl, then every point of a lies in pl. 
+### In this case we say: "The line a lies in the plane pl"
+prop line_on_plane(l line, pl plane):
+    forall A l:
+        A $in pl
+    
+know:
+    forall A point,B point, pl plane:
+        A!=B
+        A $in pl
+        B $in pl
+        =>:
+            $line_on_plane(line_of(A,B),pl)
+
+## I7
+### If two planes α, β have a point A in common, then they have at least a second point B in common
+prop another_point_of_two_intersect_planes(A point,B point,p plane,q plane):
+    B $in p
+    B $in q
+    A!=B
+
+know:
+    forall A point, p,q plane:
+        A $in p
+        A $in q
+        =>:
+            exist B point st {$another_point_of_two_intersect_planes(A,B,p,q)}
+
+## I8
+### There exist at least four points not lying in a plane    
+prop four_points_not_on_any_plane(A point, B point, C point, D point):
+    A!=B
+    A!=C
+    A!=D
+    B!=C
+    B!=D
+    C!=D
+    forall p plane:
+        not $in(A,p) or not $in(B,p) or not $in(C,p) or not $in(D,p)
+      
+know:
+    exist A,B,C,D point st {$four_points_not_on_any_plane(A,B,C,D)}
+    
+
+
+#Between
+## B1
+### If a point B lies between points A and C, B is also between C and A, 
+### and there exists a line containing the distinct points A, B, C
+prop point_between(B point ,A point ,C point)
+know:
+    forall B,A,C point:
+        $point_between(B,A,C)
+        =>:
+            $point_between(B,C,A)
+    forall B,A,C point:
+        $point_between(B,A,C)
+        =>:
+            B != A
+            B != C
+            C != A
+            $not_three_points_collinear(A,B,C)
+    
+## B2
+### If A and C are two points, then there exists at least one point B on the line AC such that C lies between A and B
+prop is_point_on_extension(A point,C point,B point):
+    A!=C
+    B $in line_of(A,C)
+    $point_between(C,A,B)
+
+know:
+    forall A,C point:
+        A!=C
+        =>:
+            exist B point st {$is_point_on_extension(A,C,B)}
+## B3
+### Of any three points situated on a line, there is no more than one which lies between the other two
+prop no_more_than_one_point_between_three_points_on_line(A point,B point ,C point):
+    forall: 
+        $point_between(A, B, C) 
+        =>:
+            not $point_between(B, C, A) 
+            not $point_between(C, A, B)
+    forall: 
+        $point_between(B, C, A) 
+        =>:
+            not $point_between(A, B, C) 
+            not $point_between(C, A, B)
+    forall: 
+        $point_between(C, A, B) 
+        =>:
+            not $point_between(A, B, C) 
+            not $point_between(B, C, A)
+know:
+    forall A,B,C point:
+        $not_three_points_collinear(A,B,C)
+        =>:
+            $no_more_than_one_point_between_three_points_on_line(A,B,C)
+
+### Pasch's axiom: Let A, B, C be three points not lying in the same line and let a be a line lying in the plane ABC 
+### and not passing through any of the points A, B, C. Then, if the line a passes through a point of the segment AB, 
+### it will also pass through either a point of the segment BC or a point of the segment AC.
+
+# Define finite_line as a segment of a line, i.e., a line with two endpoints.
+
+
+let fn finite_line_of(A point,B point) power_set(point):
+    dom:
+        A!=B
+
+know:
+    forall A, B point:
+        A!=B
+        =>:
+            finite_line_of(A,B) $subset line_of(A,B)
+
+know:
+    forall A,B point:
+        A!=B
+        =>:
+            A $in finite_line_of(A,B)
+            B $in finite_line_of(A,B)
+            finite_line_of(A,B)=finite_line_of(B,A)
+    forall A,B,C point:
+        A!=B
+        C!=A
+        C!=B
+        C $in finite_line_of(A,B)
+        =>:
+            C $in line_of(A,B)
+            $point_between(C,A,B)
+prop line_intersect_finite_line(l line ,B ,C point):
+    B != C
+    exist A point st {A $in l, A $in finite_line_of(B,C)}
+
+know:
+    forall A,B,C point ,l line:
+        A!=B
+        A!=C
+        B!=C
+        $not_three_points_collinear(A,B,C)
+        $line_on_plane(l,plane_of(A,B,C))
+        $line_intersect_finite_line(l,A,B)
+        =>:
+            $line_intersect_finite_line(l,B,C) or $line_intersect_finite_line(l,A,C) 
+
+
+#Congruence
+# Think of two finite lines congruent if they have the same length.
+
+## C1
+### If A, B are two points on a line a, and if A′ is a point upon the same or another line a′, 
+### then, upon a given side of A′ on the straight line a′, we can always find a point B′ 
+### so that the segment AB is congruent to the segment A′B′.
+### We indicate this relation by writing AB ≅ A′B′. Every segment is congruent to itself
+
+prop on_the_same_side_of_line(z point, start point, end point):
+    start != end
+    $not_three_points_collinear(z, start, end)
+    $point_between(z, start, end) or $point_between(end, start, z) or z = end or z = start
+
+prop finite_line_congruence(A point,B point,A2 point,B2 point)
+
+know:
+    forall A, B point, a2 line, A2 a2, side_signal_end_point a2:
+        A != B
+        =>:
+            exist B2 a2 st {$on_the_same_side_of_line(B2,A2,side_signal_end_point), $finite_line_congruence(A2,B2,A,B)}
+
+## C2
+### Reflexive: AB ≅ AB
+### Symmetric: AB ≅ CD => CD ≅ AB
+### Transitive: AB ≅ CD, CD ≅ EF => AB ≅ EF
+
+prop finite_line_congruence_transitive_result(A point,B point,C point,A2 point,B2 point,C2 point):
+    $finite_line_congruence(A,B,E,F)
+
+know:
+    forall A, B point:
+        A != B
+        =>:
+            $finite_line_congruence(A,B,B,A)
+    forall A, B, C, D point:
+        A != B
+        C != D
+        $finite_line_congruence(A,B,C,D)
+        =>:
+            $finite_line_congruence(C,D,A,B)
+    forall A, B, C, D, E, F point:
+        A != B
+        C != D
+        E != F
+        $finite_line_congruence(A,B,C,D)
+        $finite_line_congruence(C,D,E,F)
+        =>:
+            $finite_line_congruence_transitive_result(A,B,C,E,F,A2,B2,C2)
+
+
+## C3
+### Let AB and BC be two segments of a line a which have no points in common aside from the point B,
+### and, furthermore, let A′B′ and B′C′ be two segments of the same or of another line a′ having, 
+### likewise, no point other than B′ in common. Then, if AB ≅ A′B′ and BC ≅ B′C′, we have AC ≅ A'C'
+### AB ≅ A2B2 and BC ≅ B2C2 => AC ≅ A2C2
+
+prop finite_line_congruence_transitive_result(A point,B point,C point,A2 point,B2 point,C2 point):
+    $finite_line_congruence(A,C,A2,C2)
+
+know:
+    forall A, B, C, A2, B2, C2 point:
+        A != B
+        B != C
+        A != C
+        intersect(finite_line_of(A,B),finite_line_of(B,C)) = {B}
+        A2 != B2
+        B2 != C2
+        A2 != C2
+        intersect(finite_line_of(A2,B2),finite_line_of(B2,C2)) = {B2}
+        $finite_line_congruence(A,B,A2,B2)
+        $finite_line_congruence(B,C,B2,C2)
+        =>:
+            $finite_line_congruence_transitive_result(A,B,C,A2,B2,C2)
+        
+
+## C4
+### Let an angle ∠ (h,k) be given in the plane α and let a line a′ be given in a plane α′.
+### Suppose also that, in the plane α′, a definite side of the straight line a′ be assigned. 
+### Denote by h′ a ray of the straight line a′ emanating from a point O′ of this line.
+### Then in the plane α′ there is one and only one ray k′ such that the angle ∠ (h, k), or ∠ (k, h), 
+### is congruent to the angle ∠ (h′, k′) and at the same time all interior points of the angle ∠ (h′, k′) lie upon the given side of a′. 
+### We express this relation by means of the notation ∠ (h, k) ≅ ∠ (h′, k′)
+
+
+
+##Todo: complete definition of angle
+let fn ray_of(A point, B point) power_set(point):
+    dom:
+        A != B
+
+
+know:
+    forall A, B, C point:
+        A != B
+        =>:
+            $point_between(C, A, B) or $point_between(B, A, C) or C = A or C = B
+        <=>:
+            C $in ray_of(A,B)
+    forall A,B,C point:
+        A!=B
+        C $in line_of(A,B)
+        $point_between(C,A,B) or $point_between(B,A,C)
+        C != A
+        =>:
+            ray_of(A,B)=ray_of(A,C)
+
+
+
+know: 
+    # Every point C on ray_of(A, B) is on line_of(A, B)
+    # In fact, $point_between(C,A,B) or $point_between(B,A,C) could lead to C $in line_of(A,B)
+    forall A,B,C point:
+        A!=B
+        C $in ray_of(A,B)
+        =>:
+            C $in line_of(A,B)
+            
+
+## Angle: We define angle with direction.
+## We define the relationship between angle and ray.
+
+# plane of a point and a line
+let fn plane_of_point_and_line(A point,l line) plane:
+    dom:
+        not A $in l
+
+know:
+    forall A point,l line:
+        not A $in l
+        =>:
+            A $in plane_of_point_and_line(A,l)
+            $line_on_plane(l,plane_of_point_and_line(A,l))
+
+#two points are on the same side of a line
+prop sameside_points(A point,C point,l line):
+    A $in plane_of_point_and_line(C,l)
+    not A $in l
+    not C $in l
+    A!=C
+    not $line_intersect_finite_line(l,A,C)
+
+#two points are on the opposite side of a line
+prop not_sameside_points(A point,C point,l line):
+    A $in plane_of_point_and_line(C,l)
+    not A $in l
+    not C $in l
+    A!=C
+    $line_intersect_finite_line(l,A,C)
+
+let fn angle_of(A point,B point,C point) power_set(point):
+    dom:
+        A!=B
+        A!=C
+        B!=C
+        $not_three_points_collinear(A,B,C)
+
+know:
+    forall A,B,C point:
+        A!=B
+        A!=C
+        B!=C
+        $not_three_points_collinear(A,B,C)
+        =>:
+            angle_of(A,B,C)=angle_of(A,C,B)
+    forall A,B,C,D,E point:
+        A!=B
+        A!=C
+        B!=C
+        D!=A
+        E!=A
+        $not_three_points_collinear(A,B,C)
+        D $in ray_of(A,B)
+        E $in ray_of(A,C)
+        =>:
+            angle_of(A,B,C)=angle_of(A,D,E)
+
+let fn area_of_angle(A point,B point,C point) power_set(point):
+    dom:
+        A!=B
+        A!=C
+        B!=C
+        $not_three_points_collinear(A,B,C)
+know:
+    forall A,B,C point:
+        A!=B
+        A!=C
+        B!=C
+        $not_three_points_collinear(A,B,C)
+        =>:
+            area_of_angle(A,B,C)=area_of_angle(A,C,B)
+
+know:
+    forall A,B,C,P point:
+        A!=B
+
+    forall A,B,C,P point:
+        A!=B
+        A!=C
+        B!=C
+        $not_three_points_collinear(A,B,C)
+        =>:
+            P $in angle_of(A,B,C)
+        <=>:
+            P $in ray_of(A,B) or P $in ray_of(A,C) or P $in area_of_angle(A,B,C)
+    
+    
+    
+    
+prop angle_congruence(A,B,C,D,E,F point):
+    A!=B
+    A!=C
+    B!=C
+    $not_three_points_collinear(A,B,C)
+    D!=E
+    D!=F
+    E!=F
+    $not_three_points_collinear(D,E,F)
+
+know:
+    forall A,B,C,D,E,F point:
+        $angle_congruence(A,B,C,D,E,F)
+        =>:
+            $angle_congruence(D,E,F,A,B,C)
+            
+
+
+know:
+    forall a1,a2 plane,A, B, C a1, D, E, side_signal_point a2:
+        A!=B
+        A!=C
+        B!=C
+        $not_three_points_collinear(A,B,C)
+        D!=E
+        =>:
+            exist F point st {$sameside_points(F,side_signal_point,line_of(D,E)),$angle_congruence(A,B,C,D,E,F)}
+
+## C5
+### If the angle ∠ (h, k) is congruent to the angle ∠ (h′, k′) and to the angle ∠ (h″, k″), 
+### then the angle ∠ (h′, k′) is congruent to the angle ∠ (h″, k″)
+    
+know :
+    forall  A,B,C,D,E,F point: 
+        =>:
+            $angle_congruence(A,B,C,D,E,F)
+        <=>:
+            $angle_congruence(D,E,F,A,B,C)
+
+    forall A,B,C point:
+        $angle_congruence(A,B,C,A,B,C)
+
+    forall A,B,C,D,E,F,G,H,I point:
+        $angle_congruence(A,B,C,D,E,F)
+        $angle_congruence(D,E,F,G,H,I)
+        =>:
+            $angle_congruence(A,B,C,G,H,I)
+
+## C6
+### If in the two triangles ABC and A′B′C′ the congruences AB ≅ A′B′, AC ≅ A′C′, ∠BAC ≅ ∠B′A′C′ hold,
+### then the congruence ∠ABC ≅ ∠A′B′C′ holds
+### (and, by a change of notation, it follows that ∠ACB ≅ ∠A′C′B′ also holds)
+
+let fn triangle_of(A point,B point,C point) power_set(point):
+    dom:
+        A!=B
+        A!=C
+        B!=C
+        $not_three_points_collinear(A,B,C)
+know: 
+    forall A,B,C,P point:
+        A!=B
+        A!=C
+        B!=C
+        $not_three_points_collinear(A,B,C)
+        =>:
+            P $in triangle_of(A,B,C)
+        <=>:
+            P $in finite_line_of(A,B) or P $in finite_line_of(B,C) or P $in finite_line_of(C,A)
+
+
+prop triangle_congruence(A point,B point,C point,A1 point,B' point,C' point):
+    $not_three_points_collinear(A,B,C)
+    $not_three_points_collinear(A2,B2,C2)
+    $finite_line_congruence(A,B,A2,B2)
+    $finite_line_congruence(A,C,A2,C2)
+    $angle_congruence(A,B,C,A2,B2,C2)
+
+know:
+    forall A,B,C point,A2,B2,C2 point:
+        $triangle_congruence(A,B,C,A2,B2,C2)
+        =>:
+            $triangle_congruence(C,B,A,C2,B2,A2)
+            $triangle_congruence(B,A,C,B2,A2,C2)
+
+
+# Parallel
+## P1
+### Playfair's axiom: Let a be any line and A a point not on it. Then there is at most one line in the plane,
+### determined by a and A, that passes through A and does not intersect a.
+
+prop line_coplanar(l1 line,l2 line):
+    exist pl plane st {l1 $in pl,l2 $in pl}
+
+prop intersect_of_two_lines(l1 line,l2 line):
+    $line_coplanar(l1,l2)
+    exist A point st {A $in l1,A $in l2}
+    l1!=l2
+
+let fn intersection_point_of_two_lines(l1,l2 line) point:
+    $intersect_of_two_lines(l1,l2)
+
+know:   
+    forall l1,l2 line:
+        $intersect_of_two_lines(l1,l2)
+        =>:
+            intersection_point_of_two_lines(l1,l2) $in l1
+            intersection_point_of_two_lines (l1,l2) $in l2
+
+prop parallel_line(l1 line,l2 line):
+    
+know:
+    forall l1,l2 line:
+        l1!=l2
+        $parallel_line(l1,l2)
+        =>:
+            $line_coplanar(l1,l2)
+            not $intersect_of_two_lines(l1,l2)
+    forall l line:
+        $parallel_line(l,l)
+            
+
+
+know:
+    forall A point,l line:
+        not A $in l
+        =>:
+            exist l1 line st {A $in l1,$line_on_plane(l1,plane_of_point_and_line(A,l)),$parallel_line(l1,l)}
+
+    forall A point,l line,l1 line,l2 line:
+        not A $in l
+        A $in l1   
+        A $in l2
+        $line_on_plane(l1,plane_of_point_and_line(A,l))
+        $line_on_plane(l2,plane_of_point_and_line(A,l))
+        $parallel_line(l1,l)
+        $parallel_line(l2,l)   
+        =>:
+            l1 = l2
+
+
+# Continuity
+## Ct1
+### Axiom of Archimedes:
+### If AB and CD are any segments then there exists a number n such that n segments CD constructed contiguously from A,
+### along the ray from A through B, will pass beyond the point B
+
+
+let fn length_of_finite_line(A point,B point) R_pos:
+    dom:
+        A!=B
+    
+
+know :
+    forall A,B,C,D point:
+        A!=B
+        C!=D
+        $finite_line_congruence(A,B,C,D)
+        =>:
+            length_of_finite_line(A,B)=length_of_finite_line(C,D)
+
+
+prop archimedes_number(A point,B point,C point,D point,n N_pos):
+    A!=B
+    C!=D
+    n * length_of_finite_line(C,D) > length_of_finite_line(A,B)
+
+know:
+    forall A,B,C,D point:
+        A!=B
+        C!=D
+        =>:
+            exist n N_pos st $archimedes_number(A,B,C,D,n)

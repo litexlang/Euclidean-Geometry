@@ -1,8 +1,24 @@
+"""
+=============================================================================
+  Part 3 · Geometric Rules and Auxiliary Definitions
+=============================================================================
+
+  This file contains geometric rules and helper definitions for proof
+  translation, written in the Litex language. It builds on the axioms
+  (new_version.lit) and concepts (defs.lit) and provides the inference
+  rules used in Euclidean geometry reasoning.
+
+  Reference (AlphaGeometry):
+  https://github.com/google-deepmind/alphageometry/blob/main/rules.txt
+
+=============================================================================
+"""
+
 # Geometric rules from rules.txt
 # Auxiliary definitions for rules
 
 ## Helper properties for rules translation
-run_file "new_version.lit"    
+run_file "../foundations_of_geometry/new_version.lit"    
 
 # For cyclic A B C D: points A, B, C, D are concyclic (lie on the same circle)
 prop four_points_cyclic(A point,B point,C point,D point,c circle):
