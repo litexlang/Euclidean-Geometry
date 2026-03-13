@@ -1,8 +1,12 @@
 """
-Part 1: Formalization of Hilbert's Axioms of Euclidean Geometry
-Reference: https://en.wikipedia.org/wiki/Hilbert%27s_axioms
+  This file formalizes Hilbert's axioms in the Litex language, with a
+  one-to-one correspondence to the definitions given in the reference.
+  Hilbert's axioms form a stricter axiomatic system built on Euclidean
+  geometry, making the foundations of geometry more rigorous and explicit.
 
-Below is the Hilbert axioms written in Litex code, along with a one-to-one correspondence with the definitions from the reference.
+  Reference:
+  https://en.wikipedia.org/wiki/Hilbert%27s_axioms
+  https://math.berkeley.edu/~wodzicki/160/Hilbert.pdf
 """
 
 # Hilbert's axiom system is constructed with six primitive notions: three primitive terms:
@@ -48,14 +52,13 @@ know:
 ### There exists at least two distinct points on a line.
 know:    
     forall l line:
-        exist A, B point st {A!=B, A $in l, B $in l}
+        exist A,B point st {A!=B, A $in l, B $in l}
 
 ## I3
 ### There exist at least three points that do not lie on the same line.
 prop three_points_collinear(A,B,C point):
     B != C
     A $in line_of(B,C)
-
 prop not_three_points_collinear(A,B,C point):
     A!=B
     A!=C
@@ -63,7 +66,6 @@ prop not_three_points_collinear(A,B,C point):
     not A $in line_of(B,C)
     not B $in line_of(A,C)
     not C $in line_of(A,B)  
-
 know:
     exist A,B,C point st {$not_three_points_collinear(A,B,C)}
 
@@ -622,8 +624,3 @@ know:
         C!=D
         =>:
             exist n N_pos st $archimedes_number(A,B,C,D,n)
-
-"""
-End of Part 1
-"""
-

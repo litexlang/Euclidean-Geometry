@@ -2,7 +2,13 @@
 
 Introduction to Euclidean Geometry Concepts
 
-This document introduces the basic concepts of Euclidean geometry defined in the `new_version.lit` file and their interrelationships.
+This repository formalizes Euclidean geometry in the **Litex** language. It is organized into two parts:
+
+- **`foundations_of_geometry/`** — Formalization of **Hilbert's axioms** (the *Foundations of Geometry*). This is the strictest and most rigorous axiomatic system for Euclidean geometry; the files here give a one-to-one encoding of Hilbert’s axiom system in Litex.
+
+- **`alphageometry_formalization/`** — Formalization of the geometric content from **AlphaGeometry** (DeepMind’s well-known AI-for-geometry project). AlphaGeometry’s defs and rules include a large body of geometric theorems and inference rules; Litex expresses these definitions and rules in a clear, compact way. The original AlphaGeometry files do not give formal definitions for the concepts they introduce; here we supply definitions based on the axioms and basic objects (points, lines, planes), making the formalization more complete.
+
+Litex makes it straightforward to write and maintain both the foundational axioms and the richer theorem library, providing math enthusiasts with a rigorous and comprehensive foundation for understanding and exploring Euclidean geometry.
 
 ## Table of Contents
 
@@ -49,6 +55,10 @@ This document introduces the basic concepts of Euclidean geometry defined in the
 **Key Functions**:
 - `plane_of(A, B, C)`: The plane through three non-collinear points A, B, C
 - `plane_of_point_and_line(A, l)`: The plane through point A and line l (requires A not on l)
+
+**Set-theoretic intuition**: For concreteness, you can identify the set of points with **cart(R, R, R)** (i.e. **R³**, three-dimensional space). Then:
+- A **line** is a set of points, so each line is an element of **power_set(point)** = power_set(cart(R,R,R)); the collection of all lines lives in **power_set(power_set(cart(R,R,R)))**. In R³, each line is the range of a parametrization: **{ p + t·v : t ∈ R }** for some point **p** ∈ cart(R,R,R) and direction vector **v** ∈ cart(R,R,R)\{0}; so the set of all lines is { z ⊆ cart(R,R,R) : ∃ p,v ∈ cart(R,R,R), v≠0, z = { p + t·v : t ∈ R } }.
+- A **plane** is also a set of points, so each plane is in **power_set(point)** = power_set(cart(R,R,R)); the collection of all planes is likewise a subset of **power_set(power_set(cart(R,R,R)))**. In R³, each plane is the solution set of one linear equation: **{ x ∈ cart(R,R,R) : a·x₁ + b·x₂ + c·x₃ + d = 0 }** with (a,b,c) ≠ (0,0,0); so the set of all planes can be described as { z ⊆ cart(R,R,R) : ∃ a,b,c,d ∈ R, (a,b,c)≠(0,0,0), z = { x ∈ cart(R,R,R) : a·x₁ + b·x₂ + c·x₃ + d = 0 } }. 
 
 ### 4. Ray
 
