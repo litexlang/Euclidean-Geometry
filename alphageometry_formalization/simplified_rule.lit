@@ -15,6 +15,7 @@ prop contri2(a, b, c, p, q, r)
 prop simtri(a, b, c, p, q, r)
 prop sameside(a, o, c, b, o, d)
 
+run_file "simplified_def.lit"
 
 # Rule 1
 ### rules.txt 单行：perp A B C D, perp C D E F, ncoll A B E => para A B E F

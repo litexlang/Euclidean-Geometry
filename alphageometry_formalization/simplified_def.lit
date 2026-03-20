@@ -1,10 +1,12 @@
 """
 basic properties referenced from defs.txt without definitions only for problem solving
 """
+have point nonempty_set
 prop ncoll(a, b, c)
 prop eqangle(a, b, c, d, e, f, g, h)
 prop cong(a, b, c, d)
 prop para(a, b, c, d)
+prop npara(a, b, c, d)
 prop diff(a, b)
 prop perp(a, b, c, d)
 prop coll(a, b, c)
@@ -59,7 +61,7 @@ a b c = ncoll a b c
 x : cong x a x b, cong x b x c
 bline a b, bline a c
 """
-prop circle(x, a, b, c point)：
+prop circle(x, a, b, c point):
     $ncoll(a, b, c)
     $cong(x, a, x, b)
     $cong(x, b, x, c)
