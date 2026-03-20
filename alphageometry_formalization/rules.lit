@@ -159,7 +159,7 @@ know:
 
 # Rule 3
 ### rules.txt: eqangle A B P Q C D P Q => para A B C D
-### 自然语言：若 \(\angle(AB,PQ)=\angle(CD,PQ)\)（两条直线 AB 与 CD 相对同一参考直线 PQ 的夹角相等），则 AB ∥ CD。
+### 自然语言:若 \(\angle(AB,PQ)=\angle(CD,PQ)\)（两条直线 AB 与 CD 相对同一参考直线 PQ 的夹角相等），则 AB ∥ CD。
 know:
     forall l1,l2,l3 line:
         l1!=l2
@@ -171,7 +171,7 @@ know:
 
 # Rule 4
 ### rules.txt: cyclic A B P Q => eqangle P A P B Q A Q B
-### 自然语言：同圆定理（同弦所对圆周角相等）：若 A,B,P,Q 共圆，则 \(\angle APB = \angle AQB\)（同为弦 AB 所对的圆周角）。
+### 自然语言:同圆定理（同弦所对圆周角相等）:若 A,B,P,Q 共圆，则 \(\angle APB = \angle AQB\)（同为弦 AB 所对的圆周角）。
 know:
     forall A,B,P,Q point:
         $cyclic_points(A,B,P,Q)
@@ -180,7 +180,7 @@ know:
 
 # Rule 5
 ### rules.txt: eqangle6 P A P B Q A Q B, ncoll P Q A B => cyclic A B P Q
-### 自然语言：圆周角定理的逆：若 \(\angle APB=\angle AQB\)，并且不出现 P,Q,A,B 全共线的退化情况，则 A,B,P,Q 共圆。
+### 自然语言:圆周角定理的逆:若 \(\angle APB=\angle AQB\)，并且不出现 P,Q,A,B 全共线的退化情况，则 A,B,P,Q 共圆。
 know:
     forall P,A,B,Q point:
         $angle_congruence(P,A,B,Q,A,B)
@@ -190,7 +190,7 @@ know:
 
 # Rule 6
 ### rules.txt: cyclic A B C P Q R, eqangle C A C B R P R Q => cong A B P Q
-### 自然语言：同圆中"等角对等弦"：在同一圆上，若圆周角 \(\angle ACB\) 与 \(\angle PRQ\) 相等，则它们所对的弦 AB 与 PQ 相等。
+### 自然语言:同圆中"等角对等弦":在同一圆上，若圆周角 \(\angle ACB\) 与 \(\angle PRQ\) 相等，则它们所对的弦 AB 与 PQ 相等。
 know:
     forall A,B,C,P,Q,R point:
         $cyclic6_points(A,B,C,P,Q,R)
@@ -200,7 +200,7 @@ know:
 
 # Rule 7
 ### rules.txt: midp E A B, midp F A C => para E F B C
-### 自然语言：三角形中位线定理：若 E、F 分别是 AB、AC 的中点，则 EF ∥ BC。
+### 自然语言:三角形中位线定理:若 E、F 分别是 AB、AC 的中点，则 EF ∥ BC。
 know:
     forall E,A,B,F,C point:
         A!=B
@@ -214,7 +214,7 @@ know:
 
 # Rule 8
 ### rules.txt: para A B C D, coll O A C, coll O B D => eqratio3 A B C D O O
-### 自然语言：平行线截比/相似带来的比例结论：AB ∥ CD 且 O 分别在 AC、BD 上时，会导出关于 A,B,C,D 与交点 O 的一个比例关系。
+### 自然语言:平行线截比/相似带来的比例结论:AB ∥ CD 且 O 分别在 AC、BD 上时，会导出关于 A,B,C,D 与交点 O 的一个比例关系。
 know:
     forall A,B,C,D,O point:
         A!=B
@@ -229,7 +229,7 @@ know:
 
 # Rule 9
 ### rules.txt: perp A B C D, perp E F G H, npara A B E F => eqangle A B E F C D G H
-### 自然语言：若 AB ⟂ CD 且 EF ⟂ GH，则 \(\angle(AB,EF)=\angle(CD,GH)\)；再加 “AB 与 EF 不平行” 用来排除夹角为 0/180° 的退化情况。
+### 自然语言:若 AB ⟂ CD 且 EF ⟂ GH，则 \(\angle(AB,EF)=\angle(CD,GH)\)；再加 “AB 与 EF 不平行” 用来排除夹角为 0/180° 的退化情况。
 know:
     forall A,B,C,D,E,F,G,H point:
         A!=B
@@ -244,8 +244,8 @@ know:
 
 # Rule 10
 ### rules.txt: eqangle a b c d m n p q, eqangle c d e f p q r u => eqangle a b e f m n r u
-### 自然语言：第一组：∠(ab, cd) = ∠(mn, pq)第二组：∠(cd, ef) = ∠(pq, ru)
-### 结论：∠(ab, ef) = ∠(mn, ru)
+### 自然语言:第一组:∠(ab, cd) = ∠(mn, pq)第二组:∠(cd, ef) = ∠(pq, ru)
+### 结论:∠(ab, ef) = ∠(mn, ru)
 know:
     forall A,B,C,D,M,N,P,Q,E,F,R,U point:
         A!=B
@@ -261,7 +261,7 @@ know:
 
 # Rule 11
 ### rules.txt: eqratio a b c d m n p q, eqratio c d e f p q r u => eqratio a b e f m n r u
-### 自然语言：比例关系的传递性：若 ab/cd = mn/pq 且 cd/ef = pq/ru，则 ab/ef = mn/ru。
+### 自然语言:比例关系的传递性:若 ab/cd = mn/pq 且 cd/ef = pq/ru，则 ab/ef = mn/ru。
 know:
     forall A,B,C,D,M,N,P,Q,E,F,R,U point:
         $eqratio_points(A,B,C,D,M,N,P,Q)
@@ -271,7 +271,7 @@ know:
 
 # Rule 12
 ### rules.txt: eqratio6 d b d c a b a c, coll d b c, ncoll a b c => eqangle6 a b a d a d a c
-### 自然语言：若 DB/DC = AB/AC，且 D, B, C 共线，A, B, C 不共线，则角 BAD 等于角 CAD（即 AD 是角 BAC 的角平分线）。
+### 自然语言:若 DB/DC = AB/AC，且 D, B, C 共线，A, B, C 不共线，则角 BAD 等于角 CAD（即 AD 是角 BAC 的角平分线）。
 know:
     forall D,B,C,A point:
         $eqratio6_points(D,B,C,A)
@@ -283,7 +283,7 @@ know:
 
 # Rule 13
 ### rules.txt: eqangle6 a b a d a d a c, coll d b c, ncoll a b c => eqratio6 d b d c a b a c
-### 自然语言：Rule 12 的逆：若角 BAD 等于角 CAD（即 AD 是角 BAC 的角平分线），且 D, B, C 共线，A, B, C 不共线，则 DB/DC = AB/AC（角平分线定理）。
+### 自然语言:Rule 12 的逆:若角 BAD 等于角 CAD（即 AD 是角 BAC 的角平分线），且 D, B, C 共线，A, B, C 不共线，则 DB/DC = AB/AC（角平分线定理）。
 know:
     forall A,B,D,C point:
         $angle_congruence(A,B,D,A,D,C)
@@ -295,7 +295,7 @@ know:
 
 # Rule 14
 ### rules.txt: cong O A O B, ncoll O A B => eqangle O A A B A B O B
-### 自然语言：等腰三角形底角相等：若 OA = OB（等腰三角形），且 O, A, B 不共线，则角 OAB 等于角 OBA。
+### 自然语言:等腰三角形底角相等:若 OA = OB（等腰三角形），且 O, A, B 不共线，则角 OAB 等于角 OBA。
 know:
     forall O,A,B point:
         $finite_line_congruence(O,A,O,B)
@@ -305,7 +305,7 @@ know:
 
 # Rule 15
 ### rules.txt: eqangle6 A O A B B A B O, ncoll O A B => cong O A O B
-### 自然语言：Rule 14 的逆：若角 AOB 等于角 BAO（即角 OAB = 角 OBA），且 O, A, B 不共线，则 OA = OB（等腰三角形判定）。
+### 自然语言:Rule 14 的逆:若角 AOB 等于角 BAO（即角 OAB = 角 OBA），且 O, A, B 不共线，则 OA = OB（等腰三角形判定）。
 know:
     forall A,O,B point:
         $angle_congruence(A,O,B,B,A,O)
@@ -315,7 +315,7 @@ know:
 
 # Rule 16
 ### rules.txt: circle O A B C, perp O A A X => eqangle A X A B C A C B
-### 自然语言：圆的切线性质：若 O 为圆心，A, B, C 在圆上，且直线 OA 垂直于直线 AX（即 AX 是切线），则角 XAB 等于角 ACB（切线与弦的夹角等于同弧所对的圆周角）。
+### 自然语言:圆的切线性质:若 O 为圆心，A, B, C 在圆上，且直线 OA 垂直于直线 AX（即 AX 是切线），则角 XAB 等于角 ACB（切线与弦的夹角等于同弧所对的圆周角）。
 know:
     forall O,A,B,C,X point:
         O!=A
@@ -328,7 +328,7 @@ know:
 
 # Rule 17
 ### rules.txt: circle O A B C, eqangle A X A B C A C B => perp O A A X
-### 自然语言：Rule 16 的逆：若 O 为圆心，A, B, C 在圆上，且角 XAB 等于角 ACB，则直线 OA 垂直于直线 AX（切线判定）。
+### 自然语言:Rule 16 的逆:若 O 为圆心，A, B, C 在圆上，且角 XAB 等于角 ACB，则直线 OA 垂直于直线 AX（切线判定）。
 know:
     forall O,A,B,C,X point:
         O!=A
@@ -342,7 +342,7 @@ know:
 
 # Rule 18
 ### rules.txt: circle O A B C, midp M B C => eqangle A B A C O B O M
-### 自然语言：圆的性质：若 O 为圆心，A, B, C 在圆上，且 M 是 BC 的中点，则角 BAC 等于角 BOM（圆心角与圆周角的关系）。
+### 自然语言:圆的性质:若 O 为圆心，A, B, C 在圆上，且 M 是 BC 的中点，则角 BAC 等于角 BOM（圆心角与圆周角的关系）。
 know:
     forall O,A,B,C,M point:
         O=center_of_circle(circle_of_triangle(A,B,C))
@@ -352,7 +352,7 @@ know:
 
 # Rule 19
 ### rules.txt: circle O A B C, coll M B C, eqangle A B A C O B O M => midp M B C
-### 自然语言：Rule 18 的逆：若 O 为圆心，A, B, C 在圆上，M 在直线 BC 上，且角 BAC 等于角 BOM，则 M 是 BC 的中点。
+### 自然语言:Rule 18 的逆:若 O 为圆心，A, B, C 在圆上，M 在直线 BC 上，且角 BAC 等于角 BOM，则 M 是 BC 的中点。
 know:
     forall O,A,B,C,M point:
         O=center_of_circle(circle_of_triangle(A,B,C))
@@ -363,7 +363,7 @@ know:
 
 # Rule 20
 ### rules.txt: perp A B B C, midp M A C => cong A M B M
-### 自然语言：直角三角形斜边中点性质：若 AB 垂直于 BC（即角 ABC 是直角），且 M 是 AC 的中点，则 AM = BM（直角三角形斜边上的中线等于斜边的一半，因此 M 到 A 和 B 的距离相等）。
+### 自然语言:直角三角形斜边中点性质:若 AB 垂直于 BC（即角 ABC 是直角），且 M 是 AC 的中点，则 AM = BM（直角三角形斜边上的中线等于斜边的一半，因此 M 到 A 和 B 的距离相等）。
 know:
     forall A,B,C,M point:
         A!=B
@@ -376,7 +376,7 @@ know:
 
 # Rule 21
 ### rules.txt: circle O A B C, coll O A C => perp A B B C
-### 自然语言：圆的性质：若 O 为圆心，A, B, C 在圆上，且 O, A, C 共线（即 AC 是直径），则 AB 垂直于 BC（直径所对的圆周角是直角）。
+### 自然语言:圆的性质:若 O 为圆心，A, B, C 在圆上，且 O, A, C 共线（即 AC 是直径），则 AB 垂直于 BC（直径所对的圆周角是直角）。
 know:
     forall O,A,B,C point:
         $not_three_points_collinear(A,B,C)
@@ -387,7 +387,7 @@ know:
 
 # Rule 22
 ### rules.txt: cyclic A B C D, para A B C D => eqangle A D C D C D C B
-### 自然语言：圆内接梯形的性质：若 A, B, C, D 共圆，且 AB ∥ CD，则角 ADC 等于角 BCD（同底角相等）。
+### 自然语言:圆内接梯形的性质:若 A, B, C, D 共圆，且 AB ∥ CD，则角 ADC 等于角 BCD（同底角相等）。
 know:
     forall A,B,C,D point:
         $cyclic_points(A,B,C,D)
@@ -397,7 +397,7 @@ know:
 
 # Rule 23
 ### rules.txt: midp M A B, perp O M A B => cong O A O B
-### 自然语言：垂直平分线的性质：若 M 是 AB 的中点，且直线 OM 垂直于 AB，则 OA = OB（O 在 AB 的垂直平分线上，因此到 A 和 B 的距离相等）。
+### 自然语言:垂直平分线的性质:若 M 是 AB 的中点，且直线 OM 垂直于 AB，则 OA = OB（O 在 AB 的垂直平分线上，因此到 A 和 B 的距离相等）。
 know:
     forall M,A,B,O point:
         A!=B
@@ -411,7 +411,7 @@ know:
 
 # Rule 24
 ### rules.txt: cong A P B P, cong A Q B Q => perp A B P Q
-### 自然语言：到两点距离相等的点的轨迹：若 AP = BP 且 AQ = BQ（P 和 Q 都在 AB 的垂直平分线上），则 AB 垂直于 PQ。
+### 自然语言:到两点距离相等的点的轨迹:若 AP = BP 且 AQ = BQ（P 和 Q 都在 AB 的垂直平分线上），则 AB 垂直于 PQ。
 know:
     forall A,P,B,Q point:
         A!=B
@@ -423,7 +423,7 @@ know:
 
 # Rule 25
 ### rules.txt: cong A P B P, cong A Q B Q, cyclic A B P Q => perp P A A Q
-### 自然语言：圆的性质：若 AP = BP，AQ = BQ，且 A, B, P, Q 共圆，则 PA 垂直于 AQ（A 是圆心，PA 和 AQ 是半径，因此垂直）。
+### 自然语言:圆的性质:若 AP = BP，AQ = BQ，且 A, B, P, Q 共圆，则 PA 垂直于 AQ（A 是圆心，PA 和 AQ 是半径，因此垂直）。
 know:
     forall A,P,B,Q point:
         P!=A
@@ -436,7 +436,7 @@ know:
 
 # Rule 26
 ### rules.txt: midp M A B, midp M C D => para A C B D
-### 自然语言：中点连线性质：若 M 既是 AB 的中点，也是 CD 的中点，则 AC ∥ BD（对角线互相平分的四边形是平行四边形）。
+### 自然语言:中点连线性质:若 M 既是 AB 的中点，也是 CD 的中点，则 AC ∥ BD（对角线互相平分的四边形是平行四边形）。
 know:
     forall M,A,B,C,D point:
         A!=C
@@ -448,7 +448,7 @@ know:
 
 # Rule 27
 ### rules.txt: midp M A B, para A C B D, para A D B C => midp M C D
-### 自然语言：Rule 26 的逆：若 M 是 AB 的中点，且 AC ∥ BD，AD ∥ BC（即 ABCD 是平行四边形），则 M 也是 CD 的中点。
+### 自然语言:Rule 26 的逆:若 M 是 AB 的中点，且 AC ∥ BD，AD ∥ BC（即 ABCD 是平行四边形），则 M 也是 CD 的中点。
 know:
     forall M,A,B,C,D point:
         A!=C
@@ -466,7 +466,7 @@ know:
   
 # Rule 28
 ### rules.txt: eqratio O A A C O B B D, coll O A C, coll O B D, ncoll A B C, sameside A O C B O D => para A B C D
-### 自然语言：比例判定平行：若 OA/AC = OB/BD，O 在 AC 上，O 在 BD 上，A, B, C 不共线，且 A, C 在 O 的同侧，B, D 在 O 的同侧，则 AB ∥ CD。
+### 自然语言:比例判定平行:若 OA/AC = OB/BD，O 在 AC 上，O 在 BD 上，A, B, C 不共线，且 A, C 在 O 的同侧，B, D 在 O 的同侧，则 AB ∥ CD。
 know:
     forall O,A,C,B,D point:
         $eqratio_points(O,A,A,C,O,B,B,D)
@@ -481,7 +481,7 @@ know:
 
 # Rule 29
 ### rules.txt: para A B A C => coll A B C
-### 自然语言：平行线的退化情况：若 AB ∥ AC（两条直线都经过点 A），则 A, B, C 共线（同一直线）。
+### 自然语言:平行线的退化情况:若 AB ∥ AC（两条直线都经过点 A），则 A, B, C 共线（同一直线）。
 know:
     forall A,B,C point:
         A!=B
@@ -492,7 +492,7 @@ know:
 
 # Rule 30
 ### rules.txt: midp M A B, midp N C D => eqratio M A A B N C C D
-### 自然语言：中点比例关系：若 M 是 AB 的中点，N 是 CD 的中点，则 MA/AB = NC/CD（都等于 1/2）。
+### 自然语言:中点比例关系:若 M 是 AB 的中点，N 是 CD 的中点，则 MA/AB = NC/CD（都等于 1/2）。
 know:
     forall M,A,B,N,C,D point:
         $is_mid_point(M,A,B)
@@ -511,7 +511,7 @@ know:
 
 # Rule 31
 ### rules.txt: eqangle A B P Q C D U V, perp P Q U V => perp A B C D
-### 自然语言：若直线 AB 与 PQ 的夹角等于直线 CD 与 UV 的夹角，且 PQ 垂直于 UV，则 AB 垂直于 CD。
+### 自然语言:若直线 AB 与 PQ 的夹角等于直线 CD 与 UV 的夹角，且 PQ 垂直于 UV，则 AB 垂直于 CD。
 know:
     forall A,B,P,Q,C,D,U,V point:
         A!=B
@@ -525,7 +525,7 @@ know:
 
 # Rule 32
 ### rules.txt: eqratio A B P Q C D U V, cong P Q U V => cong A B C D
-### 自然语言：若 AB/PQ = CD/UV，且 PQ = UV，则 AB = CD。
+### 自然语言:若 AB/PQ = CD/UV，且 PQ = UV，则 AB = CD。
 know:
     forall A,B,P,Q,C,D,U,V point:
         $eqratio_points(A,B,P,Q,C,D,U,V)
@@ -535,7 +535,7 @@ know:
 
 # Rule 33
 ### rules.txt: cong A B P Q, cong B C Q R, cong C A R P, ncoll A B C => contri* A B C P Q R
-### 自然语言：全等三角形判定（SSS）：若 AB = PQ，BC = QR，CA = RP，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
+### 自然语言:全等三角形判定（SSS）:若 AB = PQ，BC = QR，CA = RP，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
 know:
     forall A,B,C,P,Q,R point:
         $finite_line_congruence(A,B,P,Q)
@@ -548,7 +548,7 @@ know:
 
 # Rule 34
 ### rules.txt: cong A B P Q, cong B C Q R, eqangle6 B A B C Q P Q R, ncoll A B C => contri* A B C P Q R
-### 自然语言：全等三角形判定（SAS）：若 AB = PQ，BC = QR，角 ABC = 角 PQR，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
+### 自然语言:全等三角形判定（SAS）:若 AB = PQ，BC = QR，角 ABC = 角 PQR，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
 know:
     forall A,B,C,P,Q,R point:
         $finite_line_congruence(A,B,P,Q)
@@ -561,7 +561,7 @@ know:
 
 # Rule 35
 ### rules.txt: eqangle6 B A B C Q P Q R, eqangle6 C A C B R P R Q, ncoll A B C => simtri A B C P Q R
-### 自然语言：相似三角形判定（AA）：若角 ABC = 角 PQR，角 ACB = 角 PRQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 相似。
+### 自然语言:相似三角形判定（AA）:若角 ABC = 角 PQR，角 ACB = 角 PRQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 相似。
 know:
     forall A,B,C,P,Q,R point:
         $angle_congruence(B,A,C,Q,P,R)
@@ -573,12 +573,12 @@ know:
 
 # Rule 36
 ### rules.txt: eqangle6 B A B C Q R Q P, eqangle6 C A C B R Q R P, ncoll A B C => simtri2 A B C P Q R
-### 自然语言：相似三角形判定（AA，交替方向）：若角 ABC = 角 QRP，角 ACB = 角 RQP，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 相似（交替方向）。
+### 自然语言:相似三角形判定（AA，交替方向）:若角 ABC = 角 QRP，角 ACB = 角 RQP，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 相似（交替方向）。
 ###不必要
 
 # Rule 37
 ### rules.txt: eqangle6 B A B C Q P Q R, eqangle6 C A C B R P R Q, ncoll A B C, cong A B P Q => contri A B C P Q R
-### 自然语言：全等三角形判定（ASA）：若角 ABC = 角 PQR，角 ACB = 角 PRQ，AB = PQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
+### 自然语言:全等三角形判定（ASA）:若角 ABC = 角 PQR，角 ACB = 角 PRQ，AB = PQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
 know:
     forall A,B,C,P,Q,R point:
         $angle_congruence(B,A,C,Q,P,R)
@@ -591,7 +591,7 @@ know:
 
 # Rule 38
 ### rules.txt: eqangle6 B A B C Q R Q P, eqangle6 C A C B R Q R P, ncoll A B C, cong A B P Q => contri2 A B C P Q R
-### 自然语言：全等三角形判定（AAS，交替方向）：若角 ABC = 角 QRP，角 ACB = 角 RQP，AB = PQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
+### 自然语言:全等三角形判定（AAS，交替方向）:若角 ABC = 角 QRP，角 ACB = 角 RQP，AB = PQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
 know:
     forall A,B,C,P,Q,R point:
         $angle_congruence(B,A,C,Q,R,P)
@@ -604,7 +604,7 @@ know:
 
 # Rule 39
 ### rules.txt: eqratio6 B A B C Q P Q R, eqratio6 C A C B R P R Q, ncoll A B C => simtri* A B C P Q R
-### 自然语言：相似三角形判定（SSS）：若 BA/BC = QP/QR，CA/CB = RP/RQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 相似。
+### 自然语言:相似三角形判定（SSS）:若 BA/BC = QP/QR，CA/CB = RP/RQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 相似。
 know:
     forall A,B,C,P,Q,R point:
         $eqratio_points(B,A,B,C,Q,P,Q,R)
@@ -616,7 +616,7 @@ know:
 
 # Rule 40
 ### rules.txt: eqratio6 B A B C Q P Q R, eqangle6 B A B C Q P Q R, ncoll A B C => simtri* A B C P Q R
-### 自然语言：相似三角形判定（SAS）：若 BA/BC = QP/QR，角 ABC = 角 PQR，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 相似。
+### 自然语言:相似三角形判定（SAS）:若 BA/BC = QP/QR，角 ABC = 角 PQR，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 相似。
 know:
     forall A,B,C,P,Q,R point:
         $eqratio_points(B,A,B,C,Q,P,Q,R)
@@ -628,7 +628,7 @@ know:
 
 # Rule 41
 ### rules.txt: eqratio6 B A B C Q P Q R, eqratio6 C A C B R P R Q, ncoll A B C, cong A B P Q => contri* A B C P Q R
-### 自然语言：全等三角形判定（SSS，通过比例）：若 BA/BC = QP/QR，CA/CB = RP/RQ，AB = PQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
+### 自然语言:全等三角形判定（SSS，通过比例）:若 BA/BC = QP/QR，CA/CB = RP/RQ，AB = PQ，且 A, B, C 不共线，则三角形 ABC 与三角形 PQR 全等。
 know:
     forall A,B,C,P,Q,R point:
         $eqratio_points(B,A,B,C,Q,P,Q,R)
@@ -641,8 +641,8 @@ know:
 
 # Rule 42
 ### rules.txt: para a b c d, coll m a d, coll n b c, eqratio6 m a m d n b n c, sameside m a d n b c => para m n a b
-### 自然语言：平行线截比定理：若 ab ∥ cd，m 在直线 ad 上，n 在直线 bc 上，ma/md = nb/nc，且 m, a, d 与 n, b, c 在各自直线的同侧，则 mn ∥ ab。
-### 注：sameside m a d 表示 m, a, d 在一条直线的同侧，这里简化为 m 不在 a 和 d 之间。
+### 自然语言:平行线截比定理:若 ab ∥ cd，m 在直线 ad 上，n 在直线 bc 上，ma/md = nb/nc，且 m, a, d 与 n, b, c 在各自直线的同侧，则 mn ∥ ab。
+### 注:sameside m a d 表示 m, a, d 在一条直线的同侧，这里简化为 m 不在 a 和 d 之间。
 know:
     forall A,B,C,D,M,N point:
         A!=B
@@ -659,7 +659,7 @@ know:
 
 # Rule 43
 ### rules.txt: para a b c d, coll m a d, coll n b c, para m n a b => eqratio6 m a m d n b n c
-### 自然语言：Rule 42 的逆：若 ab ∥ cd，m 在直线 ad 上，n 在直线 bc 上，且 mn ∥ ab，则 ma/md = nb/nc。
+### 自然语言:Rule 42 的逆:若 ab ∥ cd，m 在直线 ad 上，n 在直线 bc 上，且 mn ∥ ab，则 ma/md = nb/nc。
 know:
     forall A,B,C,D,M,N point:
         A!=B
