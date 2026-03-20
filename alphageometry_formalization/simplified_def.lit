@@ -2,7 +2,7 @@
 basic properties referenced from defs.txt without definitions only for problem solving
 """
 have point nonempty_set
-prop ncoll(a, b, c)
+prop ncoll(a,b,c)
 prop eqangle(a, b, c, d, e, f, g, h)
 prop cong(a, b, c, d)
 prop para(a, b, c, d)
