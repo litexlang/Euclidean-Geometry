@@ -24,8 +24,6 @@ prop is_angle_bisector(A,B,C,X point):
     X $in angle_of(A,B,C)
     $angle_congruence(A,X,B,A,X,C)
 
-"""
-??? 
 let angle_bisector_point fn(A point, B point, C point: A != B, A != C, B != C, $not_three_points_collinear(A, B, C)) point
     
 know:
@@ -40,7 +38,6 @@ know:
         $is_angle_bisector(A,B,C,X)
         =>:
             ray_of(A,X)=ray_of(A,angle_bisector_point(A,B,C)) 
-"""
 
 #2 angle mirror
 
@@ -53,8 +50,6 @@ prop angle_mirror(A,B,C,X point):
     $not_sameside_points(X,B,line_of(A,C))
     $angle_congruence(A,B,C,A,X,C)
 
-"""
-???
 let angle_mirror_point fn(A point, B point, C point: A != B, A != C, B != C, $not_three_points_collinear(A, B, C)) point
     
 know:
@@ -69,7 +64,6 @@ know:
         $angle_mirror(A,B,C,X)
         =>:
             ray_of(A,X)=ray_of(A,angle_mirror_point(A,B,C))
-"""
 
 #3  circle
 have circle nonempty_set
