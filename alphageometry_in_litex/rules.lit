@@ -1,0 +1,555 @@
+"""
+Rules-only predicates (not in simplified_def.lit). Base props used by rules are declared here.
+Inference rules use AlphaGeometry-style $... names.
+"""
+# Props moved from simplified_def.lit (only those used by rules below)
+have point nonempty_set
+prop ncoll(a, b, c)
+prop eqangle(a, b, c, d, e, f, g, h)
+prop cong(a, b, c, d)
+prop para(a, b, c, d)
+prop diff(a, b)
+prop perp(a, b, c, d)
+prop coll(a, b, c)
+prop midpoint(x, a, b point):
+    $diff(a, b)
+    $coll(x, a, b)
+    $cong(x, a, x, b)
+prop circle(x, a, b, c point):
+    $ncoll(a, b, c)
+    $cong(x, a, x, b)
+    $cong(x, b, x, c)
+prop npara(a, b, c, d)
+prop cyclic(a, b, c, d)
+prop cyclic6(a, b, c, p, q, r)
+prop ncoll2(p, q, a, b)
+prop eqratio(a, b, c, d, m, n, p, q)
+prop eqratio6(d, b, c, a)
+prop eqratio3(a, b, c, d, o)
+prop contri(a, b, c, p, q, r)
+prop contri2(a, b, c, p, q, r)
+prop simtri(a, b, c, p, q, r)
+prop sameside(a, o1, c, b, o2, d)
+
+
+
+# Rule 1
+### rules.txt 单行:perp a b c d, perp c d e f, ncoll a b e => para a b e f
+### If line ab is perpendicular to line cd, and line cd is perpendicular to line ef,
+### and points a, b, e are not collinear, then line ab is parallel to line ef.
+### 如果直线ab垂直于直线cd，直线cd垂直于直线ef，且点a、b、e不共线，则直线ab平行于直线ef。
+know:
+    forall a, b, c, d, e, f point:
+        a != b
+        c != d
+        e != f
+        $perp(a, b, c, d)
+        $perp(c, d, e, f)
+        $ncoll(a, b, e)
+        =>:
+            $para(a, b, e, f)
+
+# Rule 2
+### rules.txt 单行:cong o a o b, cong o b o c, cong o c o d => cyclic a b c d
+### If segments oa, ob, oc, od are all congruent (oa ≅ ob ≅ oc ≅ od),
+### then points a, b, c, d are concyclic (lie on the same circle).
+### 如果线段oa、ob、oc、od都相等（oa ≅ ob ≅ oc ≅ od），则点a、b、c、d共圆。
+know:
+    forall o, a, b, c, d point:
+        o != a
+        o != b
+        o != c
+        o != d
+        $cong(o, a, o, b)
+        $cong(o, b, o, c)
+        $cong(o, c, o, d)
+        =>:
+            $cyclic(a, b, c, d)
+
+# Rule 3
+### rules.txt 单行:eqangle a b p q c d p q => para a b c d
+### 自然语言:若 \(\angle(ab,pq)=\angle(cd,pq)\)（两条直线 ab 与 cd 相对同一参考直线 pq 的夹角相等），则 ab ∥ cd。
+### If ∠(ab,pq)=∠(cd,pq) (equal angles with respect to line pq), then ab ∥ cd.
+know:
+    forall a, b, c, d, p, q point:
+        a != b
+        c != d
+        p != q
+        $eqangle(a, b, p, q, c, d, p, q)
+        =>:
+            $para(a, b, c, d)
+
+# Rule 4
+### rules.txt 单行:cyclic a b p q => eqangle p a p b q a q b
+### 自然语言:同圆定理（同弦所对圆周角相等）:若 a,b,p,q 共圆，则 \(\angle apb = \angle aqb\)（同为弦 ab 所对的圆周角）。
+### Inscribed angle theorem: if a,b,p,q are concyclic, then ∠apb = ∠aqb (angles subtended by chord ab).
+know:
+    forall a, b, p, q point:
+        $cyclic(a, b, p, q)
+        =>:
+            $eqangle(p, a, p, b, q, a, q, b)
+
+# Rule 5
+### rules.txt 单行:eqangle6 p a p b q a q b, ncoll p q a b => cyclic a b p q
+### 自然语言:圆周角定理的逆:若 \(\angle apb=\angle aqb\)，并且不出现 p,q,a,b 全共线的退化情况，则 a,b,p,q 共圆。
+### Converse of inscribed angle theorem: if ∠apb = ∠aqb and p,q,a,b not collinear, then a,b,p,q are concyclic.
+know:
+    forall p, a, b, q point:
+        $eqangle(p, a, p, b, q, a, q, b)
+        $ncoll2(p, q, a, b)
+        =>:
+            $cyclic(a, b, p, q)
+
+# Rule 6
+### rules.txt 单行:cyclic a b c p q r, eqangle c a c b r p r q => cong a b p q
+### 自然语言:同圆中"等角对等弦":在同一圆上，若圆周角 \(\angle acb\) 与 \(\angle prq\) 相等，则它们所对的弦 ab 与 pq 相等。
+### Equal angles subtend equal chords: on the same circle, if ∠acb = ∠prq, then chord ab = chord pq.
+know:
+    forall a, b, c, p, q, r point:
+        $cyclic6(a, b, c, p, q, r)
+        $eqangle(c, a, c, b, r, p, r, q)
+        =>:
+            $cong(a, b, p, q)
+
+# Rule 7
+### rules.txt 单行:midp e a b, midp f a c => para e f b c
+### 自然语言:三角形中位线定理:若 e、f 分别是 ab、ac 的中点，则 ef ∥ bc。
+### Midsegment theorem: if e, f are midpoints of ab, ac, then ef ∥ bc.
+know:
+    forall e, a, b, f, c point:
+        $ncoll(a, b, c)
+        $midpoint(e, a, b)
+        $midpoint(f, a, c)
+        =>:
+            $para(e, f, b, c)
+
+# Rule 8
+### rules.txt 单行:para a b c d, coll o a c, coll o b d => eqratio3 a b c d o o
+### 自然语言:平行线截比/相似带来的比例结论:ab ∥ cd 且 o 分别在 ac、bd 上时，会导出关于 a,b,c,d 与交点 o 的一个比例关系。
+### Parallel intercept theorem: if ab ∥ cd and o lies on ac, bd, then a ratio holds among a,b,c,d and o.
+know:
+    forall a, b, c, d, o point:
+        $para(a, b, c, d)
+        $coll(o, a, c)
+        $coll(o, b, d)
+        =>:
+            $eqratio3(a, b, c, d, o)
+
+# Rule 9
+### rules.txt 单行:perp a b c d, perp e f g h, npara a b e f => eqangle a b e f c d g h
+### 自然语言:若 ab ⟂ cd 且 ef ⟂ gh，则 \(\angle(ab,ef)=\angle(cd,gh)\)；再加 "ab 与 ef 不平行" 用来排除夹角为 0/180° 的退化情况。
+### If ab ⟂ cd and ef ⟂ gh, then ∠(ab,ef)=∠(cd,gh); "ab not parallel to ef" excludes 0/180° degenerate case.
+know:
+    forall a, b, c, d, e, f, g, h point:
+        $perp(a, b, c, d)
+        $perp(e, f, g, h)
+        $npara(a, b, e, f)
+        =>:
+            $eqangle(a, b, e, f, c, d, g, h)
+
+# Rule 10
+### rules.txt 单行:eqangle a b c d m n p q, eqangle c d e f p q r u => eqangle a b e f m n r u
+### 自然语言:第一组:∠(ab, cd) = ∠(mn, pq)第二组:∠(cd, ef) = ∠(pq, ru)
+### 结论:∠(ab, ef) = ∠(mn, ru)
+### Group 1: ∠(ab, cd) = ∠(mn, pq); Group 2: ∠(cd, ef) = ∠(pq, ru) => ∠(ab, ef) = ∠(mn, ru).
+know:
+    forall a, b, c, d, m, n, p, q, e, f, r, u point:
+        $eqangle(a, b, c, d, m, n, p, q)
+        $eqangle(c, d, e, f, p, q, r, u)
+        =>:
+            $eqangle(a, b, e, f, m, n, r, u)
+
+# Rule 11
+### rules.txt 单行:eqratio a b c d m n p q, eqratio c d e f p q r u => eqratio a b e f m n r u
+### 自然语言:比例关系的传递性:若 ab/cd = mn/pq 且 cd/ef = pq/ru，则 ab/ef = mn/ru。
+### Ratio transitivity: if ab/cd = mn/pq and cd/ef = pq/ru, then ab/ef = mn/ru.
+know:
+    forall a, b, c, d, m, n, p, q, e, f, r, u point:
+        $eqratio(a, b, c, d, m, n, p, q)
+        $eqratio(c, d, e, f, p, q, r, u)
+        =>:
+            $eqratio(a, b, e, f, m, n, r, u)
+
+# Rule 12
+### rules.txt 单行:eqratio6 d b d c a b a c, coll d b c, ncoll a b c => eqangle6 a b a d a d a c
+### 自然语言:若 db/dc = ab/ac，且 d, b, c 共线，a, b, c 不共线，则角 bad 等于角 cad（即 ad 是角 bac 的角平分线）。
+### If db/dc = ab/ac, d,b,c collinear, a,b,c non-collinear, then ∠bad = ∠cad (ad is angle bisector of ∠bac).
+know:
+    forall d, b, c, a point:
+        $eqratio6(d, b, c, a)
+        $coll(d, b, c)
+        $ncoll(a, b, c)
+        =>:
+            $eqangle(a, b, a, d, a, d, a, c)
+
+# Rule 13
+### rules.txt 单行:eqangle6 a b a d a d a c, coll d b c, ncoll a b c => eqratio6 d b d c a b a c
+### 自然语言:Rule 12 的逆:若角 bad 等于角 cad（即 ad 是角 bac 的角平分线），且 d, b, c 共线，a, b, c 不共线，则 db/dc = ab/ac（角平分线定理）。
+### Converse of Rule 12 / Angle bisector theorem: if ∠bad = ∠cad (ad bisects ∠bac), then db/dc = ab/ac.
+know:
+    forall a, b, d, c point:
+        $eqangle(a, b, a, d, a, d, a, c)
+        $coll(d, b, c)
+        $ncoll(a, b, c)
+        =>:
+            $eqratio6(d, b, c, a)
+
+# Rule 14
+### rules.txt 单行:cong o a o b, ncoll o a b => eqangle o a a b a b o b
+### 自然语言:等腰三角形底角相等:若 oa = ob（等腰三角形），且 o, a, b 不共线，则角 oab 等于角 oba。
+### Isosceles triangle base angles: if oa = ob and o,a,b non-collinear, then ∠oab = ∠oba.
+know:
+    forall o, a, b point:
+        $cong(o, a, o, b)
+        $ncoll(o, a, b)
+        =>:
+            $eqangle(o, a, a, b, a, b, o, b)
+
+# Rule 15
+### rules.txt 单行:eqangle6 a o a b b a b o, ncoll o a b => cong o a o b
+### 自然语言:Rule 14 的逆:若角 aob 等于角 bao（即角 oab = 角 oba），且 o, a, b 不共线，则 oa = ob（等腰三角形判定）。
+### Converse of Rule 14: if ∠oab = ∠oba and o,a,b non-collinear, then oa = ob (isosceles triangle).
+know:
+    forall a, o, b point:
+        $eqangle(a, o, a, b, b, a, b, o)
+        $ncoll(o, a, b)
+        =>:
+            $cong(o, a, o, b)
+
+# Rule 16
+### rules.txt 单行:circle o a b c, perp o a a x => eqangle a x a b c a c b
+### 自然语言:圆的切线性质:若 o 为圆心，a, b, c 在圆上，且直线 oa 垂直于直线 ax（即 ax 是切线），则角 xab 等于角 acb（切线与弦的夹角等于同弧所对的圆周角）。
+### Tangent-chord angle: if o is center, a,b,c on circle, oa ⟂ ax (ax tangent), then ∠xab = ∠acb.
+know:
+    forall o, a, b, c, x point:
+        $ncoll(a, b, c)
+        $circle(o, a, b, c)
+        $perp(o, a, a, x)
+        =>:
+            $eqangle(a, x, a, b, c, a, c, b)
+
+# Rule 17
+### rules.txt 单行:circle o a b c, eqangle a x a b c a c b => perp o a a x
+### 自然语言:Rule 16 的逆:若 o 为圆心，a, b, c 在圆上，且角 xab 等于角 acb，则直线 oa 垂直于直线 ax（切线判定）。
+### Converse of Rule 16 / Tangent criterion: if ∠xab = ∠acb, then oa ⟂ ax (ax is tangent).
+know:
+    forall o, a, b, c, x point:
+        $ncoll(a, b, c)
+        $circle(o, a, b, c)
+        $eqangle(a, x, a, b, c, a, c, b)
+        =>:
+            $perp(o, a, a, x)
+
+# Rule 18
+### rules.txt 单行:circle o a b c, midp m b c => eqangle a b a c o b o m
+### 自然语言:圆的性质:若 o 为圆心，a, b, c 在圆上，且 m 是 bc 的中点，则角 bac 等于角 bom（圆心角与圆周角的关系）。
+### Central angle vs inscribed angle: if m is midpoint of bc, then ∠bac = ∠bom.
+know:
+    forall o, a, b, c, m point:
+        $circle(o, a, b, c)
+        $midpoint(m, b, c)
+        =>:
+            $eqangle(a, b, a, c, o, b, o, m)
+
+# Rule 19
+### rules.txt 单行:circle o a b c, coll m b c, eqangle a b a c o b o m => midp m b c
+### 自然语言:Rule 18 的逆:若 o 为圆心，a, b, c 在圆上，m 在直线 bc 上，且角 bac 等于角 bom，则 m 是 bc 的中点。
+### Converse of Rule 18: if m on bc and ∠bac = ∠bom, then m is midpoint of bc.
+know:
+    forall o, a, b, c, m point:
+        $circle(o, a, b, c)
+        $coll(m, b, c)
+        $eqangle(a, b, a, c, o, b, o, m)
+        =>:
+            $midpoint(m, b, c)
+
+# Rule 20
+### rules.txt 单行:perp a b b c, midp m a c => cong a m b m
+### 自然语言:直角三角形斜边中点性质:若 ab 垂直于 bc（即角 abc 是直角），且 m 是 ac 的中点，则 am = bm（直角三角形斜边上的中线等于斜边的一半，因此 m 到 a 和 b 的距离相等）。
+### Right triangle median: if ∠abc is right and m is midpoint of ac, then am = bm.
+know:
+    forall a, b, c, m point:
+        $perp(a, b, b, c)
+        $midpoint(m, a, c)
+        =>:
+            $cong(a, m, b, m)
+
+# Rule 21
+### rules.txt 单行:circle o a b c, coll o a c => perp a b b c
+### 自然语言:圆的性质:若 o 为圆心，a, b, c 在圆上，且 o, a, c 共线（即 ac 是直径），则 ab 垂直于 bc（直径所对的圆周角是直角）。
+### Thales' theorem: if ac is diameter, then ∠abc is right (ab ⟂ bc).
+know:
+    forall o, a, b, c point:
+        $ncoll(a, b, c)
+        $circle(o, a, b, c)
+        $coll(o, a, c)
+        =>:
+            $perp(a, b, b, c)
+
+# Rule 22
+### rules.txt 单行:cyclic a b c d, para a b c d => eqangle a d c d c d c b
+### 自然语言:圆内接梯形的性质:若 a, b, c, d 共圆，且 ab ∥ cd，则角 adc 等于角 bcd（同底角相等）。
+### Cyclic trapezoid: if a,b,c,d concyclic and ab ∥ cd, then ∠adc = ∠bcd.
+know:
+    forall a, b, c, d point:
+        $cyclic(a, b, c, d)
+        $para(a, b, c, d)
+        =>:
+            $eqangle(a, d, c, d, c, d, c, b)
+
+# Rule 23
+### rules.txt 单行:midp m a b, perp o m a b => cong o a o b
+### 自然语言:垂直平分线的性质:若 m 是 ab 的中点，且直线 om 垂直于 ab，则 oa = ob（o 在 ab 的垂直平分线上，因此到 a 和 b 的距离相等）。
+### Perpendicular bisector: if m is midpoint of ab and om ⟂ ab, then oa = ob.
+know:
+    forall m, a, b, o point:
+        $midpoint(m, a, b)
+        $perp(o, m, a, b)
+        =>:
+            $cong(o, a, o, b)
+
+# Rule 24
+### rules.txt 单行:cong a p b p, cong a q b q => perp a b p q
+### 自然语言:到两点距离相等的点的轨迹:若 ap = bp 且 aq = bq（p 和 q 都在 ab 的垂直平分线上），则 ab 垂直于 pq。
+### Locus of equidistant points: if ap = bp and aq = bq, then ab ⟂ pq.
+know:
+    forall a, p, b, q point:
+        $cong(a, p, b, p)
+        $cong(a, q, b, q)
+        =>:
+            $perp(a, b, p, q)
+
+# Rule 25
+### rules.txt 单行:cong a p b p, cong a q b q, cyclic a b p q => perp p a a q
+### 自然语言:圆的性质:若 ap = bp，aq = bq，且 a, b, p, q 共圆，则 pa 垂直于 aq（a 是圆心，pa 和 aq 是半径，因此垂直）。
+### If a,b,p,q concyclic with ap = bp = aq = bq (a center), then pa ⟂ aq.
+know:
+    forall a, p, b, q point:
+        $cong(a, p, b, p)
+        $cong(a, q, b, q)
+        $cyclic(a, b, p, q)
+        =>:
+            $perp(p, a, a, q)
+
+# Rule 26
+### rules.txt 单行:midp m a b, midp m c d => para a c b d
+### 自然语言:中点连线性质:若 m 既是 ab 的中点，也是 cd 的中点，则 ac ∥ bd（对角线互相平分的四边形是平行四边形）。
+### Parallelogram diagonals: if m bisects both ab and cd, then ac ∥ bd (parallelogram).
+know:
+    forall m, a, b, c, d point:
+        $midpoint(m, a, b)
+        $midpoint(m, c, d)
+        =>:
+            $para(a, c, b, d)
+
+# Rule 27
+### rules.txt 单行:midp m a b, para a c b d, para a d b c => midp m c d
+### 自然语言:Rule 26 的逆:若 m 是 ab 的中点，且 ac ∥ bd，ad ∥ bc（即 abcd 是平行四边形），则 m 也是 cd 的中点。
+### Converse of Rule 26: if abcd is parallelogram (ac∥bd, ad∥bc) and m midpoint of ab, then m midpoint of cd.
+know:
+    forall m, a, b, c, d point:
+        $midpoint(m, a, b)
+        $para(a, c, b, d)
+        $para(a, d, b, c)
+        =>:
+            $midpoint(m, c, d)
+
+# Rule 28
+### rules.txt 单行:eqratio o a a c o b b d, coll o a c, coll o b d, ncoll a b c, sameside a o c b o d => para a b c d
+### 自然语言:比例判定平行:若 oa/ac = ob/bd，o 在 ac 上，o 在 bd 上，a, b, c 不共线，且 a, c 在 o 的同侧，b, d 在 o 的同侧，则 ab ∥ cd。
+### Parallel by ratio: if oa/ac = ob/bd with sameside condition, then ab ∥ cd.
+know:
+    forall o, a, c, b, d point:
+        $eqratio(o, a, a, c, o, b, b, d)
+        $coll(o, a, c)
+        $coll(o, b, d)
+        $ncoll(a, b, c)
+        $sameside(a, o, c, b, o, d)
+        =>:
+            $para(a, b, c, d)
+
+# Rule 29
+### rules.txt 单行:para a b a c => coll a b c
+### 自然语言:平行线的退化情况:若 ab ∥ ac（两条直线都经过点 a），则 a, b, c 共线（同一直线）。
+### Degenerate parallel: if ab ∥ ac (both through a), then a, b, c are collinear.
+know:
+    forall a, b, c point:
+        $para(a, b, a, c)
+        =>:
+            $coll(a, b, c)
+
+# Rule 30
+### rules.txt 单行:midp m a b, midp n c d => eqratio m a a b n c c d
+### 自然语言:中点比例关系:若 m 是 ab 的中点，n 是 cd 的中点，则 ma/ab = nc/cd（都等于 1/2）。
+### Midpoint ratio: if m, n are midpoints of ab, cd, then ma/ab = nc/cd (= 1/2).
+know:
+    forall m, a, b, n, c, d point:
+        $midpoint(m, a, b)
+        $midpoint(n, c, d)
+        =>:
+            $eqratio(m, a, a, b, n, c, c, d)
+
+# Rule 31
+### rules.txt 单行:eqangle a b p q c d u v, perp p q u v => perp a b c d
+### 自然语言:若直线 ab 与 pq 的夹角等于直线 cd 与 uv 的夹角，且 pq 垂直于 uv，则 ab 垂直于 cd。
+### If ∠(ab,pq) = ∠(cd,uv) and pq ⟂ uv, then ab ⟂ cd.
+know:
+    forall a, b, p, q, c, d, u, v point:        
+        $eqangle(a, b, p, q, c, d, u, v)
+        $perp(p, q, u, v)
+        =>:
+            $perp(a, b, c, d)
+
+# Rule 32
+### rules.txt 单行:eqratio a b p q c d u v, cong p q u v => cong a b c d
+### 自然语言:若 ab/pq = cd/uv，且 pq = uv，则 ab = cd。
+### If ab/pq = cd/uv and pq = uv, then ab = cd.
+know:
+    forall a, b, p, q, c, d, u, v point:
+        $eqratio(a, b, p, q, c, d, u, v)
+        $cong(p, q, u, v)
+        =>:
+            $cong(a, b, c, d)
+
+# Rule 33
+### rules.txt 单行:cong a b p q, cong b c q r, cong c a r p, ncoll a b c => contri* a b c p q r
+### 自然语言:全等三角形判定（SSS）:若 ab = pq，bc = qr，ca = rp，且 a, b, c 不共线，则三角形 abc 与三角形 pqr 全等。
+### SSS congruence: if ab=pq, bc=qr, ca=rp and a,b,c non-collinear, then Δabc ≅ Δpqr.
+know:
+    forall a, b, c, p, q, r point:
+        $cong(a, b, p, q)
+        $cong(b, c, q, r)
+        $cong(c, a, r, p)
+        $ncoll(a, b, c)
+        $ncoll(p, q, r)
+        =>:
+            $contri(a, b, c, p, q, r)
+
+# Rule 34
+### rules.txt 单行:cong a b p q, cong b c q r, eqangle6 b a b c q p q r, ncoll a b c => contri* a b c p q r
+### 自然语言:全等三角形判定（SAS）:若 ab = pq，bc = qr，角 abc = 角 pqr，且 a, b, c 不共线，则三角形 abc 与三角形 pqr 全等。
+### SAS congruence: if ab=pq, bc=qr, ∠abc=∠pqr, then Δabc ≅ Δpqr.
+know:
+    forall a, b, c, p, q, r point:
+        $cong(a, b, p, q)
+        $cong(b, c, q, r)
+        $eqangle(b, a, b, c, q, p, q, r)
+        $ncoll(a, b, c)
+        $ncoll(p, q, r)
+        =>:
+            $contri(a, b, c, p, q, r)
+
+# Rule 35
+### rules.txt 单行:eqangle6 b a b c q p q r, eqangle6 c a c b r p r q, ncoll a b c => simtri a b c p q r
+### 自然语言:相似三角形判定（AA）:若角 abc = 角 pqr，角 acb = 角 prq，且 a, b, c 不共线，则三角形 abc 与三角形 pqr 相似。
+### AA similarity: if ∠abc=∠pqr, ∠acb=∠prq, then Δabc ~ Δpqr.
+know:
+    forall a, b, c, p, q, r point:
+        $eqangle(b, a, b, c, q, p, q, r)
+        $eqangle(c, a, c, b, r, p, r, q)
+        $ncoll(a, b, c)
+        $ncoll(p, q, r)
+        =>:
+            $simtri(a, b, c, p, q, r)
+
+# Rule 36
+### rules.txt 单行:eqangle6 b a b c q r q p, eqangle6 c a c b r q r p, ncoll a b c => simtri2 a b c p q r
+### 自然语言:相似三角形判定（AA，交替方向）:若角 abc = 角 qrp，角 acb = 角 rqp，且 a, b, c 不共线，则三角形 abc 与三角形 pqr 相似（交替方向）。
+### AA similarity (alternate orientation): if ∠abc=∠qrp, ∠acb=∠rqp, then Δabc ~ Δpqr.
+###不必要
+
+# Rule 37
+### rules.txt 单行:eqangle6 b a b c q p q r, eqangle6 c a c b r p r q, ncoll a b c, cong a b p q => contri a b c p q r
+### 自然语言:全等三角形判定（ASA）:若角 abc = 角 pqr，角 acb = 角 prq，ab = pq，且 a, b, c 不共线，则三角形 abc 与三角形 pqr 全等。
+### ASA congruence: if ∠abc=∠pqr, ∠acb=∠prq, ab=pq, then Δabc ≅ Δpqr.
+know:
+    forall a, b, c, p, q, r point:
+        $eqangle(b, a, b, c, q, p, q, r)
+        $eqangle(c, a, c, b, r, p, r, q)
+        $ncoll(a, b, c)
+        $ncoll(p, q, r)
+        $cong(a, b, p, q)
+        =>:
+            $contri(a, b, c, p, q, r)
+
+# Rule 38
+### rules.txt 单行:eqangle6 b a b c q r q p, eqangle6 c a c b r q r p, ncoll a b c, cong a b p q => contri2 a b c p q r
+### 自然语言:全等三角形判定（AAS，交替方向）:若角 abc = 角 qrp，角 acb = 角 rqp，ab = pq，且 a, b, c 不共线，则三角形 abc 与三角形 pqr 全等。
+### AAS congruence (alternate): if ∠abc=∠qrp, ∠acb=∠rqp, ab=pq, then Δabc ≅ Δpqr.
+know:
+    forall a, b, c, p, q, r point:
+        $eqangle(b, a, b, c, q, r, q, p)
+        $eqangle(c, a, c, b, r, q, r, p)
+        $ncoll(a, b, c)
+        $ncoll(p, q, r)
+        $cong(a, b, p, q)
+        =>:
+            $contri2(a, b, c, p, q, r)
+
+# Rule 39
+### rules.txt 单行:eqratio6 b a b c q p q r, eqratio6 c a c b r p r q, ncoll a b c => simtri* a b c p q r
+### 自然语言:相似三角形判定（SSS）:若 ba/bc = qp/qr，ca/cb = rp/rq，且 a, b, c 不共线，则三角形 abc 与三角形 pqr 相似。
+### SSS similarity: if ba/bc=qp/qr, ca/cb=rp/rq, then Δabc ~ Δpqr.
+know:
+    forall a, b, c, p, q, r point:
+        $eqratio(b, a, b, c, q, p, q, r)
+        $eqratio(c, a, c, b, r, p, r, q)
+        $ncoll(a, b, c)
+        $ncoll(p, q, r)
+        =>:
+            $simtri(a, b, c, p, q, r)
+
+# Rule 40
+### rules.txt 单行:eqratio6 b a b c q p q r, eqangle6 b a b c q p q r, ncoll a b c => simtri* a b c p q r
+### 自然语言:相似三角形判定（SAS）:若 ba/bc = qp/qr，角 abc = 角 pqr，且 a, b, c 不共线，则三角形 abc 与三角形 pqr 相似。
+### SAS similarity: if ba/bc=qp/qr, ∠abc=∠pqr, then Δabc ~ Δpqr.
+know:
+    forall a, b, c, p, q, r point:
+        $eqratio(b, a, b, c, q, p, q, r)
+        $eqangle(b, a, b, c, q, p, q, r)
+        $ncoll(a, b, c)
+        $ncoll(p, q, r)
+        =>:
+            $simtri(a, b, c, p, q, r)
+
+# Rule 41
+### rules.txt 单行:eqratio6 b a b c q p q r, eqratio6 c a c b r p r q, ncoll a b c, cong a b p q => contri* a b c p q r
+### 自然语言:全等三角形判定（SSS，通过比例）:若 ba/bc = qp/qr，ca/cb = rp/rq，ab = pq，且 a, b, c 不共线，则三角形 abc 与三角形 pqr 全等。
+### SSS congruence (via ratios): if ba/bc=qp/qr, ca/cb=rp/rq, ab=pq, then Δabc ≅ Δpqr.
+know:
+    forall a, b, c, p, q, r point:
+        $eqratio(b, a, b, c, q, p, q, r)
+        $eqratio(c, a, c, b, r, p, r, q)
+        $ncoll(a, b, c)
+        $ncoll(p, q, r)
+        $cong(a, b, p, q)
+        =>:
+            $contri(a, b, c, p, q, r)
+
+# Rule 42
+### rules.txt 单行:para a b c d, coll m a d, coll n b c, eqratio6 m a m d n b n c, sameside m a d n b c => para m n a b
+### 自然语言:平行线截比定理:若 ab ∥ cd，m 在直线 ad 上，n 在直线 bc 上，ma/md = nb/nc，且 m, a, d 与 n, b, c 在各自直线的同侧，则 mn ∥ ab。
+### Intercept theorem: if ab ∥ cd, m on ad, n on bc, ma/md=nb/nc (sameside), then mn ∥ ab.
+### 注:sameside m a d 表示 m, a, d 在一条直线的同侧，这里简化为 m 不在 a 和 d 之间。
+know:
+    forall a, b, c, d, m, n point:
+        $para(a, b, c, d)
+        $coll(m, a, d)
+        $coll(n, b, c)
+        $eqratio(m, a, m, d, n, b, n, c)
+        $sameside(m, a, d, n, b, c)
+        =>:
+            $para(m, n, a, b)
+
+# Rule 43
+### rules.txt 单行:para a b c d, coll m a d, coll n b c, para m n a b => eqratio6 m a m d n b n c
+### 自然语言:Rule 42 的逆:若 ab ∥ cd，m 在直线 ad 上，n 在直线 bc 上，且 mn ∥ ab，则 ma/md = nb/nc。
+### Converse of intercept theorem: if ab ∥ cd, m on ad, n on bc, mn ∥ ab, then ma/md = nb/nc.
+know:
+    forall a, b, c, d, m, n point:
+        $para(a, b, c, d)
+        $coll(m, a, d)
+        $coll(n, b, c)
+        $para(m, n, a, b)
+        =>:
+            $eqratio(m, a, m, d, n, b, n, c)
