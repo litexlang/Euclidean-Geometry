@@ -1,0 +1,144 @@
+# three primitive terms:
+have point nonempty_set
+have line nonempty_set
+have plane nonempty_set
+
+# All elements on a line or a plane are points (power_set: the set of all subsets of a set)
+know:
+    forall l line:
+        l $in power_set(point)
+    forall pl plane:
+        pl $in power_set(point)
+
+# three primitive relations
+#Incidence
+# We use the keyword `in` in set theory to denote the membership of an element to a set. Since a point on line and a line is a set of points, we use the keyword `in` to denote the membership of a point to a line.
+
+##I1
+### For every two points A and B there exists a line a that contains them both. We write AB = a or BA = a
+### For every two points there exists no more than one line that contains them both
+let draw_line fn(A point,B point : A!=B) line
+
+
+know:
+    forall A,B point:
+        A!=B
+        =>:
+            draw_line(A,B)=draw_line(B,A)
+            A $in draw_line(A,B)
+            B $in draw_line(A,B)
+    
+    forall l line, A,B l:
+        A != B
+        =>:
+            l = draw_line(A,B)
+    
+## I2
+prop three_distinct_points(A, B, C point):
+    A!=B
+    A!=C
+    B!=C
+
+know:
+    forall A,B,C point:
+        $three_distinct_points(A,B,C)
+        draw_line(A,B)=draw_line(A,C)
+        =>:
+            draw_line(B,C)=draw_line(A,C)
+
+## I3
+prop not_on_the_same_line(A point,B point,C point):
+    $three_distinct_points(A,B,C)
+    not A $in draw_line(B,C) or not B $in draw_line(A,C) or not C $in draw_line(A,B)
+
+let fn draw_plane(A point,B point,C point : $not_on_the_same_line(A,B,C)) plane
+
+know:
+    forall A,B,C point:
+        $not_on_the_same_line(A,B,C)
+        =>:
+            A $in draw_plane(A,B,C)
+            B $in draw_plane(A,B,C)
+            C $in draw_plane(A,B,C)
+
+
+## I4
+know:
+    forall A,B,C point,a plane:
+        $not_on_the_same_line(A,B,C)
+        A $in a
+        B $in a
+        C $in a
+        =>:
+            a = draw_plane(A,B,C)
+        
+    forall A,B,C point:
+        $not_on_the_same_line(A,B,C)
+        =>:
+            draw_plane(A,B,C)=draw_plane(A,C,B)
+            draw_plane(A,B,C)=draw_plane(B,A,C)
+            draw_plane(A,B,C)=draw_plane(C,A,B)
+            draw_plane(A,B,C)=draw_plane(B,C,A)
+            draw_plane(A,B,C)=draw_plane(C,B,A)
+## I5
+prop line_on_plane(l line,pl plane):
+    l $subset pl
+know:
+    forall pl plane,A,B point:
+        A $in pl
+        B $in pl
+        A!=B
+        =>:
+            $line_on_plane(draw_line(A,B),pl)
+
+## I6
+
+know:
+    forall a,b plane,A point:
+        A $in a
+        A $in b
+        =>:
+            exist B point st {B $in a,B $in b,B!=A}
+
+## I7
+know:
+    forall l line:
+        exist A,B point st {A!=B,A $in l,B $in l}
+
+    forall pl plane:
+        exist A,B,C point st {A!=B,A!=C,B!=C,A $in pl,B $in pl,C $in pl}
+
+
+##Theorem 1
+claim:
+    prove:
+        forall l1, l2 line, A, B point:
+            l1!=l2
+            A $in l1
+            A $in l2
+            B $in l1
+            B $in l2
+            =>:
+                A = B
+    by_contra:
+        prove:
+            A = B
+        A != B
+        draw_line(A, B) = l1
+        draw_line(A, B) = l2
+        impossible l1 = l2
+        
+## II1
+abstract_prop between(a,b,c)
+
+prop three_points_on_the_same_line(a,b,c point):
+    $three_distinct_points(a,b,c)
+    a $in draw_line(b,c) or b $in draw_line(a,c) or c $in draw_line(a,b)
+
+know:
+    forall a,b,c point:
+        $three_points_on_the_same_line(a,b,c)
+        $between(a,b,c)
+        =>:
+            $between(c,b,a)
+

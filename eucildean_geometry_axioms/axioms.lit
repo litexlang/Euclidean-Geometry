@@ -35,18 +35,28 @@ know:
 ## I1
 ### For every two points A and B there exists a line a that contains them both. We write AB = a or BA = a
 ### For every two points there exists no more than one line that contains them both
-let fn line_of(A point,B point) line:
+let fn draw_line(A point,B point) line:
     dom:
         A!=B
 
 know:
     forall A,B point:
-        A $in line_of(A,B)
-        B $in line_of(A,B)
+        A!=B
+        =>:
+            A $in draw_line(A,B)
+            B $in draw_line(A,B)
     forall l line, A,B l:
         A != B
         =>:
-            l = line_of(A,B)
+            l = draw_line(A,B)
+    forall A,B,C point:
+        A!=B
+        A!=C
+        B!=C
+        draw_line(A,B)=draw_line(A,C)
+        =>:
+            draw_line(B,C)=draw_line(A,C)
+        
 
 ## I2
 ### There exists at least two distinct points on a line.
@@ -58,14 +68,14 @@ know:
 ### There exist at least three points that do not lie on the same line.
 prop three_points_collinear(A,B,C point):
     B != C
-    A $in line_of(B,C)
+    A $in draw_line(B,C)
 prop not_three_points_collinear(A,B,C point):
     A!=B
     A!=C
     B!=C
-    not A $in line_of(B,C)
-    not B $in line_of(A,C)
-    not C $in line_of(A,B)  
+    not A $in draw_line(B,C)
+    not B $in draw_line(A,C)
+    not C $in draw_line(A,B)  
 know:
     exist A,B,C point st {$not_three_points_collinear(A,B,C)}
 
@@ -107,7 +117,7 @@ know:
         A $in pl
         B $in pl
         =>:
-            $line_on_plane(line_of(A,B),pl)
+            $line_on_plane(draw_line(A,B),pl)
 
 ## I7
 ### If two planes α, β have a point A in common, then they have at least a second point B in common
@@ -162,7 +172,7 @@ know:
 ### If A and C are two points, then there exists at least one point B on the line AC such that C lies between A and B
 prop is_point_on_extension(A point,C point,B point):
     A!=C
-    B $in line_of(A,C)
+    B $in draw_line(A,C)
     $point_between(C,A,B)
 
 know:
@@ -201,7 +211,7 @@ know:
 # Define finite_line as a segment of a line, i.e., a line with two endpoints.
 
 
-let fn finite_line_of(A point,B point) power_set(point):
+let fn finite_draw_line(A point,B point) power_set(point):
     dom:
         A!=B
 
@@ -209,26 +219,26 @@ know:
     forall A, B point:
         A!=B
         =>:
-            finite_line_of(A,B) $subset line_of(A,B)
+            finite_draw_line(A,B) $subset draw_line(A,B)
 
 know:
     forall A,B point:
         A!=B
         =>:
-            A $in finite_line_of(A,B)
-            B $in finite_line_of(A,B)
-            finite_line_of(A,B)=finite_line_of(B,A)
+            A $in finite_draw_line(A,B)
+            B $in finite_draw_line(A,B)
+            finite_draw_line(A,B)=finite_draw_line(B,A)
     forall A,B,C point:
         A!=B
         C!=A
         C!=B
-        C $in finite_line_of(A,B)
+        C $in finite_draw_line(A,B)
         =>:
-            C $in line_of(A,B)
+            C $in draw_line(A,B)
             $point_between(C,A,B)
 prop line_intersect_finite_line(l line ,B ,C point):
     B != C
-    exist A point st {A $in l, A $in finite_line_of(B,C)}
+    exist A point st {A $in l, A $in finite_draw_line(B,C)}
 
 know:
     forall A,B,C point ,l line:
@@ -269,7 +279,7 @@ know:
 ### Symmetric: AB ≅ CD => CD ≅ AB
 ### Transitive: AB ≅ CD, CD ≅ EF => AB ≅ EF
 
-prop finite_line_congruence_transitive_result(A point,B point,C point,A2 point,B2 point,C2 point):
+prop finite_line_congruence_transitive_result(A point,B point,C point,D point,E point,F point):
     $finite_line_congruence(A,B,E,F)
 
 know:
@@ -290,7 +300,7 @@ know:
         $finite_line_congruence(A,B,C,D)
         $finite_line_congruence(C,D,E,F)
         =>:
-            $finite_line_congruence_transitive_result(A,B,C,E,F,A2,B2,C2)
+            $finite_line_congruence_transitive_result(A,B,C,D,E,F)
 
 
 ## C3
@@ -307,11 +317,11 @@ know:
         A != B
         B != C
         A != C
-        intersect(finite_line_of(A,B),finite_line_of(B,C)) = {B}
+        intersect(finite_draw_line(A,B),finite_draw_line(B,C)) = {B}
         A2 != B2
         B2 != C2
         A2 != C2
-        intersect(finite_line_of(A2,B2),finite_line_of(B2,C2)) = {B2}
+        intersect(finite_draw_line(A2,B2),finite_draw_line(B2,C2)) = {B2}
         $finite_line_congruence(A,B,A2,B2)
         $finite_line_congruence(B,C,B2,C2)
         =>:
@@ -343,7 +353,7 @@ know:
             C $in ray_of(A,B)
     forall A,B,C point:
         A!=B
-        C $in line_of(A,B)
+        C $in draw_line(A,B)
         $point_between(C,A,B) or $point_between(B,A,C)
         C != A
         =>:
@@ -352,13 +362,13 @@ know:
 
 
 know: 
-    # Every point C on ray_of(A, B) is on line_of(A, B)
-    # In fact, $point_between(C,A,B) or $point_between(B,A,C) could lead to C $in line_of(A,B)
+    # Every point C on ray_of(A, B) is on draw_line(A, B)
+    # In fact, $point_between(C,A,B) or $point_between(B,A,C) could lead to C $in draw_line(A,B)
     forall A,B,C point:
         A!=B
         C $in ray_of(A,B)
         =>:
-            C $in line_of(A,B)
+            C $in draw_line(A,B)
             
 
 ## Angle: We define angle with direction.
@@ -477,7 +487,7 @@ know:
         $not_three_points_collinear(A,B,C)
         D!=E
         =>:
-            exist F point st {$sameside_points(F,side_signal_point,line_of(D,E)),$angle_congruence(A,B,C,D,E,F)}
+            exist F point st {$sameside_points(F,side_signal_point,draw_line(D,E)),$angle_congruence(A,B,C,D,E,F)}
 
 ## C5
 ### If the angle ∠ (h, k) is congruent to the angle ∠ (h′, k′) and to the angle ∠ (h″, k″), 
@@ -519,7 +529,7 @@ know:
         =>:
             P $in triangle_of(A,B,C)
         <=>:
-            P $in finite_line_of(A,B) or P $in finite_line_of(B,C) or P $in finite_line_of(C,A)
+            P $in finite_draw_line(A,B) or P $in finite_draw_line(B,C) or P $in finite_draw_line(C,A)
 
 
 prop triangle_congruence(A point,B point,C point,A1 point,B' point,C' point):
